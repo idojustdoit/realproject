@@ -1,42 +1,38 @@
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import SignUp from "../components/Signup";
+import Portal from "../components/Portal";
+import LogIn from "../components/Login";
 
-import React from 'react';
-import { useNavigate,Link } from 'react-router-dom';
-import styled from 'styled-components'
-import axios from 'axios'
-import SignUp from '../components/Signup'
-import Portal from '../components/Portal'
-import LogIn from '../components/Login'
+const Main = (props) => {
+  const navigate = useNavigate();
 
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
 
-const Main = (props)=> {
+  const LoginModal = () => {
+    setOpen(!open);
+  };
 
-    const[isOpen, setIsOpen] = React.useState(false);
-    const [open , setOpen] = React.useState(false);
+  const handleModal = () => {
+    setIsOpen(!isOpen);
+  };
 
-    const LoginModal = () => {
-      setOpen(!open);
-    }
+  return (
+    <>
+      <button onClick={LoginModal}> 로그인 </button>
+      <Portal>{open && <LogIn onClose={LoginModal} />}</Portal>
 
-    const handleModal = () => {
-        setIsOpen(!isOpen);
-      };
-
-    return (                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
-                <>
-                  <button onClick={LoginModal} > 로그인 </button>
-                  <Portal>
-                  {open && <LogIn  onClose={LoginModal}/>}
-                  </Portal>
-
-                  <button onClick={handleModal} > 회원가입 </button>
-                  <Portal>
-                  {isOpen && <SignUp  onClose={handleModal}/>}
-                  </Portal>
-                   
-                    
-                   
-                   
-                </>
-    );
-}
-export default Main
+      <button onClick={handleModal}> 회원가입 </button>
+      <Portal>{isOpen && <SignUp onClose={handleModal} />}</Portal>
+      <button
+        onClick={() => {
+          navigate("/video");
+        }}
+      >
+        화상채팅
+      </button>
+    </>
+  );
+};
+export default Main;
