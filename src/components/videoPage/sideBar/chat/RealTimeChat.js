@@ -22,7 +22,7 @@ const RealTimeChat = () => {
   };
 
   const openChat = () => {
-    if (room !== "") {
+    if (room !== "" && nick !== "") {
       socket.emit("join_room", nick, room);
     }
   };
@@ -65,6 +65,7 @@ const RealTimeChat = () => {
               onChange={nickChange}
               type="text"
               placeholder="Nickname"
+              required
             />
             <button
               style={{ width: "100px" }}

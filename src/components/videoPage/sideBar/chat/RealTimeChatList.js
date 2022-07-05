@@ -71,12 +71,12 @@ const RealTimeChatList = ({ socket, nick, room }) => {
                 </Message>
               ) : !messageContent.message ? (
                 // 유저가 방에 들어올 때 알림
-                <p>
-                  {messageContent.author || "익명 사용자"}님이 입장하셨습니다.👀
+                <p className="enter_and_exit">
+                  {messageContent.author}님이 입장하셨습니다.👀
                 </p>
               ) : messageContent.message === "님이 퇴장하셨습니다." ? (
                 // 유저가 퇴장할 때 알림
-                <p>
+                <p className="enter_and_exit">
                   {getUserName || "익명 사용자"}
                   {messageContent.message}😢
                 </p>
@@ -129,6 +129,9 @@ const ChatList = styled.div`
   background-color: #e7e7e7;
   overflow-y: auto;
   box-sizing: border-box;
+  .enter_and_exit {
+    text-align: center;
+  }
 `;
 
 const MessageForm = styled.form`
@@ -167,7 +170,7 @@ const Message = styled.div`
     gap: 10px;
     width: 100%;
     word-wrap: break-word;
-    margin-bottom: 5px;
+    margin-bottom: 7px;
   }
   .user_img {
     width: 30px;
@@ -187,14 +190,13 @@ const Message = styled.div`
     }
   }
   .message {
-    display: flex;
     max-width: 70%;
-    justify-content: ${(props) => (props.state ? "flex-end" : "flex-start")};
     color: ${(props) => (props.state ? "black" : "white")};
     background-color: ${(props) => (props.state ? "#f1c40f" : "#95a5a6")};
     border-radius: 10px;
     padding: 10px;
     word-break: break-all;
+    line-height: 1.3;
   }
 
   .msg_line {
@@ -203,7 +205,7 @@ const Message = styled.div`
     gap: 10px;
     justify-content: ${(props) => (props.state ? "flex-end" : "flex-start")};
     align-items: flex-end;
-    margin-bottom: 5px;
+    margin-bottom: 7px;
     transition: all 0.3s ease-in-out;
     &:hover .message {
       opacity: 0.7;

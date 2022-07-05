@@ -43,7 +43,20 @@ const Video = () => {
           {/* Main Screen 하단 기능 아이콘 */}
           <PlusBar>
             <SideBtn onClick={sideBarHandler}>
-              {openBar ? <BsChatDots /> : <BsChatDotsFill />}
+              {openBar ? (
+                <div style={{position:'relative'}}>
+                <BsChatDots/>
+                <Alert/>
+                </div>
+                
+              ) : (
+                <div style={{position:'relative'}}>
+                <BsChatDotsFill/>
+                <Alert/>
+                </div>
+              )}
+              
+              
             </SideBtn>
           </PlusBar>
           {/* Main Screen 하단 기능 아이콘 */}
@@ -111,6 +124,16 @@ const Btn = styled.button`
   top: 0;
   bottom: 0;
   margin: auto 0;
+`;
+
+const Alert = styled.div`
+  position: absolute;
+  background-color: tomato;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  right: -5px;
+  top: -3px;
 `;
 
 export default Video;

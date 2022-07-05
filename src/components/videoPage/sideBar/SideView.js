@@ -22,7 +22,7 @@ const SideView = ({ openBar }) => {
 const SideBar = styled.div`
   display: ${(props) => (props.BarState ? "none" : "")};
   width: 30%;
-  animation: ${(props) => (props.BarState ? "bar-hidden" : "bar-show")} 0.3s;
+  animation: ${(props) => (props.BarState ? "bar-hidden" : "bar-show")} 0.5s;
 
   @keyframes bar-show {
     0% {

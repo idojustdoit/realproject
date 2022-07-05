@@ -14,7 +14,8 @@ const TimeBar = () => {
 const Wrapper = styled.div`
   display: flex;
   justify-content: flex-end;
-  height: 50px;
+  align-items: center;
+  height: 60px;
   background-color: black;
   color: white;
   font-weight: bold;

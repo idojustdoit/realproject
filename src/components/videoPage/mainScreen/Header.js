@@ -16,7 +16,7 @@ export default Header;
 
 const Head = styled.div`
   display: flex;
-  height: 70px;
+  height: 50px;
   justify-content: space-between;
   align-items: center;
   background-color: white;

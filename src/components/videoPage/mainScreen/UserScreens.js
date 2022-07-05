@@ -13,7 +13,7 @@ const UserScreens = () => {
 
 const Wrapper = styled.div`
   width: ${(props) => (props.BarState ? "35% + 30px" : "100%")};
-  height: calc((100vh - 277px) / 2);
+  height: calc((100vh - 267px) / 2);
   background-color: pink;
 `;
 
