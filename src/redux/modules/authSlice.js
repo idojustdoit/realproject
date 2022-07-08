@@ -21,7 +21,6 @@ const authSlice = createSlice({
     },
   },
 });
-
 //내보내진(export된) actions은 사용되는 컴포넌트에서 불러와서 쓰임
 // e.g.)dispatch(authActions.logout()); 이런식으로 쓰임!
 export const authActions = authSlice.actions;
