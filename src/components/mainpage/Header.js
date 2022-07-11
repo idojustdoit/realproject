@@ -3,6 +3,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { authSlice } from "../../redux/modules/authSlice";
 import { Link, useNavigate } from "react-router-dom";
 import "../../styles/reset.css";
+import SignUp from "../Signup";
+import Portal from "../Portal";
+import LogIn from "../Login";
+import Creatroom from "../Createroom";
+// import Invite from "../components/Invite";
 
 import styled from "styled-components";
 // import { Button } from "@mui/material";
@@ -16,22 +21,39 @@ function Header() {
   const isAuth = useSelector((state) => state.auth.isAuth);
 
   //isLogin 기본 state값 false
-  const [isLogin, setIsLogin] = useState(false);
-  console.log(isLogin);
-  const dispatch = useDispatch();
+  const token = sessionStorage.getItem("accessToken");
+  // const dispatch = useDispatch();
 
-  const logoutHandler = () => {
+  const logoutHandler = (e) => {
     // dispatch(authActions.logout());
-    setIsLogin(!isLogin);
+    sessionStorage.removeItem("accessToken");
+    sessionStorage.removeItem("refreshToken");
+    window.location.reload();
   };
 
-  const loginHandler = () => {
-    setIsLogin(!isLogin);
+  const [LogInOpen, setIsLogInOpen] = React.useState(false);
+  const [SignUpOpen, setSignUpOpen] = React.useState(false);
+  const [CreateOpen, setCreateOpen] = React.useState(false);
+
+  // const [InviteOpen, setInviteOpen] = React.useState(false);
+
+  const LoginModal = () => {
+    setIsLogInOpen(!LogInOpen);
     //로그인 모달 열림
   };
-  const signupHandler = () => {
+
+  const SignupModal = () => {
+    setSignUpOpen(!SignUpOpen);
     //회원가입 모달열림
   };
+
+  const createModal = () => {
+    setCreateOpen(!CreateOpen);
+  };
+
+  // const InviteModal = () => {
+  //   setInviteOpen(!InviteOpen);
+  // }; 초대 모달
 
   return (
     <HeaderCont className="header">
@@ -52,10 +74,13 @@ function Header() {
             </Li>
           </Ul>
         </LeftCont>
-        {isLogin ? (
+        {token ? (
           <Ul>
             <li>
-              <StudyBtn>+스터디 생성</StudyBtn>
+              <StudyBtn onClick={createModal}>+스터디 생성</StudyBtn>
+              <Portal>
+                {CreateOpen && <Creatroom onClose={createModal} />}
+              </Portal>
             </li>
             <li>
               <Link to="/mypage">
@@ -76,10 +101,20 @@ function Header() {
         ) : (
           <Ul>
             <li>
-              <HeaderBtn onClick={loginHandler}>로그인</HeaderBtn>
+              <HeaderBtn onClick={LoginModal}>로그인</HeaderBtn>
+              <Portal>
+                {LogInOpen && (
+                  <LogIn onClose={LoginModal} SignOpen={SignupModal} />
+                )}
+              </Portal>
             </li>
             <li>
-              <HeaderBtn onClick={signupHandler}>회원가입</HeaderBtn>
+              <HeaderBtn onClick={SignupModal}>회원가입</HeaderBtn>
+              <Portal>
+                {SignUpOpen && (
+                  <SignUp onClose={SignupModal} LoginOpen={LoginModal} />
+                )}
+              </Portal>
             </li>
           </Ul>
         )}
@@ -149,6 +184,7 @@ const HeaderBtn = styled.button`
   //border radius를 주면 border굵기 조정 불가
   border: 1px solid #000000;
   background-color: white;
+  cursor: pointer;
 `;
 
 //HeaderBtn 의 내용을 전체 상속

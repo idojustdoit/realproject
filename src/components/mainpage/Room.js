@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { FaUser } from "react-icons/fa";
+import Portal from "../Portal";
+import Roomenter from "../Roomenter";
 
 const Room = ({
   roomId,
@@ -15,18 +17,29 @@ const Room = ({
   const [likeState, setLikeState] = useState(isLiked);
   console.log("isLike?" + isLiked, "roomId?" + roomId);
 
+  const token = sessionStorage.getItem("accessToken");
+
   function toggleLike() {
     setLikeState(!likeState);
   }
-  function enterRoomHandler() {
-    //입장하기버튼: 클릭한 방(roomId)에 해당하는 화상채팅방으로 입장하는 모달
-  }
-
-  const [isShow, setIsShow] = useState(false);
+  // function enterRoomHandler() {
+  // }
+  //입장하기버튼: 클릭한 방(roomId)에 해당하는 화상채팅방으로 입장하는 모달
+  const [EnterOpen, setEnterOpen] = React.useState(false);
+  const EnterModal = () => {
+    setEnterOpen(!EnterOpen);
+  };
+  // const [isShow, setIsShow] = useState(false);
 
   // function toggleShow() {
   //   setIsShow(!isShow);
   // }
+
+  //로그인 안했을시에 보여지는 경고창
+  const AlertHandler = () => {
+    alert("로그인이후 사용해주세요!");
+  };
+
   return (
     <RoomCont key={roomId}>
       <RoomImg src={imageUrl}></RoomImg>
@@ -52,15 +65,23 @@ const Room = ({
             return <Tag key={index}>#{tag}</Tag>;
           })}
         </TagBox>
-        <BtnBox>
-          {!likeState ? (
-            <WhiteBtn onClick={toggleLike}>찜하기</WhiteBtn>
-          ) : (
-            <LikedWhiteBtn onClick={toggleLike}>찜취소</LikedWhiteBtn>
-          )}
+        {token ? (
+          <BtnBox>
+            {!likeState ? (
+              <WhiteBtn onClick={toggleLike}>찜하기</WhiteBtn>
+            ) : (
+              <LikedWhiteBtn onClick={toggleLike}>찜취소</LikedWhiteBtn>
+            )}
 
-          <BlackBtn onClick={enterRoomHandler}>참여하기</BlackBtn>
-        </BtnBox>
+            <BlackBtn onClick={EnterModal}>참여하기</BlackBtn>
+            <Portal>{EnterOpen && <Roomenter onClose={EnterModal} />}</Portal>
+          </BtnBox>
+        ) : (
+          <BtnBox>
+            <WhiteBtn onClick={AlertHandler}>찜하기</WhiteBtn>
+            <BlackBtn onClick={AlertHandler}>참여하기</BlackBtn>
+          </BtnBox>
+        )}
       </RoomCotentBox>
     </RoomCont>
   );

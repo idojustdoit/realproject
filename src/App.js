@@ -1,10 +1,11 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 // import Main from "./pages/Main";
-
+// import Mypage from "./pages/Mypage";
 import styled from "styled-components";
 import "./App.css";
+import "./shared/font/pretendard.css";
 import MainPage from "./pages/MainPage";
-import Mypage from "./pages/Mypage";
+import Modify from "./pages/Modify";
 
 function App() {
   return (
@@ -13,7 +14,8 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<MainPage />}></Route>
-            <Route path="/mypage" element={<Mypage />}></Route>
+            {/* <Route path="/mypage" element={<Mypage />}></Route> */}
+            <Route path="Modify" element={<Modify />}></Route>
           </Routes>
         </Router>
       </StyledApp>
