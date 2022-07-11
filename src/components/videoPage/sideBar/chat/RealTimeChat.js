@@ -3,10 +3,21 @@ import React, { useState } from "react";
 import RealTimeChatList from "./RealTimeChatList";
 import styled from "styled-components";
 import io from "socket.io-client";
+import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 // http://13.124.252.225
 const socket = io.connect("http://localhost:3001");
 
 const RealTimeChat = () => {
+  const [chatToggle, setChatToggle] = useState(true);
+
+  const toggleHandler = () => {
+    if (chatToggle) {
+      setChatToggle(false);
+    } else {
+      setChatToggle(true);
+    }
+  };
+
   const [nick, setNick] = useState("");
   const [room, setRoom] = useState("");
 
@@ -29,8 +40,8 @@ const RealTimeChat = () => {
 
   return (
     <ChatArea>
-      <Wrapper>
-        <Title
+      <Title>
+        <span
           onClick={() => {
             if (!roomToggle) {
               setRoomToggle(true);
@@ -39,8 +50,21 @@ const RealTimeChat = () => {
             }
           }}
         >
-          Chat (Room: {room})
-        </Title>
+          그룹채팅 {room}
+        </span>
+        {chatToggle ? (
+          <IoIosArrowUp
+            onClick={toggleHandler}
+            style={{ position: "absolute", right: "25", cursor: "pointer" }}
+          />
+        ) : (
+          <IoIosArrowDown
+            onClick={toggleHandler}
+            style={{ position: "absolute", right: "25", cursor: "pointer" }}
+          />
+        )}
+      </Title>
+      <Wrapper>
         {/* 임시 방 생성 */}
         {roomToggle && (
           <div
@@ -76,8 +100,9 @@ const RealTimeChat = () => {
             </button>
           </div>
         )}
-
-        <RealTimeChatList socket={socket} nick={nick} room={room} />
+        {chatToggle && (
+          <RealTimeChatList socket={socket} nick={nick} room={room} />
+        )}
       </Wrapper>
     </ChatArea>
   );
@@ -85,28 +110,32 @@ const RealTimeChat = () => {
 
 const ChatArea = styled.div`
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-end;
   align-items: center;
   width: inherit;
-  height: 60%;
-  background-color: tomato;
+  height: 100%;
+  min-height: 20vh;
+
+  background-color: #e9e9e9;
+  padding: 15px;
 `;
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  width: calc(100% - 30px);
-  height: calc(100% - 30px);
-  background-color: teal;
+  width: 100%;
+  height: 100%;
 `;
 
 const Title = styled.span`
-  font-size: 1.5rem;
+  font-size: 1rem;
+  width: 100%;
   font-weight: bold;
   text-align: center;
   background-color: black;
   color: white;
-  padding: 10px 0;
+  padding: 10px;
 `;
 
 export default RealTimeChat;

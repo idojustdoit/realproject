@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import React, { useState, useRef } from "react";
+import { DragDropContext, Draggable } from "react-beautiful-dnd";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import {
@@ -8,15 +8,42 @@ import {
   updateTodoChecked,
 } from "../../../../redux";
 
+//react icons
+import { ImCross } from "react-icons/im";
+import { RiPencilFill } from "react-icons/ri";
+import { GoPlus } from "react-icons/go";
+
 const TodoList = () => {
   const dispatch = useDispatch();
 
-  const todoListItem = useSelector((state) => state);
+  const check_ref = useRef(null);
 
+  const todoListItem = useSelector((state) => state);
+  console.log(todoListItem);
+
+  const [updateTodo, setUpdateTodo] = useState(false);
+  const [inputShow, setInputShow] = useState(false);
+  const [emptyListInputShow, setEmptyListInputShow] = useState(false);
   const [todo, setTodo] = useState([]);
   const [boxCheck, setBoxCheck] = useState(false);
 
   const id = Math.random();
+
+  const updateTodoList = () => {
+    if (!updateTodo) {
+      setUpdateTodo(true);
+    } else {
+      setUpdateTodo(false);
+    }
+  };
+
+  const todoInputHandler = () => {
+    if (!emptyListInputShow) {
+      setEmptyListInputShow(true);
+    } else {
+      setEmptyListInputShow(false);
+    }
+  };
 
   const todoHandler = (e) => {
     setTodo(e.target.value);
@@ -26,57 +53,125 @@ const TodoList = () => {
     e.preventDefault();
     dispatch(addTodoList({ id: id, list: todo, checked: boxCheck }));
     setTodo("");
-  };
-
-  const ChangeBox = (e) => {
-    setBoxCheck(e.currentTarget.checked);
+    setUpdateTodo(false);
   };
 
   return (
     <>
-      <DoList>
-        {todoListItem.map((i) => {
-          return (
+      <DoList empty={todoListItem.length === 0 && !emptyListInputShow}>
+        <ul
+          style={{
+            width: "inherit",
+            margin: "0 auto",
+            padding: "0",
+          }}
+        >
+          {todoListItem.length === 0 && !emptyListInputShow ? (
             <div
-              style={{ display: "flex", justifyContent: "space-between" }}
-              key={i.id}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                placeItems: "center",
+              }}
             >
-              <CheckLabel boxCheck={i.checked}>
-                <input
-                  onChange={(e) => {
-                    setBoxCheck(e.currentTarget.checked);
-                    console.log(e.currentTarget.checked);
-                    dispatch(
-                      updateTodoChecked({ id: i.id, checked: i.checked })
-                    );
-                  }}
-                  type="checkbox"
-                />
-                {i.list}
-              </CheckLabel>
-              <button
-                onClick={() => {
-                  dispatch(deleteTodoList({ id: i.id }));
-                }}
+              <div style={{ color: "#808080" }}>
+                아직 입력된 TO-DO-List가 없습니다.
+              </div>
+              <div
+                onClick={todoInputHandler}
+                style={{ textDecoration: "underline", cursor: "pointer" }}
               >
-                삭제
-              </button>
+                To-Do-List 입력하기
+              </div>
             </div>
-          );
-        })}
-      </DoList>
+          ) : null}
 
-      <TodoForm onSubmit={addList}>
-        <div>
-          <input
-            onChange={todoHandler}
-            value={todo}
-            type="text"
-            placeholder="목표를 입력해 주세요."
-          />
-          <button>등록</button>
-        </div>
-      </TodoForm>
+          {todoListItem.map((i, index) => {
+            return (
+              <div key={i.id}>
+                <ChatItem>
+                  <CheckLabel boxCheck={i.checked}>
+                    <input
+                      className="check"
+                      ref={check_ref}
+                      onClick={(e) => {
+                        setBoxCheck(e.currentTarget.checked);
+                        console.log(e.currentTarget.checked);
+                        dispatch(
+                          updateTodoChecked({ id: i.id, checked: i.checked })
+                        );
+                      }}
+                      type="checkbox"
+                      //re-rander시 체크박스 유지
+                      defaultChecked={i.checked && "defaultChecked"}
+                    />
+
+                    <input
+                      className="input_result"
+                      type="text"
+                      defaultValue={i.list}
+                      disabled={!updateTodo &&  "disabled"}
+                    />
+                  </CheckLabel>
+                  <div
+                    className="list_icons"
+                    style={{
+                      color: "#808080",
+                      alignItems: "center",
+                      gap: "5px",
+                    }}
+                  >
+                    <GoPlus
+                      onClick={() => {
+                        setEmptyListInputShow(true);
+                      }}
+                      style={{ cursor: "pointer" }}
+                    />
+                    <RiPencilFill
+                      onClick={updateTodoList}
+                      style={{
+                        fontSize: "0.9rem",
+                        cursor: "pointer",
+                      }}
+                    />
+                    <ImCross
+                      style={{
+                        fontSize: "0.7rem",
+                        cursor: "pointer",
+                      }}
+                      onClick={() => {
+                        dispatch(deleteTodoList({ id: i.id }));
+                      }}
+                    />
+                  </div>
+                </ChatItem>
+                {/* {inputShow && (
+                  <TodoForm onSubmit={addList}>
+                    <input type="checkbox" disabled />
+                    <input
+                      onChange={todoHandler}
+                      value={todo}
+                      type="text"
+                      placeholder="TO-DO List를 입력해 주세요"
+                    />
+                  </TodoForm>
+                )} */}
+              </div>
+            );
+          })}
+        </ul>
+        {emptyListInputShow  && (
+          <TodoForm onSubmit={addList}>
+            <input type="checkbox" disabled />
+            <input
+              onChange={todoHandler}
+              value={todo}
+              type="text"
+              placeholder="TO-DO List를 입력해 주세요"
+            />
+          </TodoForm>
+        )}
+      </DoList>
     </>
   );
 };
@@ -84,45 +179,56 @@ const TodoList = () => {
 const DoList = styled.div`
   width: 100%;
   height: 100%;
+  min-height: 17vh;
+  max-height: 70vh;
   padding: 10px;
-  background-color: wheat;
   display: flex;
   flex-direction: column;
-  border: 2px solid rgb(192, 192, 192);
-  background-color: #e7e7e7;
-  overflow-y: scroll;
-  box-sizing: border-box;
+  justify-content: ${(props) => (props.empty ? "center" : "flex-start")};
+  background-color: white;
+  overflow-y: auto;
+`;
+
+const ChatItem = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .list_icons {
+    display: none;
+  }
+  &:hover .list_icons {
+    display: flex;
+  }
+  &:hover .input_result {
+    text-overflow: unset;
+  }
+`;
+const CheckLabel = styled.label`
+  display: flex;
+  width: 100%;
+  .input_result {
+    width: inherit;
+    text-decoration: ${(props) => (props.boxCheck ? "line-through" : "none")};
+    background-color: transparent;
+    text-overflow: ellipsis;
+
+    font-size: 1rem;
+    border: none;
+    outline: none;
+  }
 `;
 
 const TodoForm = styled.form`
   display: flex;
   width: 100%;
-  box-sizing: border-box;
-  div {
-    display: flex;
+
+  input:last-child {
     width: inherit;
-    height: 30px;
-    margin: 10px;
-    gap: 10px;
-  }
-  input {
-    box-sizing: border-box;
-    width: inherit;
-    border-radius: 5px;
+    background-color: transparent;
+    font-size: 1rem;
     border: none;
+    outline: none;
   }
-  button {
-    width: 70px;
-    background-color: black;
-    color: white;
-    font-weight: bold;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-  }
-`;
-const CheckLabel = styled.label`
-  text-decoration: ${(props) => (props.boxCheck ? "line-through" : "none")};
 `;
 
 export default TodoList;

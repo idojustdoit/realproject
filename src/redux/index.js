@@ -1,12 +1,43 @@
 import { createSlice, configureStore } from "@reduxjs/toolkit";
-import { list } from "firebase/storage";
 
-const todoListSlice = createSlice({
+const initialTodoListState = [
+  {
+    id: 1,
+    list: "공부시간 4시간 채우기",
+    checked: false,
+  },
+  {
+    id: 2,
+    list: "'웹디자인기능가 필기 절대족보' 53P ~ 80P",
+    checked: false,
+  },
+  {
+    id: 3,
+    list: "13:00 ~ 14:00 방해금지 시간",
+    checked: true,
+  },
+  {
+    id: 4,
+    list: "--------------------------율찬--------------------------",
+    checked: false,
+  },
+  {
+    id: 5,
+    list: "유튜브 강의 Chapter2",
+    checked: false,
+  },
+  {
+    id: 6,
+    list: "유튜브 강의 Chapter3",
+    checked: false,
+  },
+];
+
+const TodoListSlice = createSlice({
   name: "todoList",
-  initialState: [],
+  initialState: initialTodoListState,
   reducers: {
     addTodoList(state, { payload }) {
-      console.log(payload);
       return [
         ...state,
         {
@@ -21,19 +52,19 @@ const todoListSlice = createSlice({
       return deletedState;
     },
     updateTodoChecked(state, { payload }) {
-      const updateState = state.map((list) =>
+      const toggleState = state.map((list) =>
         list.id === payload.id ? { ...list, checked: !payload.checked } : list
       );
-      return updateState;
+      return toggleState;
     },
   },
 });
 
-const store = configureStore({
-  reducer: todoListSlice.reducer,
-});
-
 export const { addTodoList, updateTodoChecked, deleteTodoList } =
-  todoListSlice.actions;
+  TodoListSlice.actions;
+
+const store = configureStore({
+  reducer: TodoListSlice.reducer,
+});
 
 export default store;

@@ -1,49 +1,47 @@
 import React from "react";
 import RealTimeChat from "./chat/RealTimeChat";
 import Todo from "./todo/Todo";
+import "../../../App.css";
+
+import { CSSTransition } from "react-transition-group";
 
 import styled from "styled-components";
 
 const SideView = ({ openBar }) => {
+  const duration = 700;
+
   return (
     <>
-      <SideBar BarState={!openBar}>
-        <Wrapper>
-          {/* components */}
-          <Todo />
-          <RealTimeChat />
-          {/* components */}
-        </Wrapper>
-      </SideBar>
+      <CSSTransition
+        in={openBar}
+        timeout={duration}
+        classNames="sidebar"
+        unmountOnExit
+      >
+        <SideBar>
+          <Wrapper>
+            {/* components */}
+            <Todo />
+            <RealTimeChat />
+            {/* components */}
+          </Wrapper>
+        </SideBar>
+      </CSSTransition>
     </>
   );
 };
 
 const SideBar = styled.div`
-  display: ${(props) => (props.BarState ? "none" : "")};
-  width: 30%;
-  animation: ${(props) => (props.BarState ? "bar-hidden" : "bar-show")} 0.5s;
-
-  @keyframes bar-show {
-    0% {
-      margin-right: -500px;
-    }
-    100% {
-      margin-right: 0;
-    }
-  }
-
-  @keyframes bar-hidden {
-    0% {
-      margin-right: 0;
-    }
-    100% {
-      margin-right: -500px;
-    }
-  }
+  visibility: ${(props) => (props.BarState ? "hidden" : "visible")};
+  display: ${(props) => (props.BarState ? "none" : "flex")};
+  width: 30vw;
+  max-height: 100vh;
 `;
 
 const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
   width: 100%;
   height: 100%;
   background-color: lavender;

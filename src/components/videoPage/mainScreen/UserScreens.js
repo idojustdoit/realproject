@@ -12,8 +12,10 @@ const UserScreens = () => {
 };
 
 const Wrapper = styled.div`
-  width: ${(props) => (props.BarState ? "35% + 30px" : "100%")};
-  height: calc((100vh - 267px) / 2);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
   background-color: pink;
 `;
 

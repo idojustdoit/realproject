@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import Header from "../components/videoPage/mainScreen/Header";
-import TimeBar from "../components/videoPage/mainScreen/TimeBar";
 import UserScreens from "../components/videoPage/mainScreen/UserScreens";
 import SideView from "../components/videoPage/sideBar/SideView";
 
-import { BsChatDots, BsChatDotsFill } from "react-icons/bs";
+import "../App.css";
+
+import { MdArrowForwardIos, MdArrowBackIos } from "react-icons/md";
+import UnderBar from "../components/videoPage/mainScreen/UnderBar";
 
 const Video = () => {
   const [openBar, setOpenBar] = useState(true);
@@ -20,55 +22,60 @@ const Video = () => {
   return (
     <>
       <ScreenWrapper>
-        <ScreenView>
-          {/* Main Screen */}
-          <Header />
-          <TimeBar />
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
+        {/* Main Screen */}
+        <div
+          style={{
+            position: "relative",
+            display: "flex",
+            width: "100%",
+            flexDirection: "column",
+            justifyContent: "flex-start",
+            alignItems: "center",
+          }}
+        >
+          <Header openBar={openBar} />
+
+          <div style={{ display: "flex", alignItems: "center" }}>
             <Screen BarState={!openBar}>
               {/* User Screen */}
+              <UserScreens BarState={!openBar} />
               <UserScreens BarState={!openBar} />
               <UserScreens BarState={!openBar} />
               <UserScreens BarState={!openBar} />
 
               {/* User Screen */}
             </Screen>
-          </div>
-          {/* Main Screen 하단 기능 아이콘 */}
-          <PlusBar>
-            <SideBtn onClick={sideBarHandler}>
+
+            <Btn onClick={sideBarHandler}>
               {openBar ? (
-                <div style={{position:'relative'}}>
-                <BsChatDots/>
-                <Alert/>
+                <div>
+                  <MdArrowForwardIos />
                 </div>
-                
               ) : (
-                <div style={{position:'relative'}}>
-                <BsChatDotsFill/>
-                <Alert/>
+                <div>
+                  <MdArrowBackIos />
                 </div>
               )}
-              
-              
-            </SideBtn>
-          </PlusBar>
+            </Btn>
+          </div>
+
           {/* Main Screen 하단 기능 아이콘 */}
 
-          {/* Side Bar On/Off Toggle Btn */}
-          <Btn onClick={sideBarHandler}>{openBar ? ">" : "<"}</Btn>
-          {/* Side Bar On/Off Toggle Btn */}
-        </ScreenView>
+          <UnderBar openBar={openBar} sideBarHandler={sideBarHandler} />
+        </div>
+
+        {/* Main Screen 하단 기능 아이콘 */}
+
+        {/* Side Bar On/Off Toggle Btn */}
+
+        {/* Side Bar On/Off Toggle Btn */}
+
         {/* Main Screen */}
 
         {/* sideBar */}
+
         <SideView openBar={openBar} />
+
         {/* sideBar */}
       </ScreenWrapper>
     </>
@@ -82,58 +89,53 @@ const ScreenWrapper = styled.div`
     grid-column: 1 / 3;
   } */
   display: flex;
-  background-color: gray;
-  height: 100vh;
-`;
-
-const ScreenView = styled.div`
-  position: relative;
-  width: 100%;
-  height: 100%;
-`;
-
-const PlusBar = styled.div`
-  position: absolute;
-  display: flex;
-  bottom: 0;
+  background-color: black;
+  height: inherit;
   width: inherit;
-  height: 70px;
-  align-items: center;
-  justify-content: center;
-  background-color: orange;
+  overflow: hidden;
 `;
 
 const Screen = styled.main`
   display: grid;
-  margin: 35px 15px;
+  width: ${(props) => (props.BarState ? "100vw" : "77vw")};
+  padding: 40px;
   gap: 15px;
   grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: ${(props) =>
+    props.BarState ? "22vw 22vw" : "19vw 19vw"};
+  transition: all 0.5s;
 `;
 
-const SideBtn = styled.div`
-  font-size: 30px;
-  color: white;
-  cursor: pointer;
-`;
-
-const Btn = styled.button`
+const Btn = styled.div`
   position: absolute;
-  width: 30px;
-  height: 30px;
-  right: 0;
+  display: flex;
   top: 0;
   bottom: 0;
   margin: auto 0;
-`;
+  align-items: center;
+  right: 0;
+  height: 100px;
+  width: 0;
+  border-right: 25px solid #e9e9e9;
+  border-top: 20px solid black;
+  border-bottom: 20px solid black;
+  cursor: pointer;
 
-const Alert = styled.div`
-  position: absolute;
-  background-color: tomato;
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  right: -5px;
-  top: -3px;
+  div {
+    padding-left: 5px;
+    font-size: 20px;
+    color: #8b95a1;
+  }
 `;
+// const Btn = styled.div`
+//   position: absolute;
+//   right: 0;
+//   height: 70px;
+//   width: 60px;
+//   background-color: #e9e9e9;
+//   transform: perspective(100px) rotateY(-69deg);
+//   border-top-left-radius: 10px;
+//   border-bottom-left-radius: 10px;
+// `;
 
 export default Video;

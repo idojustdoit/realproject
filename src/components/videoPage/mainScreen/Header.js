@@ -2,13 +2,27 @@ import React from "react";
 import styled from "styled-components";
 import { BasicBtn } from "../../../elements/Button";
 
-const Header = () => {
+import "../../../App.css";
+
+import { CSSTransition } from "react-transition-group";
+
+const Header = ({openBar}) => {
+
+  const duration = 700;
   return (
+    <CSSTransition
+        in={openBar}
+        timeout={duration}
+        classNames="header"
+        unmountOnExit
+      >
+
     <Head>
       <Logo>SGETHER</Logo>
       <h2>Study Title</h2>
       <BasicBtn />
     </Head>
+      </CSSTransition>
   );
 };
 
@@ -16,10 +30,11 @@ export default Header;
 
 const Head = styled.div`
   display: flex;
-  height: 50px;
+  width: 100%;
   justify-content: space-between;
   align-items: center;
   background-color: white;
+  z-index: 99;
 `;
 
 const Logo = styled.span`

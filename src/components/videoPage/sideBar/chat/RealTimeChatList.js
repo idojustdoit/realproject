@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
+
+import { TiDelete } from "react-icons/ti";
 import styled from "styled-components";
+import HorizonLine from "../../../../elements/HorizonLine";
 
 const RealTimeChatList = ({ socket, nick, room }) => {
   const [currentMessage, setCurrentMessage] = useState("");
@@ -11,6 +14,22 @@ const RealTimeChatList = ({ socket, nick, room }) => {
     setCurrentMessage(event.target.value);
   };
 
+  const now_year = new Date(Date.now()).getFullYear();
+  const now_month = String(new Date(Date.now()).getMonth() + 1).padStart(
+    2,
+    "0"
+  );
+  const now_date = String(new Date(Date.now()).getDate()).padStart(2, "0");
+
+  const now_hours = String(new Date(Date.now()).getHours()).padStart(2, "0");
+  const now_minutes = String(new Date(Date.now()).getMinutes()).padStart(
+    2,
+    "0"
+  );
+
+  const fullDate = `${now_year}.${now_month}.${now_date}`;
+  const fullTime = `${now_hours}:${now_minutes}`;
+
   const sendMessage = (e) => {
     e.preventDefault();
     if (currentMessage !== "") {
@@ -18,11 +37,8 @@ const RealTimeChatList = ({ socket, nick, room }) => {
         room: room,
         author: nick,
         message: currentMessage,
-        time:
-          //시, 분 2자리로 표시 - padStart 사용
-          String(new Date(Date.now()).getHours()).padStart(2, "0") +
-          ":" +
-          String(new Date(Date.now()).getMinutes()).padStart(2, "0"),
+        time: fullTime,
+        date: fullDate,
       };
 
       socket.emit("send_message", messageData);
@@ -48,7 +64,13 @@ const RealTimeChatList = ({ socket, nick, room }) => {
 
   return (
     <>
-      <ChatList>
+      <ChatList className="panel sidebar" empty={messageList.length === 0}>
+        {messageList.length === 0 ? (
+          <div style={{ textAlign: "center", color: "#808080" }}>
+            아직 나눈 대화가 없습니다.
+          </div>
+        ) : null}
+
         {messageList.map((messageContent, idx) => {
           return (
             <div key={idx} className="message">
@@ -57,10 +79,18 @@ const RealTimeChatList = ({ socket, nick, room }) => {
                   {/* 같은 유저가 보낼때 메세지, 시간만 전송(my chat) */}
                   {idx >= 0 &&
                   messageList[idx]?.author !== messageList[idx + 1]?.author ? (
-                    <div className="msg_items">
-                      <div className="user_img"></div>
-                      <div className="nickname">{messageContent.author}</div>
-                    </div>
+                    <>
+                      {idx >= 0 &&
+                        messageList[idx]?.date !==
+                          messageList[idx + 1]?.date && (
+                          <HorizonLine text={messageContent.date} />
+                        )}
+
+                      <div className="msg_items">
+                        <div className="user_img"></div>
+                        <div className="nickname">{messageContent.author}</div>
+                      </div>
+                    </>
                   ) : null}
                   {/* 같은 유저가 보낼때 메세지, 시간만 전송(my chat) */}
 
@@ -104,13 +134,31 @@ const RealTimeChatList = ({ socket, nick, room }) => {
       </ChatList>
 
       <MessageForm onSubmit={sendMessage}>
-        <div>
-          <input
-            onChange={inputChange}
-            value={currentMessage}
-            type="text"
-            placeholder="메세지를 입력해 주세요."
-          />
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <div style={{ position: "relative" }}>
+            <input
+              onChange={inputChange}
+              value={currentMessage}
+              type="text"
+              placeholder="메세지를 입력해 주세요."
+            />
+            <TiDelete
+              onClick={() => {
+                setCurrentMessage("");
+              }}
+              style={{
+                position: "absolute",
+                right: "5",
+                top: "0",
+                bottom: "0",
+                margin: "auto 0",
+                fontSize: "1.3rem",
+                color: "#8B8C8C",
+                background: "white",
+                cursor: "pointer",
+              }}
+            />
+          </div>
           <button>전송</button>
         </div>
       </MessageForm>
@@ -120,13 +168,14 @@ const RealTimeChatList = ({ socket, nick, room }) => {
 
 const ChatList = styled.div`
   width: 100%;
-  height: 100%;
+  justify-content: ${(props) => (props.empty ? "center" : "")};
   padding: 10px;
+  height: 100%;
   background-color: wheat;
   display: flex;
   flex-direction: column-reverse;
-  border: 2px solid rgb(192, 192, 192);
-  background-color: #e7e7e7;
+  border-bottom: 1px solid #e9e9e9;
+  background-color: white;
   overflow-y: auto;
   box-sizing: border-box;
   .enter_and_exit {
@@ -137,22 +186,25 @@ const ChatList = styled.div`
 const MessageForm = styled.form`
   display: flex;
   width: 100%;
-  box-sizing: border-box;
+  align-items: center;
+  padding: 10px;
+  background-color: white;
   div {
     display: flex;
     width: inherit;
     height: 30px;
-    margin: 10px;
     gap: 10px;
   }
   input {
     box-sizing: border-box;
     width: inherit;
+    height: 100%;
     border-radius: 5px;
-    border: none;
+    border: 1px solid #dddddd;
   }
   button {
     width: 70px;
+    height: 100%;
     background-color: black;
     color: white;
     font-weight: bold;

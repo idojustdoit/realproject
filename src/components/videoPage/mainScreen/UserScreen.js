@@ -107,17 +107,20 @@ const UserScreen = () => {
   };
   return (
     <>
-      <video
-        ref={video_ref}
-        id="myFace"
-        autoPlay
-        playsInline
-        style={{
-          width: "100%",
-          height: "85%",
-          backgroundColor: "wheat",
-        }}
-      ></video>
+      <div style={{width:'100%', height:'85%'}}>
+        <video
+          ref={video_ref}
+          id="myFace"
+          autoPlay
+          playsInline
+          style={{
+            width: "100%",
+            height: "100%",
+
+            backgroundColor: "white",
+          }}
+        ></video>
+      </div>
 
       {/* 장치 선택 */}
       {/* <div className="devices">
@@ -143,12 +146,12 @@ const UserScreen = () => {
           </select>
         </div> */}
 
-      <UnderBar style={{ width: "100%", backgroundColor: "tomato" }}>
+      <UnderBar style={{ width: "100%", height:'15%',backgroundColor: "#808080" }}>
         <div>
           <div className="user_img"></div>
           <span className="user_name">Name</span>
         </div>
-        <p>00:00:00</p>
+        <span>00:00:00</span>
         <DeviceSelctor className="video_control_btn">
           <div className="audio" onClick={muteClick}>
             {!mute ? <BsFillMicMuteFill /> : <AiFillAudio />}
@@ -164,11 +167,12 @@ const UserScreen = () => {
 };
 
 const UnderBar = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  justify-content: space-between;
   place-items: center;
   color: lightgray;
   font-weight: bold;
+  padding:10px;
   div {
     display: flex;
     align-items: center;
