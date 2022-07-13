@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
@@ -39,39 +39,48 @@ const Login = ({ onClose }) => {
   //사용하는 변수명 정리
   const navigate = useNavigate();
   const outZone_ref = React.useRef(); //모달창 닫을때
-  const [studyName, setstudyName] = React.useState(""); // 스터디 방이름
-  const [study, setStudy] = React.useState(""); // 스터디 내용
-  const [pwd, setpwd] = React.useState(""); // 비공개방 비밀번호
+  const [title, setTitle] = React.useState(""); // 스터디 방이름
+  const [content, setContent] = React.useState(""); // 스터디 내용
+  const [password, setPassword] = React.useState(""); // 비공개방 비밀번호
   const [close, setClose] = React.useState(false); //비공개방 비밀번호 창띄우기
   const [loading, setLoading] = React.useState(true); //라디오 박스 체크 관련
   const [dateRange, setDateRange] = React.useState([null, null]); //날짜
   const [startDate, endDate] = dateRange;
 
   const handlerName = (e) => {
-    setstudyName(e.target.value);
+    setTitle(e.target.value);
   };
 
-  const handlerStudy = (e) => {
-    setStudy(e.target.value);
+  const handlercontent = (e) => {
+    setContent(e.target.value);
   };
 
   const priPassword = (e) => {
-    setpwd(e.target.value);
+    setPassword(e.target.value);
   };
 
   // 서버에 방 정보 보내는 통신
   const CreateAxios = () => {
+    const token = sessionStorage.getItem("accessToken");
+    axios.defaults.withCredentials = true;
+    const userId = sessionStorage.getItem("userId");
     axios({
-      method: "POST",
-      url: "url",
+      method: "post",
+      url: `/api/room/create/${userId}`,
       data: {
-        title: studyName,
-        study: study,
-        password: pwd,
-        Date: dateRange,
-        tagName: ["전체", categoryName],
+        title: title,
+        password: password,
+        content: content,
+        date: dateRange.join(),
+        tagName: ["전체", categoryName.join()],
       },
-      baseURL: "http://13.124.252.225",
+
+      baseURL: "http://3.35.26.55",
+      headers: {
+        ContentType: "application/json",
+        withCredentials: true,
+        Authorization: `${token}`,
+      },
     })
       .then((response) => {
         console.log(response);
@@ -107,6 +116,13 @@ const Login = ({ onClose }) => {
     } = event;
     setcategoryName(typeof value === "string" ? value.split(",") : value);
   };
+
+  console.log(title);
+  console.log(password);
+  console.log(content);
+  console.log(dateRange);
+  console.log(categoryName);
+
   return (
     <Container>
       <Background
@@ -178,7 +194,7 @@ const Login = ({ onClose }) => {
                 type="text"
                 placeholder="스터디 내용을 입력해주세요."
                 style={{}}
-                onChange={handlerStudy}
+                onChange={handlercontent}
               />
             </div>
           </Label>
@@ -447,7 +463,7 @@ display: inline-block
   margin-bottom: 12px;
   width: 150px;
   color: #fff;
-  background-color: black;
+  background-color: #1D9FFD;
   border: none;
   font-size: 18px;
   font-weight: 900;

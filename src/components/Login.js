@@ -41,6 +41,7 @@ const Login = ({ onClose, SignOpen }) => {
         axios.defaults.withCredentials = true;
         sessionStorage.setItem("accessToken", response.data.accessToken);
         sessionStorage.setItem("refreshToken", response.data.refreshToken);
+        sessionStorage.setItem("userId", response.data.userId);
         onClose();
         // LoginCondition();
         window.location.reload();
@@ -268,7 +269,7 @@ const Button = styled.button`
   margin-top: 42px;
   margin-bottom: 8px;
   color: #fff;
-  background-color: ${(props) => (props.disabled ? "gray" : "black;")};
+  background-color: ${(props) => (props.disabled ? "gray" : "#1D9FFD")};
   border: none;
   font-size: 18px;
   font-weight: 900;

@@ -2,13 +2,15 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
+import Header from "../components/mainpage/Header";
+import Footer from "../components/mainpage/Footer";
 
 function Modify() {
   const navigate = useNavigate();
 
-  const imgUrl_ref = React.useRef(null); //이미지url
+  const imgUrl_ref = React.useRef(null);     //이미지url
   const [imgUrl, setimgUrl] = React.useState(
-    //이미지url
+        //이미지url
     "https://opgg-com-image.akamaized.net/attach/images/20220220075306.1538486.jpg"
   );
   // const [email, setemail] = React.useState(""); //이메일 인풋
@@ -45,14 +47,14 @@ function Modify() {
   };
 
   // 페이지가 나오자마자 회원정보 불러오기 및 삭제
-  useEffect(() => {
-    originData();
-  }, []);
+  // useEffect(() => {
+  //   originData();
+  // }, []);
 
   //수정할 회원정보 등록
   const signupdata = () => {
     axios({
-      method: "PuT",
+      method: "PUT",
       url: "/api/mypage/update/",
       data: {
         nickname: nickname,
@@ -88,117 +90,122 @@ function Modify() {
   };
 
   return (
-    <Background>
-      <ModalBlock>
-        <Title>개인정보 수정</Title>
-        <Line />
-        <Label>
-          <span>
-            <img
-              alt=""
-              style={{
-                cursor: "pointer",
-                width: "80px",
-                height: "80px",
-                borderRadius: "50px",
-                position: "relative",
-              }}
-              src={imgUrl}
-            />
-            <img
-              alt=""
-              style={{
-                cursor: "pointer",
-                width: "28px",
-                borderRadius: "50px",
-                position: "absolute",
-                marginLeft: "-30px",
-                marginTop: "53px",
-              }}
-              src="https://www.shareicon.net/data/2017/05/09/885771_camera_512x512.png"
-            />
-            <Input
-              style={{ display: "none" }}
-              type="file"
-              id="file"
-              onChange={UpImageUrl}
-            />
-            <br />
-          </span>
-        </Label>
-        {/* <Label>
+    <div style={{ width: "1920px", backgroundColor: "lightgray" }}>
+      <Background>
+        <Header />
+        <ModalBlock>
+          <Title>개인정보 수정</Title>
+          <Line />
+          <Label>
+            <span>
+              <img
+                alt=""
+                style={{
+                  cursor: "pointer",
+                  width: "80px",
+                  height: "80px",
+                  borderRadius: "50px",
+                  position: "relative",
+                }}
+                src={imgUrl}
+              />
+              <img
+                alt=""
+                style={{
+                  cursor: "pointer",
+                  width: "28px",
+                  borderRadius: "50px",
+                  position: "absolute",
+                  marginLeft: "-30px",
+                  marginTop: "53px",
+                }}
+                src="https://www.shareicon.net/data/2017/05/09/885771_camera_512x512.png"
+              />
+              <Input
+                style={{ display: "none" }}
+                type="file"
+                id="file"
+                onChange={UpImageUrl}
+              />
+              <br />
+            </span>
+          </Label>
+          {/* <Label>
           <div>
             <Chat1>이메일</Chat1>
 
             <Input type="email" onChange={handlerId} value={email} />
           </div>
         </Label> */}
-        <Label>
-          <div>
-            <Chat1>닉네임</Chat1>
+          <Label>
+            <div>
+              <Chat1>닉네임</Chat1>
 
-            <Input type="text" onChange={handlernickname} value={nickname} />
-          </div>
-        </Label>
-        <Label>
-          <div>
-            <Chat2>비밀번호</Chat2>
-            <Input
-              style={{ fontSize: "15px" }}
-              onChange={handlerPw}
-              value={password}
-            />
-          </div>
-        </Label>
-        <Label>
-          <div>
-            <Chat3></Chat3>
-            <Input
-              type="password"
-              style={{ fontSize: "15px" }}
-              onChange={handlerPwcheck}
-              value={passwordCheck}
-            />
-          </div>
-        </Label>
+              <Input type="text" onChange={handlernickname} value={nickname} />
+            </div>
+          </Label>
+          <Label>
+            <div>
+              <Chat2>비밀번호</Chat2>
+              <Input
+                style={{ fontSize: "15px" }}
+                onChange={handlerPw}
+                value={password}
+              />
+            </div>
+          </Label>
+          <Label>
+            <div>
+              <Chat3></Chat3>
+              <Input
+                type="password"
+                style={{ fontSize: "15px" }}
+                onChange={handlerPwcheck}
+                value={passwordCheck}
+              />
+            </div>
+          </Label>
 
-        <LoginBtn>
-          <Button1 onClick={signupdata}>변경사항 저장</Button1> <br />
-          <Button2
-            onClick={() => {
-              navigate("/");
-            }}
-          >
-            취소
-          </Button2>
-        </LoginBtn>
-      </ModalBlock>
-    </Background>
+          <LoginBtn>
+            <Button1 onClick={signupdata}>변경사항 저장</Button1> <br />
+            <Button2
+              onClick={() => {
+                navigate("/");
+              }}
+            >
+              취소
+            </Button2>
+          </LoginBtn>
+        </ModalBlock>
+      </Background>
+      <Footer />
+    </div>
   );
 }
 
 const Background = styled.div`
   width: 100%;
   height: 100%;
-  background-color: #f5f5f5;
+
+  align-content: center;
+  text-align: center;
 `;
 const ModalBlock = styled.div`
   display: flex;
   flex-direction: column;
   align-content: center;
   text-align: center;
-  position: absolute;
-  top: 6.5rem;
-  width: 458px;
-  height: 710px;
   background-color: white;
   color: black;
+  width: 458px;
+  height: 610px;
+  padding: 10px;
   box-shadow: 1px 1px 1px 1px gray;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  min-height: 35rem;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  transform: translate(150%, 0%);
+  margin-top: 50px;
+  margin-bottom: 50px;
 `;
 
 const Title = styled.div`

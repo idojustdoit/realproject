@@ -283,7 +283,7 @@ const LoginBtn = styled.div``;
 const Button1 = styled.button`
   margin-top: 42px;
   color: #fff;
-  background-color: black;
+  background-color: #1d9ffd;
   border: none;
   font-size: 18px;
   font-weight: 900;
