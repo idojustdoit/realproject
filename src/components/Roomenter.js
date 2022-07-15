@@ -173,6 +173,7 @@ const Login = ({ onClose }) => {
                 <People>
                   {" "}
                   <img
+                    alt=""
                     style={{
                       width: "25px",
                       height: "25px",

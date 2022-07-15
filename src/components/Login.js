@@ -193,6 +193,7 @@ const ModalBlock = styled.div`
       opacity: 1;
       margin-top: 0;
     }
+  }
 `;
 const Title = styled.div`
   display: flex;

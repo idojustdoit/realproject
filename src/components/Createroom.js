@@ -381,6 +381,17 @@ const ModalBlock = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  animation: modal-show 1s;
+  @keyframes modal-show {
+    from {
+      opacity: 0;
+      margin-top: -50px;
+    }
+    to {
+      opacity: 1;
+      margin-top: 0;
+    }
+  }
 `;
 
 const Title = styled.span`
@@ -483,9 +494,8 @@ const BtnG = styled.div`
 `;
 
 const Btn1 = styled.button`
-
-  margin-right:15px;
-  display: inline-block
+  margin-right: 15px;
+  display: inline-block;
   margin-right: 15px;
   margin-bottom: 12px;
   width: 197px;
@@ -516,16 +526,16 @@ const Btn1 = styled.button`
 `;
 
 const Btn2 = styled.button`
-display: inline-block
+  display: inline-block;
   margin-bottom: 12px;
   width: 150px;
   color: #fff;
-  background-color: #1D9FFD;
+  background-color: #1d9ffd;
   border: none;
   font-size: 18px;
   font-weight: 900;
   height: 50px;
-  width:197px;
+  width: 197px;
   padding: 0 16px 3px;
   transition: all 80ms linear;
   user-select: none;
