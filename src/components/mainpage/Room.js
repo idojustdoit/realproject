@@ -24,12 +24,6 @@ const Room = ({
 
   const [isShow, setIsShow] = useState(false);
 
-  //splitedArr를 구조분해 하니까 3번째 인자가 없는 경우 undefined로 뜸 아래와같이 수정하면 정상작동
-  // const [word1, word2] = tagName;
-  // let splitedArr = word2.split(",");
-  // let fullTag = [word1, ...splitedArr];
-  // console.log(fullTag);
-
   return (
     <RoomCont key={roomId}>
       <RoomImg src={imageUrl}></RoomImg>

@@ -1,15 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-// import "./SearchBar.modules.css";
+
 import bgImage from "../../shared/mainpage-assets/search_background.png";
 import { ReactComponent as SearchIcon } from "../../shared/mainpage-assets/search_icon.svg";
 
 function SearchBanner() {
   return (
-    // <form action="#">
-    //   <h1>Search Bar Tutorial</h1>
-    //   <input type="search" placeholder="Seach..." />
-    // </form>
     <SearchCont>
       <SearchTitle>어떤 스터디를 찾고 계신가요?</SearchTitle>
       <SearchBox>
