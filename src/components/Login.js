@@ -2,7 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import axios from "axios";
 import kakao from "../shared/kakao.png";
-import google from "../shared/google.png";
+
+import GoogleButton from "../pages/GoogleButton";
 
 const Login = ({ onClose, SignOpen }) => {
   const outZone_ref = React.useRef(null); // 모달창이외에부분 지정
@@ -41,6 +42,7 @@ const Login = ({ onClose, SignOpen }) => {
         axios.defaults.withCredentials = true;
         sessionStorage.setItem("accessToken", response.data.accessToken);
         sessionStorage.setItem("refreshToken", response.data.refreshToken);
+        sessionStorage.setItem("userId", response.data.userId);
         onClose();
         // LoginCondition();
         window.location.reload();
@@ -50,6 +52,9 @@ const Login = ({ onClose, SignOpen }) => {
         console.log(error);
       });
   };
+
+  const kakaoUrl =
+    "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=b266efe96498090868c78833faf62705&redirect_uri=http://localhost:3000/Kakaologin";
 
   const MoveModal = () => {
     onClose();
@@ -118,7 +123,7 @@ const Login = ({ onClose, SignOpen }) => {
                 marginBottom: "10px",
                 marginTop: "24px",
               }}
-              href="http://3.35.26.55/api/auth/kakao"
+              href={kakaoUrl}
             >
               <img
                 alt=""
@@ -132,24 +137,8 @@ const Login = ({ onClose, SignOpen }) => {
               />
             </a>
             <br />
-            <a
-              style={{
-                width: "360px",
-                height: "50px",
-                marginBottom: "10px",
-              }}
-              href="http://13.124.252.225/api/auth/kakao"
-            >
-              <img
-                alt=""
-                style={{
-                  width: "360px",
-                  height: "50px",
-                  marginBottom: "10px",
-                }}
-                src={google}
-              />
-            </a>
+
+            <GoogleButton />
           </LoginBtn>
         </ModalBlock>
       </Background>
@@ -268,7 +257,7 @@ const Button = styled.button`
   margin-top: 42px;
   margin-bottom: 8px;
   color: #fff;
-  background-color: ${(props) => (props.disabled ? "gray" : "black;")};
+  background-color: ${(props) => (props.disabled ? "gray" : "#1D9FFD")};
   border: none;
   font-size: 18px;
   font-weight: 900;

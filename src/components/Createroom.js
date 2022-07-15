@@ -1,16 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./Datepicker.css";
+import roomimg from "../shared/roomimg.png";
 import { ko } from "date-fns/esm/locale";
+import { storage } from "../shared/firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import ListItemText from "@mui/material/ListItemText";
 import Select from "@mui/material/Select";
 import Checkbox from "@mui/material/Checkbox";
+
+// import "bootstrap/dist/css/bootstrap.min.css";
+// import Select from "react-select";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -35,43 +41,77 @@ const names = [
   { id: 9, name: "자유주제" },
 ];
 
+const techCompanies = [
+  { label: "자격증", value: 1 },
+  { label: "대입", value: 2 },
+  { label: "독서", value: 3 },
+  { label: "자기계발", value: 4 },
+  { label: "취미", value: 5 },
+  { label: "어학", value: 6 },
+  { label: "코딩", value: 7 },
+  { label: "공무원", value: 8 },
+  { label: "자유주제", value: 9 },
+];
+
 const Login = ({ onClose }) => {
   //사용하는 변수명 정리
   const navigate = useNavigate();
   const outZone_ref = React.useRef(); //모달창 닫을때
-  const [studyName, setstudyName] = React.useState(""); // 스터디 방이름
-  const [study, setStudy] = React.useState(""); // 스터디 내용
-  const [pwd, setpwd] = React.useState(""); // 비공개방 비밀번호
+  const profile_ref = React.useRef(null);
+  const [title, setTitle] = React.useState(""); // 스터디 방이름
+  const [content, setContent] = React.useState(""); // 스터디 내용
+  const [password, setPassword] = React.useState(""); // 비공개방 비밀번호
   const [close, setClose] = React.useState(false); //비공개방 비밀번호 창띄우기
   const [loading, setLoading] = React.useState(true); //라디오 박스 체크 관련
-  const [dateRange, setDateRange] = React.useState([null, null]); //날짜
+  const [dateRange, setDateRange] = React.useState("", ""); //날짜
   const [startDate, endDate] = dateRange;
-
+  const [imgUrl, setImgUrl] = React.useState(
+    "https://media.istockphoto.com/vectors/photo-album-icon-vector-id1023892724?k=20&m=1023892724&s=170667a&w=0&h=zXZB3iWNnwhrDA055eJgxh4Sq814_ZNRSVAJT7lBgLY="
+  );
   const handlerName = (e) => {
-    setstudyName(e.target.value);
+    setTitle(e.target.value);
   };
 
-  const handlerStudy = (e) => {
-    setStudy(e.target.value);
+  const handlercontent = (e) => {
+    setContent(e.target.value);
   };
 
   const priPassword = (e) => {
-    setpwd(e.target.value);
+    setPassword(e.target.value);
+  };
+
+  const UpImageUrl = async (e) => {
+    const upload_file = await uploadBytes(
+      ref(storage, `images/${e.target.files[0].name}`),
+      e.target.files[0]
+    );
+
+    const file_url = await getDownloadURL(upload_file.ref);
+    profile_ref.current = { url: file_url };
+    setImgUrl(profile_ref.current.url);
   };
 
   // 서버에 방 정보 보내는 통신
   const CreateAxios = () => {
+    const token = sessionStorage.getItem("accessToken");
+    const userId = sessionStorage.getItem("userId");
     axios({
       method: "POST",
-      url: "url",
+      url: `/api/room/create/${userId}`,
       data: {
-        title: studyName,
-        study: study,
-        password: pwd,
-        Date: dateRange,
-        tagName: ["전체", categoryName],
+        title: title,
+        imgUrl: imgUrl,
+        password: password,
+        content: content,
+        date: dateRange,
+        tagName: ["전체", ...categoryName],
       },
-      baseURL: "http://13.124.252.225",
+
+      baseURL: "http://3.35.26.55",
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     })
       .then((response) => {
         console.log(response);
@@ -107,6 +147,13 @@ const Login = ({ onClose }) => {
     } = event;
     setcategoryName(typeof value === "string" ? value.split(",") : value);
   };
+
+  // // console.log(title);
+  // console.log(password);
+  // console.log(content);
+  // console.log(dateRange);
+  // console.log(categoryName);
+
   return (
     <Container>
       <Background
@@ -118,6 +165,22 @@ const Login = ({ onClose }) => {
         }}
       >
         <ModalBlock>
+          {/* <div className="container">
+            <div
+              className="row"
+              style={{ display: "flex", justifyContent: "center" }}
+            >
+              <div className="col-md-4"></div>
+              <div className="col-md-4">
+                <Select
+                  options={techCompanies}
+                  selectOption={handleChange}
+                  isMulti
+                />
+              </div>
+              <div className="col-md-4"></div>
+            </div>
+          </div> */}
           <Title> 스터디 생성</Title>
           <Line />
           <Label>
@@ -171,6 +234,33 @@ const Login = ({ onClose }) => {
           ) : (
             ""
           )}
+
+          <Label>
+            <div style={{ marginLeft: "60px" }}>
+              <span>
+                <img
+                  alt=""
+                  style={{
+                    cursor: "pointer",
+                    width: "160px",
+                    height: "100px",
+                    position: "relative",
+                    marginTop: "10px",
+                    marginBottom: "10px",
+                  }}
+                  src={imgUrl}
+                />
+                <br />
+                <input
+                  style={{}}
+                  type="file"
+                  id="files"
+                  onChange={UpImageUrl}
+                />
+                <br />
+              </span>
+            </div>
+          </Label>
           <Label>
             <div>
               <Chat1>스터디 내용</Chat1>
@@ -178,10 +268,11 @@ const Login = ({ onClose }) => {
                 type="text"
                 placeholder="스터디 내용을 입력해주세요."
                 style={{}}
-                onChange={handlerStudy}
+                onChange={handlercontent}
               />
             </div>
           </Label>
+
           <Label>
             <div
               style={{ display: "flex", justifyContent: "center", gap: "32px" }}
@@ -190,14 +281,14 @@ const Login = ({ onClose }) => {
               <DatePicker
                 selectsRange={true}
                 locale={ko} // 한글로 변경
-                dateFormat="yyyy.MM.dd (eee)" // 시간 포맷 변경
+                dateFormat="yyyy년MM월dd일(eee)" // 시간 포맷 변경
                 startDate={new Date()}
                 endDate={endDate}
                 minDate={new Date()}
                 popperPlacement="auto"
                 customInput={<Input />}
-                onChange={(update) => {
-                  setDateRange(update);
+                onChange={(date) => {
+                  setDateRange(date);
                 }}
                 withPortal
               />
@@ -284,30 +375,12 @@ const ModalBlock = styled.div`
   background-color: white;
   color: black;
   width: 508px;
-  height: 492px;
+  height: 600px;
   box-shadow: 1px 1px 1px 1px gray;
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  @media (max-width: 1120px) {
-    width: 50rem;
-  }
-  @media (max-width: 50rem) {
-    width: 80%;
-  }
-  min-height: 35rem;
-  animation: modal-show 0.5s;
-  @keyframes modal-show {
-    from {
-      opacity: 0;
-      margin-top: -50px;
-    }
-    to {
-      opacity: 1;
-      margin-top: 0;
-    }
-  }
 `;
 
 const Title = styled.span`
@@ -325,7 +398,7 @@ const Line = styled.hr`
   width: 410px;
   height: 2px;
   margin-top: 12px;
-  margin-bottom: 32px;
+  margin-bottom: 15px;
 `;
 const Label1 = styled.label`
   float: left;
@@ -447,7 +520,7 @@ display: inline-block
   margin-bottom: 12px;
   width: 150px;
   color: #fff;
-  background-color: black;
+  background-color: #1D9FFD;
   border: none;
   font-size: 18px;
   font-weight: 900;

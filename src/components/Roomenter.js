@@ -5,16 +5,16 @@ import axios from "axios";
 
 const Login = ({ onClose }) => {
   const outZone_ref = React.useRef(null);
-
+  const [title, settitle] = React.useState("");
   const [todolist, setTodolist] = React.useState([]);
   const [personinfo, setPersoninfo] = React.useState([]);
 
-  // todo 리스트 불러오기
+  // 방에서 만든 스터디명,  TodoList, 방에 소속된 유저의 프로필 URL, nickname , 선택한  방에 roomId
   // const TodoListAxios = () => {
   //axios.defaults.withCredentials = true;
   //   axios({
   //     method: "get",
-  //     url: "/user/auth",
+  //     url: "/",
   //     baseURL: "http://13.124.252.225",
   // headers: {
   //   authorization: localStorage.getItem("access_token"),
@@ -22,20 +22,28 @@ const Login = ({ onClose }) => {
   //   })
   //     .then(function (response) {
   //       console.log(response);
+  //         settitle(response.data);
   //        setTodolist (response.data);
+
+  //        setpersoninfo(response.data); map함수 한번에?
+  //        {setprofileURL(response.data);map함수 사용..  각각? 뭐가맞죠?
+  //        setNicknames(response.data)map함수 사용..}
+  //
   //     })
   //     .catch(function (error) {
   //       alert(error.response.data.message);
   //       console.log(error);
   //     });
   // };
-
   // 참여 멤버의  url과 닉네임불러오기
-  // const MemberlistAxios = () => {
+  // const RoomEnterAxios = () => {
   //axios.defaults.withCredentials = true;
   //   axios({
-  //     method: "get",
-  //     url: "/user/auth",
+  //     method: "post",
+  //     url: "url/roomId",
+  //     data: {
+  //             password: ""
+  //              },
   //     baseURL: "http://13.124.252.225",
   // headers: {
   //   authorization: localStorage.getItem("access_token"),
@@ -44,8 +52,6 @@ const Login = ({ onClose }) => {
 
   //     .then(function (response) {
   //
-  //
-  //      setPersoninfo(response.data)
   //     })
   //     .catch(function (error) {
   //       alert(error.response.data.message);
@@ -64,6 +70,7 @@ const Login = ({ onClose }) => {
         }}
       >
         <ModalBlock>
+          {/* <Title>Title</Title> */}
           <Title> 자격증 공부</Title>
           <Line />
           <Label>
@@ -121,6 +128,7 @@ const Login = ({ onClose }) => {
               <div>
                 <People>
                   <img
+                    alt=""
                     style={{
                       width: "25px",
                       height: "25px",
@@ -135,6 +143,7 @@ const Login = ({ onClose }) => {
                 <People>
                   {" "}
                   <img
+                    alt=""
                     style={{
                       width: "25px",
                       height: "25px",
@@ -149,6 +158,7 @@ const Login = ({ onClose }) => {
                 <People>
                   {" "}
                   <img
+                    alt=""
                     style={{
                       width: "25px",
                       height: "25px",
@@ -189,6 +199,7 @@ const Login = ({ onClose }) => {
               onClick={() => {
                 onClose();
                 //방입장하는 navigate(방상세)
+                //
               }}
             >
               입장하기
