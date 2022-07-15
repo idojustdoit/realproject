@@ -16,6 +16,18 @@ const SignUp = ({ onClose, LoginOpen }) => {
   const [passwordCheck, setpasswordCheck] = React.useState(""); //비밀번호 확인 인풋
   const [nickname, setNickName] = React.useState(""); //닉네임인풋
 
+  // 유효성 검사 email, password,  닉네임 중복검사
+  const [userIdError, setUserIdError] = React.useState(false); // email 중복검사.
+
+  const onChangeUserId = (e) => {
+    const userIdRegex =
+      /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
+    if (!e.target.value || userIdRegex.test(e.target.value))
+      setUserIdError(false);
+    else setUserIdError(true);
+    setemail(e.target.value);
+  };
+
   //firebase 사용해서 url 추출
   const UpImageUrl = async (e) => {
     const upload_file = await uploadBytes(
@@ -53,10 +65,6 @@ const SignUp = ({ onClose, LoginOpen }) => {
         console.log(error);
         alert(error.response.data.message);
       });
-  };
-
-  const handlerId = (e) => {
-    setemail(e.target.value);
   };
 
   const handlerPw = (e) => {
@@ -125,8 +133,16 @@ const SignUp = ({ onClose, LoginOpen }) => {
               <Input
                 type="email"
                 placeholder="abc@example.com"
-                onChange={handlerId}
+                onChange={onChangeUserId}
               />
+              {userIdError && (
+                <div
+                  class="invalid-input"
+                  style={{ color: "red", fontSize: "14px", marginTop: "3px" }}
+                >
+                  이메일 형식에 맞춰 작성해주세요.
+                </div>
+              )}
             </div>
           </Label>
 
@@ -150,6 +166,14 @@ const SignUp = ({ onClose, LoginOpen }) => {
                 placeholder="비밀번호 확인"
                 onChange={handlerPwcheck}
               />
+              {password !== passwordCheck && (
+                <div
+                  style={{ color: "red", fontSize: "14px", marginTop: "3px" }}
+                >
+                  {" "}
+                  비밀번호가 같은지 확인해주세요{" "}
+                </div>
+              )}
             </div>
           </Label>
           <Label>

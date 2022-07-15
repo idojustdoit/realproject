@@ -28,6 +28,7 @@ function Header() {
     // dispatch(authActions.logout());
     sessionStorage.removeItem("accessToken");
     sessionStorage.removeItem("refreshToken");
+    sessionStorage.removeItem("userId");
     window.location.reload();
   };
 

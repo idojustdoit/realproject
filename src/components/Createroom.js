@@ -11,6 +11,7 @@ import FormControl from "@mui/material/FormControl";
 import ListItemText from "@mui/material/ListItemText";
 import Select from "@mui/material/Select";
 import Checkbox from "@mui/material/Checkbox";
+import moment from "moment";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -44,7 +45,7 @@ const Login = ({ onClose }) => {
   const [password, setPassword] = React.useState(""); // 비공개방 비밀번호
   const [close, setClose] = React.useState(false); //비공개방 비밀번호 창띄우기
   const [loading, setLoading] = React.useState(true); //라디오 박스 체크 관련
-  const [dateRange, setDateRange] = React.useState([null, null]); //날짜
+  const [dateRange, setDateRange] = React.useState([], []); //날짜
   const [startDate, endDate] = dateRange;
 
   const handlerName = (e) => {
@@ -62,24 +63,22 @@ const Login = ({ onClose }) => {
   // 서버에 방 정보 보내는 통신
   const CreateAxios = () => {
     const token = sessionStorage.getItem("accessToken");
-    axios.defaults.withCredentials = true;
     const userId = sessionStorage.getItem("userId");
     axios({
-      method: "post",
+      method: "POST",
       url: `/api/room/create/${userId}`,
       data: {
         title: title,
         password: password,
         content: content,
-        date: dateRange.join(),
+        date: dateRange,
         tagName: ["전체", categoryName.join()],
       },
 
       baseURL: "http://3.35.26.55",
       headers: {
-        ContentType: "application/json",
-        withCredentials: true,
-        Authorization: `${token}`,
+        "content-type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((response) => {
@@ -117,11 +116,11 @@ const Login = ({ onClose }) => {
     setcategoryName(typeof value === "string" ? value.split(",") : value);
   };
 
-  console.log(title);
-  console.log(password);
-  console.log(content);
-  console.log(dateRange);
-  console.log(categoryName);
+  // console.log(title);
+  // console.log(password);
+  // console.log(content);
+  // console.log(dateRange);
+  // console.log(categoryName);
 
   return (
     <Container>
@@ -206,7 +205,7 @@ const Login = ({ onClose }) => {
               <DatePicker
                 selectsRange={true}
                 locale={ko} // 한글로 변경
-                dateFormat="yyyy.MM.dd (eee)" // 시간 포맷 변경
+                dateFormat="yyyy.MM.dd" // 시간 포맷 변경
                 startDate={new Date()}
                 endDate={endDate}
                 minDate={new Date()}
