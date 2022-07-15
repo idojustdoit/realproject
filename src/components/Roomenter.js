@@ -252,6 +252,7 @@ const ModalBlock = styled.div`
       opacity: 1;
       margin-top: 0;
     }
+  }
 `;
 const Title = styled.div`
   font-size: 25px;
@@ -322,16 +323,16 @@ const LinkContainer = styled.div`
 `;
 
 const Btn1 = styled.button`
-border: 1px solid black;
-  margin-right:15px;
-  display: inline-block
+  border: 1px solid black;
+  margin-right: 15px;
+  display: inline-block;
   margin-right: 10px;
   margin-bottom: 12px;
   width: 197px;
   height: 50px;
   color: black;
   background-color: white;
-  
+
   font-size: 18px;
   font-weight: 900;
   min-width: 96px;
@@ -355,7 +356,7 @@ border: 1px solid black;
 `;
 
 const Btn2 = styled.button`
-display: inline-block
+  display: inline-block;
   margin-bottom: 12px;
   width: 197px;
   height: 50px;

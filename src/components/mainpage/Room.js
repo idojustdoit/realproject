@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 import styled from "styled-components";
 import { FaUser } from "react-icons/fa";
 import Portal from "../Portal";
@@ -10,17 +10,17 @@ const Room = ({
   title,
   content,
   date,
-  tagId,
+  tagName,
   groupNum,
   isLiked,
 }) => {
   const [likeState, setLikeState] = useState(isLiked);
-  console.log("isLike?" + isLiked, "roomId?" + roomId);
 
   const token = sessionStorage.getItem("accessToken");
 
   function toggleLike() {
-    setLikeState(!likeState);
+    // setLikeState(!likeState) 하면 안됨 이전 상태를 기반으로 상태를 반전시켜주기
+    setLikeState((prevlikeState) => !prevlikeState);
   }
   // function enterRoomHandler() {
   // }
@@ -48,11 +48,9 @@ const Room = ({
           <TitleBox className="roomTitle-box">
             <RoomTitle>{title}</RoomTitle>
             <UserCountBox className="userCount-box">
-              <i>
-                <FaUser />
-                &nbsp;
-              </i>
-              {groupNum}/4
+              <FaUser />
+              &nbsp;
+              <span>{groupNum}/4</span>
             </UserCountBox>
           </TitleBox>
           <ContentBox>{content}</ContentBox>
@@ -61,7 +59,7 @@ const Room = ({
 
         {/* 태그 돌릴때도 고유값 전달 */}
         <TagBox>
-          {tagId.map((tag, index) => {
+          {tagName.map((tag, index) => {
             return <Tag key={index}>#{tag}</Tag>;
           })}
         </TagBox>
@@ -91,13 +89,14 @@ export default Room;
 
 const RoomCont = styled.div`
   background-color: #fff;
-  /* width: 424px; */
   height: 500px;
   display: flex;
   flex-direction: column;
-  /* margin: 16px 8px; */
   -webkit-margin-collapse: collapse;
-  /* flex-wrap: wrap; */
+  overflow: hidden;
+  border-radius: 10px;
+  -webkit-box-shadow: 1px 8px 12px -7px #8f8f8f;
+  box-shadow: 1px 8px 12px -7px #8f8f8f;
 `;
 const RoomImg = styled.img`
   width: 100%;
@@ -106,19 +105,17 @@ const RoomImg = styled.img`
 `;
 const RoomCotentBox = styled.div`
   height: 50%;
-  padding: 15px;
+  padding: 20px 16px 16px 16px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 1rem;
 `;
 
 const TopContent = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: 0.5rem;
   font-weight: 600;
-  padding-top: 5px;
 `;
 const TitleBox = styled.div`
   display: flex;
@@ -129,18 +126,18 @@ const RoomTitle = styled.h3`
   font-size: 20px;
   margin-right: 10px;
   font-weight: 700;
+  line-height: 24px;
 `;
 const UserCountBox = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
-  background-color: #7e7e7e;
+  justify-content: space-between;
+  background-color: #ff4d00;
   border-radius: 20px;
   font-size: 12px;
   color: white;
   padding: 5px 8px;
   font-weight: 700;
-  align-items: stretch;
 `;
 
 const ContentBox = styled.p`
@@ -154,24 +151,29 @@ const ContentBox = styled.p`
 `;
 
 const DueDate = styled.span`
-  color: #95afc0;
+  font-weight: 400;
+  color: #000;
+  opacity: 0.5;
   font-size: 12px;
+  line-height: 14px;
 `;
 const TagBox = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.7rem;
+  gap: 5px;
   font-size: 16px;
 `;
 const Tag = styled.span`
+  font-size: 16px;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 15px;
-  border: 1px solid #4b4b4b;
-  color: #4b4b4b;
-  padding: 7px 10px;
-  font-weight: 600;
+  border-radius: 20px;
+  border: 1px solid #000;
+  color: #000;
+  opacity: 0.5;
+  padding: 10px 16px;
+  font-weight: 400;
 `;
 
 const BtnBox = styled.div`
@@ -186,7 +188,7 @@ const WhiteBtn = styled.button`
   height: 60px;
   border-radius: 4px;
   font-size: 20px;
-  font-weight: 500;
+  font-weight: 700;
   background-color: #fff;
 `;
 
