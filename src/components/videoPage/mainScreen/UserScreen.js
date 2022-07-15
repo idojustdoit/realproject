@@ -5,7 +5,7 @@ import { AiFillAudio } from "react-icons/ai";
 import { BsFillMicMuteFill } from "react-icons/bs";
 import { TbVideo, TbVideoOff } from "react-icons/tb";
 
-const UserScreen = () => {
+const UserScreen = ({ socket, nick, room }) => {
   const video_ref = useRef();
   //camera, mute control
   const [videoCtrl, setVideoCtrl] = useState(false);
@@ -48,7 +48,9 @@ const UserScreen = () => {
   //Media 실행(user video, audio)
   useEffect(() => {
     let myStream;
+    let myPeerConnection;
     //user device(camera) 정보 불러오기
+
     const getCameras = async () => {
       try {
         const devices = await navigator.mediaDevices.enumerateDevices();
@@ -71,7 +73,7 @@ const UserScreen = () => {
       const initialConstrains = {
         audio: false,
         // video: { facingMode: "user" }, //selfie mode
-        video: false,
+        video: true,
       };
 
       const deviceConstraints = {
@@ -88,15 +90,39 @@ const UserScreen = () => {
         console.log(myStream.getAudioTracks());
 
         await getCameras();
+
+        
+
+        // RTC code
+
+        myPeerConnection = new RTCPeerConnection();
+        myStream
+          .getTracks()
+          .forEach((track) => myPeerConnection.addTrack(track, myStream));
       } catch (e) {
         console.log(e);
       }
     };
+    
+
+    getMedia();
+
     setMute(false);
     setVideoCtrl(false);
 
-    getMedia();
-  }, [audioId, cameraId]);
+
+    socket.on("welcome", async () => {
+      const offer = await myPeerConnection.createOffer();
+      myPeerConnection.setLocalDescription(offer);
+      console.log("sent the offer");
+      socket.emit("offer", offer, room);
+    });
+
+    socket.on("offer", async(offer) => {
+      console.log(offer)
+      await myPeerConnection.setRemoteDescription(offer);
+    });
+  }, [socket, room, audioId, cameraId]);
 
   const cameraSelect = (e) => {
     setCameraId(e.target.value);
@@ -105,9 +131,10 @@ const UserScreen = () => {
   const audioSelect = (e) => {
     setAudioId(e.target.value);
   };
+
   return (
     <>
-      <div style={{width:'100%', height:'85%'}}>
+      <div style={{ width: "100%", height: "85%" }}>
         <video
           ref={video_ref}
           id="myFace"
@@ -146,7 +173,9 @@ const UserScreen = () => {
           </select>
         </div> */}
 
-      <UnderBar style={{ width: "100%", height:'15%',backgroundColor: "#808080" }}>
+      <UnderBar
+        style={{ width: "100%", height: "15%", backgroundColor: "#808080" }}
+      >
         <div>
           <div className="user_img"></div>
           <span className="user_name">Name</span>
@@ -172,7 +201,7 @@ const UnderBar = styled.div`
   place-items: center;
   color: lightgray;
   font-weight: bold;
-  padding:10px;
+  padding: 10px;
   div {
     display: flex;
     align-items: center;
@@ -215,4 +244,4 @@ const DeviceSelctor = styled.div`
   }
 `;
 
-export default UserScreen;
+// export default UserScreen;

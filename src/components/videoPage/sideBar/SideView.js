@@ -7,7 +7,7 @@ import { CSSTransition } from "react-transition-group";
 
 import styled from "styled-components";
 
-const SideView = ({ openBar }) => {
+const SideView = ({ openBar, socket, nick, room }) => {
   const duration = 700;
 
   return (
@@ -22,7 +22,7 @@ const SideView = ({ openBar }) => {
           <Wrapper>
             {/* components */}
             <Todo />
-            <RealTimeChat />
+            <RealTimeChat socket={socket} nick={nick} room={room} />
             {/* components */}
           </Wrapper>
         </SideBar>

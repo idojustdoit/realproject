@@ -9,7 +9,7 @@ import "../../../../App.css";
 
 const Todo = () => {
   const [todoToggle, setTodoToggle] = useState(true);
-
+ 
   const toggleHandler = () => {
     if (todoToggle) {
       setTodoToggle(false);

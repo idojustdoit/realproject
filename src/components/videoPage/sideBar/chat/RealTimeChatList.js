@@ -53,14 +53,14 @@ const RealTimeChatList = ({ socket, nick, room }) => {
       setMessageList((list) => [data, ...list]);
     });
     socket.on("welcome", (data) => {
-      console.log(`welcome(on): ${data}`);
+      console.log(`welcome(on): ${data.author}`);
       setMessageList((list) => [data, ...list]);
     });
     socket.on("bye", (data) => {
       console.log(`bye(on): ${data}`);
       setMessageList((list) => [{ message: "님이 퇴장하셨습니다." }, ...list]);
     });
-  }, [socket]);
+  }, [socket,nick, room]);
 
   return (
     <>
