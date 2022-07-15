@@ -4,8 +4,8 @@ import styled from "styled-components";
 import axios from "axios";
 
 const Login = ({ onClose }) => {
-  const outZone_ref = React.useRef(null); 
-  const [title, settitle]= React.useState('');
+  const outZone_ref = React.useRef(null);
+  const [title, settitle] = React.useState("");
   const [todolist, setTodolist] = React.useState([]);
   const [personinfo, setPersoninfo] = React.useState([]);
 
@@ -128,7 +128,7 @@ const Login = ({ onClose }) => {
               <div>
                 <People>
                   <img
-                  alt=""
+                    alt=""
                     style={{
                       width: "25px",
                       height: "25px",
@@ -158,7 +158,7 @@ const Login = ({ onClose }) => {
                 <People>
                   {" "}
                   <img
-                  alt=""
+                    alt=""
                     style={{
                       width: "25px",
                       height: "25px",

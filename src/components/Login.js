@@ -2,7 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import axios from "axios";
 import kakao from "../shared/kakao.png";
-import google from "../shared/google.png";
+
+import GoogleButton from "../pages/GoogleButton";
 
 const Login = ({ onClose, SignOpen }) => {
   const outZone_ref = React.useRef(null); // 모달창이외에부분 지정
@@ -53,7 +54,7 @@ const Login = ({ onClose, SignOpen }) => {
   };
 
   const kakaoUrl =
-    "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=7f92dc9fd12752de2973837b5845deb9&redirect_uri=http://localhost:3000/Kakaologin";
+    "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=b266efe96498090868c78833faf62705&redirect_uri=http://localhost:3000/Kakaologin";
 
   const MoveModal = () => {
     onClose();
@@ -136,24 +137,8 @@ const Login = ({ onClose, SignOpen }) => {
               />
             </a>
             <br />
-            <a
-              style={{
-                width: "360px",
-                height: "50px",
-                marginBottom: "10px",
-              }}
-              href="http://13.124.252.225/api/auth/kakao"
-            >
-              <img
-                alt=""
-                style={{
-                  width: "360px",
-                  height: "50px",
-                  marginBottom: "10px",
-                }}
-                src={google}
-              />
-            </a>
+
+            <GoogleButton />
           </LoginBtn>
         </ModalBlock>
       </Background>

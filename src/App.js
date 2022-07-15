@@ -6,6 +6,7 @@ import "./App.css";
 import "./shared/font/pretendard.css";
 import MainPage from "./pages/MainPage";
 import Modify from "./pages/Modify";
+import Kakaologin from "./pages/Kakaologin";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
             <Route path="/" element={<MainPage />}></Route>
             {/* <Route path="/mypage" element={<Mypage />}></Route> */}
             <Route path="Modify" element={<Modify />}></Route>
+            <Route path="/Kakaologin" element={<Kakaologin />}></Route>
           </Routes>
         </Router>
       </StyledApp>

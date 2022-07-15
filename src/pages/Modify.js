@@ -8,9 +8,9 @@ import Footer from "../components/mainpage/Footer";
 function Modify() {
   const navigate = useNavigate();
 
-  const imgUrl_ref = React.useRef(null);     //이미지url
+  const imgUrl_ref = React.useRef(null); //이미지url
   const [imgUrl, setimgUrl] = React.useState(
-        //이미지url
+    //이미지url
     "https://opgg-com-image.akamaized.net/attach/images/20220220075306.1538486.jpg"
   );
   // const [email, setemail] = React.useState(""); //이메일 인풋
@@ -22,29 +22,29 @@ function Modify() {
     setimgUrl(imgUrl_ref.current.url);
   };
 
-  //해당회원의 정보요청
-  const originData = () => {
-    axios.defaults.withCredentials = true;
-    axios({
-      method: "get",
-      url: "/api/mypage/update/",
-      baseURL: "http://localhost:5001",
+  //  해당회원의 정보요청
+  // const originData = () => {
+  //   axios.defaults.withCredentials = true;
+  //   axios({
+  //     method: "get",
+  //     url: "/api/mypage/update/",
+  //     baseURL: "http://localhost:5001",
 
-      // headers: {
-      //   authorization: localStorage.getItem("access_token"),
-    })
-      .then((response) => {
-        console.log(response);
-        setimgUrl(response.data.iconUrl);
-        setNickname(response.data.nickname);
-        setpassword(response.data.password);
-        setpasswordCheck(response.data.passwordCheck);
-      })
-      .catch((error) => {
-        console.log(error);
-        alert(error.response.data);
-      });
-  };
+  //     // headers: {
+  //     //   authorization: localStorage.getItem("access_token"),
+  //   })
+  //     .then((response) => {
+  //       console.log(response);
+  //       setimgUrl(response.data.iconUrl);
+  //       setNickname(response.data.nickname);
+  //       setpassword(response.data.password);
+  //       setpasswordCheck(response.data.passwordCheck);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       alert(error.response.data);
+  //     });
+  // };
 
   // 페이지가 나오자마자 회원정보 불러오기 및 삭제
   // useEffect(() => {
@@ -66,6 +66,10 @@ function Modify() {
     })
       .then((response) => {
         console.log(response);
+        // setimgUrl(response.data.iconUrl);
+        //       setNickname(response.data.nickname);
+        //       setpassword(response.data.password);
+        //       setpasswordCheck(response.data.passwordCheck);
       })
       .catch((error) => {
         console.log(error);
@@ -130,13 +134,7 @@ function Modify() {
               <br />
             </span>
           </Label>
-          {/* <Label>
-          <div>
-            <Chat1>이메일</Chat1>
 
-            <Input type="email" onChange={handlerId} value={email} />
-          </div>
-        </Label> */}
           <Label>
             <div>
               <Chat1>닉네임</Chat1>
@@ -163,6 +161,20 @@ function Modify() {
                 onChange={handlerPwcheck}
                 value={passwordCheck}
               />
+
+              {password !== passwordCheck && (
+                <div
+                  style={{
+                    color: "red",
+                    fontSize: "14px",
+                    marginLeft: "14px",
+                    marginTop: "5px",
+                  }}
+                >
+                  {" "}
+                  비밀번호가 같은지 확인해주세요{" "}
+                </div>
+              )}
             </div>
           </Label>
 
