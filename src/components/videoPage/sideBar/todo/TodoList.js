@@ -6,7 +6,7 @@ import {
   addTodoList,
   deleteTodoList,
   updateTodoChecked,
-} from "../../../../redux";
+} from "../../../../redux/modules/todoListSlice";
 
 //react icons
 import { ImCross } from "react-icons/im";
@@ -18,7 +18,7 @@ const TodoList = () => {
 
   const check_ref = useRef(null);
 
-  const todoListItem = useSelector((state) => state);
+  const todoListItem = useSelector((state) => state.todoList);
   console.log(todoListItem);
 
   const [updateTodo, setUpdateTodo] = useState(false);

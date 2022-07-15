@@ -1,28 +1,14 @@
 import React from "react";
-import { useNavigate, Link } from "react-router-dom";
-import Cookies from "universal-cookie";
 import styled from "styled-components";
 import axios from "axios";
-import Portal from "./Portal";
+import kakao from "../shared/kakao.png";
+import google from "../shared/google.png";
 
-const Login = ({ onClose }) => {
-  const cookies = new Cookies();
+const Login = ({ onClose, SignOpen }) => {
+  const outZone_ref = React.useRef(null); // 모달창이외에부분 지정
 
-  const navigate = useNavigate();
-  const id_ref = React.useRef(null);
-  const pw_ref = React.useRef(null);
-  const outZone_ref = React.useRef();
-
-  let [active, setActive] = React.useState(false);
-
-  const [username, setUserName] = React.useState("");
-  const [password, setPwd] = React.useState("");
-
-  const ActiveIsPassedLogin = () => {
-    return username.includes("@") && password.length >= 5
-      ? setActive(true)
-      : setActive(false);
-  };
+  const [username, setUserName] = React.useState(null); //email 아이디
+  const [password, setPwd] = React.useState(null); // 비밀번호
 
   const handlerId = (e) => {
     setUserName(e.target.value);
@@ -32,95 +18,142 @@ const Login = ({ onClose }) => {
     setPwd(e.target.value);
   };
 
-  const loginAxios = () => {
-    axios({
-      method: "POST",
-      url: "/login",
-      data: {
-        username: username,
-        password: password,
-      },
-      baseURL: "http://13.124.252.225",
-    })
-      .then(function (response) {
-        console.log(response);
-        axios.defaults.withCredentials = true;
-        alert(response.data.message);
-        cookies.set("access_token", response.headers.authorization);
-        navigate("/");
-      })
-      .catch(function (error) {
-        alert(error.response.data.message);
-        console.log(error);
-      });
-  };
-
   //엔터키 작동
   const onKeyPress = (e) => {
     if (e.key == "Enter") {
       loginAxios();
     }
   };
+  // 로그인 서버통신
+  const loginAxios = () => {
+    axios({
+      method: "POST",
+      url: "/api/auth/login",
+      data: {
+        username: username,
+        password: password,
+      },
+      baseURL: "http://3.35.26.55",
+    })
+      .then(function (response) {
+        console.log(response.data);
+        alert(response.data.msg);
+        axios.defaults.withCredentials = true;
+        sessionStorage.setItem("accessToken", response.data.accessToken);
+        sessionStorage.setItem("refreshToken", response.data.refreshToken);
+        onClose();
+        // LoginCondition();
+        window.location.reload();
+      })
+      .catch(function (error) {
+        alert(error.response.data.msg);
+        console.log(error);
+      });
+  };
+
+  const MoveModal = () => {
+    onClose();
+    SignOpen();
+  };
 
   return (
-    <Portal>
-      <Container>
-        <Background
-          ref={outZone_ref}
-          onClick={(e) => {
-            if (outZone_ref.current === e.target) {
-              onClose();
-            }
-          }}
-        >
-          <ModalBlock>
-            <LinkContainer>
-              Slack을 처음 사용하시나요? <br />
-              <Link to="/signup">계정생성</Link>
-            </LinkContainer>
-            <Form>
-              <Label>
-                <span>이메일 주소</span>
-                <div>
-                  <Input
-                    type="email"
-                    id="email"
-                    placeholder="abc@example.com"
-                    ref={id_ref}
-                    onChange={handlerId}
-                    onKeyUp={ActiveIsPassedLogin}
-                    onKeyPress={onKeyPress}
-                  />
-                </div>
-              </Label>
-              <Label>
-                <span>비밀번호</span>
-                <div>
-                  <Input
-                    type="password"
-                    id="password"
-                    placeholder="비밀번호를 입력해주세요"
-                    ref={pw_ref}
-                    onChange={handlerPw}
-                    onKeyUp={ActiveIsPassedLogin}
-                    onKeyPress={onKeyPress}
-                  />
-                </div>
-              </Label>
+    <Container>
+      <Background
+        ref={outZone_ref}
+        onClick={(e) => {
+          if (outZone_ref.current === e.target) {
+            onClose();
+          }
+        }}
+      >
+        <ModalBlock>
+          <Label>
+            <Title>로그인</Title>
+            <Line />
+            <div>
+              <Chat1>ID</Chat1>
+              <Input
+                style={{ fontSize: "15px", marginLeft: "2px" }}
+                type="email"
+                id="email"
+                placeholder="abc@example.com"
+                onChange={handlerId}
+                onKeyPress={onKeyPress}
+              />
+            </div>
+          </Label>
+          <Label>
+            <div>
+              <Chat2>PW</Chat2>
+              <Input
+                style={{ fontSize: "15px", marginTop: "7px" }}
+                type="password"
+                id="password"
+                placeholder="비밀번호를 입력해주세요"
+                onChange={handlerPw}
+                onKeyPress={onKeyPress}
+              />
+            </div>
+          </Label>
+          <LoginBtn>
+            <Button
+              id="login_btn"
+              onClick={loginAxios}
+              disabled={username === "" || password === "" ? true : false}
+            >
+              로그인
+            </Button>
 
-              <Button
-                id="login_btn"
-                onClick={loginAxios}
-                className={active ? "ActiveLoginBtn" : "LoginBtn"}
-                disabled={username === "" || password === "" ? true : false}
-              >
-                로그인
-              </Button>
-            </Form>
-          </ModalBlock>
-        </Background>
-      </Container>
-    </Portal>
+            <LinkContainer>
+              아직 스게더 회원이 아니신가요?
+              <Letter id="signin_btn" onClick={MoveModal}>
+                회원가입
+              </Letter>
+              후 이용해주세요.
+            </LinkContainer>
+            <a
+              style={{
+                width: "360px",
+                height: "50px",
+                marginBottom: "10px",
+                marginTop: "24px",
+              }}
+              href="http://3.35.26.55/api/auth/kakao"
+            >
+              <img
+                alt=""
+                style={{
+                  width: "360px",
+                  height: "50px",
+                  marginBottom: "10px",
+                  marginTop: "24px",
+                }}
+                src={kakao}
+              />
+            </a>
+            <br />
+            <a
+              style={{
+                width: "360px",
+                height: "50px",
+                marginBottom: "10px",
+              }}
+              href="http://13.124.252.225/api/auth/kakao"
+            >
+              <img
+                alt=""
+                style={{
+                  width: "360px",
+                  height: "50px",
+                  marginBottom: "10px",
+                }}
+                src={google}
+              />
+            </a>
+          </LoginBtn>
+        </ModalBlock>
+      </Background>
+    </Container>
   );
 };
 
@@ -137,7 +170,6 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
 `;
-
 const Background = styled.div`
   position: fixed;
   width: 100%;
@@ -147,27 +179,136 @@ const Background = styled.div`
 `;
 
 const ModalBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  text-align: center;
   position: absolute;
-  top: 6.5rem;
-  border-radius: 10px;
-  padding: 1.5rem;
   background-color: white;
   color: black;
-  width: 700px;
+  width: 458px;
+  height: 480px;
   box-shadow: 1px 1px 1px 1px gray;
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  min-height: 35rem;
+  animation: modal-show 1s;
+  @keyframes modal-show {
+    from {
+      opacity: 0;
+      margin-top: -50px;
+    }
+    to {
+      opacity: 1;
+      margin-top: 0;
+    }
+  }
+`;
+const Title = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  text-align: center;
+  margin-top: 24px;
 `;
 
-const Form = styled.div``;
+const Line = styled.hr`
+  background-color: black;
+  width: 360px;
+  height: 2px;
+  margin-top: 12px;
+  margin-bottom: 32px;
+`;
 
-const Label = styled.label``;
+const Label = styled.label`
+  font-size: 25px;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  text-align: center;
+`;
 
-const Input = styled.input``;
+const Chat1 = styled.span`
+  font-size: 20px;
+  margin-right: 25px;
+`;
 
-const Button = styled.button``;
+const Chat2 = styled.span`
+  font-size: 20px;
+  margin-right: 14px;
+  vertical-align: middle;
+`;
 
-export const LinkContainer = styled.p``;
+const Input = styled.input`
+  --saf-0: rgba(var(--sk_foreground_high_solid, 134, 134, 134), 1);
+  border: 1px solid var(--saf-0);
+  transition: border 80ms ease-out, box-shadow 80ms ease-out;
+  box-sizing: border-box;
+  width: 290px;
+  height: 36px;
+  color: rgba(var(--sk_primary_foreground, 29, 28, 29), 1);
+  background-color: rgba(var(--sk_primary_background, 255, 255, 255), 1);
+  padding: 12px;
+  border-radius: 4px;
+  font-size: 18px;
+  line-height: 1.33333333;
+`;
+
+const LoginBtn = styled.div``;
+
+const LinkContainer = styled.div`
+  font-size: 12px;
+  color: #616061;
+  align-content: center;
+`;
+
+const Button = styled.button`
+  margin-top: 42px;
+  margin-bottom: 8px;
+  color: #fff;
+  background-color: ${(props) => (props.disabled ? "gray" : "black;")};
+  border: none;
+  font-size: 18px;
+  font-weight: 900;
+  width: 360px;
+  height: 50px;
+  padding: 0 16px 3px;
+  transition: all 80ms linear;
+  user-select: none;
+  outline: none;
+  cursor: pointer;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  ${(props) =>
+    props.disabled
+      ? ""
+      : `&:hover {
+  background-color: rgba(74, 21, 75, 0.9);
+  border: none;
+}`};
+  &:focus {
+    --saf-0: rgba(var(--sk_highlight, 18, 100, 163), 1);
+    box-shadow: 0 0 0 1px var(--saf-0), 0 0 0 5px rgba(29, 155, 209, 0.3);
+  }
+`;
+
+const Letter = styled.button`
+  font-size: 13px;
+  display: inline-block;
+  font-weight: bold;
+  color: blue;
+  background-color: transparent;
+  border-color: transparent;
+  cursor: pointer;
+
+  padding: 1px 2px 10px 2px;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
 export default Login;

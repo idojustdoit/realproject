@@ -1,0 +1,9 @@
+.react-datepicker__portal {
+  background-color: transparent;
+  width: 110%;
+}
+
+.react-datepicker__input-container {
+  width: "309px";
+  height: "36px";
+}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
-import Header from "../components/videoPage/mainScreen/Header";
+import VideoHeader from "../components/videoPage/mainScreen/VideoHeader";
 import SideView from "../components/videoPage/sideBar/SideView";
 
 import "../App.css";
@@ -21,8 +21,8 @@ const socket = io.connect("https://www.e-gloo.link");
 
 const Video = () => {
   const { state } = useLocation();
-  const nick = state.nick;
-  const room = state.room;
+  const nick = "성인";
+  const room = "임시방";
 
   const [openBar, setOpenBar] = useState(true);
 
@@ -208,7 +208,7 @@ const Video = () => {
             alignItems: "center",
           }}
         >
-          <Header openBar={openBar} />
+          <VideoHeader openBar={openBar} />
 
           <div style={{ display: "flex", alignItems: "center" }}>
             <Screen BarState={!openBar}>
@@ -358,8 +358,8 @@ const ScreenWrapper = styled.div`
   } */
   display: flex;
   background-color: black;
-  height: inherit;
-  width: inherit;
+  height: 100vh;
+  width: 100vw;
   overflow: hidden;
 `;
 

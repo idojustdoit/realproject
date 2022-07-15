@@ -49,3 +49,35 @@
   margin-top: -67px;
   transition: all 0.7s;
 }
+body {
+  margin: 0 auto;
+}
+button {
+  cursor: pointer;
+  /* background-color: #3c0080;
+  border: 1px solid #3c0080;
+  color: white;
+  padding: 0.5rem 1.5rem;
+  border-radius: 6px; */
+}
+input:focus,
+input:active,
+button:focus,
+button:active {
+  outline: none;
+  /* box-shadow: none; */
+}
+/* a태그 기본CSS 없애주기  */
+a:-webkit-any-link {
+  color: black;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css");
+
+* {
+  font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto,
+    "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR",
+    "Malgun Gothic", sans-serif;
+}

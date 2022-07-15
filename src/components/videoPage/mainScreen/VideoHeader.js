@@ -6,7 +6,7 @@ import "../../../App.css";
 
 import { CSSTransition } from "react-transition-group";
 
-const Header = ({openBar}) => {
+const VideoHeader = ({openBar}) => {
 
   const duration = 700;
   return (
@@ -26,8 +26,6 @@ const Header = ({openBar}) => {
   );
 };
 
-export default Header;
-
 const Head = styled.div`
   display: flex;
   width: 100%;
@@ -43,3 +41,6 @@ const Logo = styled.span`
   color: gray;
   font-weight: bold;
 `;
+
+export default VideoHeader;
+

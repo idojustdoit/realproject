@@ -1,4 +1,4 @@
-import { createSlice, configureStore } from "@reduxjs/toolkit";
+import { createSlice} from "@reduxjs/toolkit";
 
 const initialTodoListState = [
   {
@@ -33,7 +33,7 @@ const initialTodoListState = [
   },
 ];
 
-const TodoListSlice = createSlice({
+const todoListSlice = createSlice({
   name: "todoList",
   initialState: initialTodoListState,
   reducers: {
@@ -61,10 +61,7 @@ const TodoListSlice = createSlice({
 });
 
 export const { addTodoList, updateTodoChecked, deleteTodoList } =
-  TodoListSlice.actions;
+  todoListSlice.actions;
 
-const store = configureStore({
-  reducer: TodoListSlice.reducer,
-});
 
-export default store;
+export default todoListSlice.reducer;
