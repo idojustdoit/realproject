@@ -1,25 +1,26 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { authSlice } from "../../redux/modules/authSlice";
+import { changeLoginState } from "../redux/modules/userSlice";
 import { Link, useNavigate } from "react-router-dom";
-import "../../styles/reset.css";
-import SignUp from "../Signup";
-import Portal from "../Portal";
-import LogIn from "../Login";
-import Creatroom from "../Createroom";
+
+import SignUp from "./Signup";
+import Portal from "./Portal";
+import LogIn from "./Login";
+import Creatroom from "./Createroom";
 // import Invite from "../components/Invite";
+import "../styles/reset.css";
 
 import styled from "styled-components";
 // import { Button } from "@mui/material";
-import { ReactComponent as LogoIcon } from "../../shared/mainpage-assets/logo.svg";
-import { ReactComponent as AlarmIcon } from "../../shared/mainpage-assets/icon-alarm-mono.svg";
-import { ReactComponent as MyPageIcon } from "../../shared/mainpage-assets/login_user.svg";
-import { ReactComponent as LogoutIcon } from "../../shared/mainpage-assets/icon-out-mono.svg";
+import { ReactComponent as LogoIcon } from "../shared/header-assets/icon-logo-header.svg";
+import { ReactComponent as AlarmIcon } from "../shared/header-assets/icon-alarm-mono.svg";
+import { ReactComponent as MyPageIcon } from "../shared/header-assets/login_user.svg";
+import { ReactComponent as LogoutIcon } from "../shared/header-assets/icon-out-mono.svg";
 
 function Header() {
-  //isAuth는 리덕스용
-  const isAuth = useSelector((state) => state.auth.isAuth);
-
+  //loginState 기본값 false
+  const loginState = useSelector((state) => state.user.isLogin);
+  const dispatch = useDispatch();
   //isLogin 기본 state값 false
   const token = sessionStorage.getItem("accessToken");
   // const dispatch = useDispatch();
@@ -39,8 +40,16 @@ function Header() {
 
   const LoginModal = () => {
     setIsLogInOpen(!LogInOpen);
-    //로그인 모달 열림
   };
+
+  // const logoutHandler = () => {
+  //   dispatch(changeLoginState(loginState));
+  // };
+
+  // const loginHandler = () => {
+  //   dispatch(changeLoginState(loginState));
+
+  // };
 
   const SignupModal = () => {
     setSignUpOpen(!SignUpOpen);
@@ -64,13 +73,16 @@ function Header() {
           </LogoCont>
           <Ul>
             <Li>
-              <Link to="/">스터디 소개</Link>
+              <Link to="/">이글루 소개</Link>
             </Li>
             <Li>
-              <Link to="/">스터디 목록</Link>
+              <Link to="/">이용 가이드</Link>
             </Li>
             <Li>
               <Link to="/">커뮤니티</Link>
+            </Li>
+            <Li>
+              <Link to="/">스터디 목록</Link>
             </Li>
           </Ul>
         </LeftCont>
@@ -124,18 +136,19 @@ function Header() {
 }
 
 const HeaderCont = styled.header`
-  /* position: absolute; */
+  z-index: 10;
+  position: fixed;
   top: 0;
-  /* width: 100%; */
+  width: 1920px;
   min-height: 80px;
   display: flex;
-  /* justify-content: space-between; */
   align-items: center;
   background-color: #fff;
   color: black;
-  /* padding: 0 10px; */
   font-size: 15px;
   padding: 0 300px;
+  /* -webkit-box-shadow: 0px 10px 9px -7px #737373;
+  box-shadow: 0px 10px 9px -7px #737373; */
 `;
 const FlexBox = styled.div`
   width: 100%;
@@ -154,7 +167,7 @@ const Ul = styled.ul`
   margin: 0;
   padding: 0;
   align-items: center;
-  gap: 20px;
+  gap: 15px;
 `;
 
 const Li = styled.li`
@@ -190,8 +203,8 @@ const HeaderBtn = styled.button`
 //HeaderBtn 의 내용을 전체 상속
 const StudyBtn = styled(HeaderBtn)`
   width: 114px;
-  background-color: black;
-  color: white;
+  background-color: white;
+
   margin-right: 12px;
 `;
 

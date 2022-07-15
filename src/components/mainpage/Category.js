@@ -1,6 +1,8 @@
 import React from "react";
 import Carousel from "react-grid-carousel";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import { roomActions } from "../../redux/modules/roomSlice";
 
 const CATEGORY_DUMMY = [
   {
@@ -67,6 +69,8 @@ const CATEGORY_DUMMY = [
 ];
 
 const Category = () => {
+  console.log();
+  const dispatch = useDispatch();
   return (
     <Container>
       <TitleH2>카테고리</TitleH2>
@@ -75,18 +79,77 @@ const Category = () => {
           cols={8}
           rows={1}
           gap={15}
-          mobileBreakpoint={670}
-          arrowRight={<ArrowBtn type="right" />}
-          arrowLeft={<ArrowBtn type="left" />}
+          containerStyle={{ maxWidth: "1300px", margin: "0 auto" }}
         >
-          {CATEGORY_DUMMY.map((cate, i) => (
+          {/* {CATEGORY_DUMMY.map((cate, i) => (
             <Carousel.Item key={i}>
               <Card>
                 <Img img={`${cate.imageUrl}`} />
                 <Title>{cate.name}</Title>
               </Card>
             </Carousel.Item>
-          ))}
+          ))} */}
+
+          <Carousel.Item>
+            <Card>
+              <Img img={`${CATEGORY_DUMMY[0].imageUrl}`} />
+              <Title>{CATEGORY_DUMMY[0].name}</Title>
+            </Card>
+          </Carousel.Item>
+          <Carousel.Item>
+            <Card>
+              <Img img={`${CATEGORY_DUMMY[1].imageUrl}`} />
+              <Title>{CATEGORY_DUMMY[1].name}</Title>
+            </Card>
+          </Carousel.Item>
+          <Carousel.Item>
+            <Card>
+              <Img img={`${CATEGORY_DUMMY[2].imageUrl}`} />
+              <Title>{CATEGORY_DUMMY[2].name}</Title>
+            </Card>
+          </Carousel.Item>
+          <Carousel.Item>
+            <Card>
+              <Img img={`${CATEGORY_DUMMY[3].imageUrl}`} />
+              <Title>{CATEGORY_DUMMY[3].name}</Title>
+            </Card>
+          </Carousel.Item>
+          <Carousel.Item>
+            <Card>
+              <Img img={`${CATEGORY_DUMMY[4].imageUrl}`} />
+              <Title>{CATEGORY_DUMMY[4].name}</Title>
+            </Card>
+          </Carousel.Item>
+          <Carousel.Item>
+            <Card>
+              <Img img={`${CATEGORY_DUMMY[5].imageUrl}`} />
+              <Title>{CATEGORY_DUMMY[5].name}</Title>
+            </Card>
+          </Carousel.Item>
+          <Carousel.Item>
+            <Card>
+              <Img img={`${CATEGORY_DUMMY[6].imageUrl}`} />
+              <Title>{CATEGORY_DUMMY[6].name}</Title>
+            </Card>
+          </Carousel.Item>
+          <Carousel.Item>
+            <Card>
+              <Img img={`${CATEGORY_DUMMY[7].imageUrl}`} />
+              <Title>{CATEGORY_DUMMY[7].name}</Title>
+            </Card>
+          </Carousel.Item>
+          <Carousel.Item>
+            <Card>
+              <Img img={`${CATEGORY_DUMMY[8].imageUrl}`} />
+              <Title>{CATEGORY_DUMMY[8].name}</Title>
+            </Card>
+          </Carousel.Item>
+          <Carousel.Item>
+            <Card>
+              <Img img={`${CATEGORY_DUMMY[9].imageUrl}`} />
+              <Title>{CATEGORY_DUMMY[9].name}</Title>
+            </Card>
+          </Carousel.Item>
         </Carousel>
       </Row>
     </Container>
@@ -94,7 +157,12 @@ const Category = () => {
 };
 
 const Container = styled.div`
-  min-height: 100%;
+  background-color: #eff3f6;
+  display: flex;
+  justify-content: center;
+  /* align-items: center; */
+  flex-direction: column;
+  min-height: 390px;
   /* width: 1920px; */
   padding: 0 300px;
 `;
@@ -158,7 +226,6 @@ const Title = styled.div`
 
 const TitleH2 = styled.h2`
   /* margin-bottom: 25px; */
-  margin-top: 60px;
   padding-left: 5px;
   font-size: 30px;
   font-weight: 700;

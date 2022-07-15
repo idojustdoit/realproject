@@ -1,16 +1,15 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useSelect, useDispatch } from "react-redux";
+import React, { useEffect, useRef, useState, useCallback } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import "../styles/reset.css";
+import axios from "axios";
+import { getMainList } from "../redux/modules/roomSlice";
 
 import styled from "styled-components";
-import Header from "../components/mainpage/Header";
-import Footer from "../components/mainpage/Footer";
+import Header from "../components/Header";
 import SearchBanner from "../components/mainpage/SearchBanner";
-import RoomList from "../components/mainpage/RoomList";
-import { getAllListsDB } from "../redux/modules/groupSlice";
-
-import axios from "axios";
 import Category from "../components/mainpage/Category";
+import RoomList from "../components/mainpage/RoomList";
+import Footer from "../components/Footer";
 
 const CATEGORY_DUMMY = [
   {
@@ -76,50 +75,38 @@ const CATEGORY_DUMMY = [
   },
 ];
 
-// 카테고리랑 메인페이지 분리하고싶은데 리덕스로 안뽑아서 같은 형제컴포라 상위에서 어떤 카테고리
-// 눌렀는지 정보 props로 내려주려고 이렇게 만듦
 function MainPage() {
-  const BASE_URL = ``;
+  const category = useSelector((state) => state.room.category);
   useEffect(() => {
-    // dispatch(getAllListsDB());
-    axios.get(`${BASE_URL}/rooms`).then((response) => {
-      console.log(response.data);
-      // dispatch(loadAllPost(response.data.result));
-    });
-
-    window.scrollTo(0, 0);
+    dispatch(getMainList());
   }, []);
+
+  useEffect(() => {}, [category]);
+  // window.scrollTo(0, 0);
 
   const dispatch = useDispatch();
   const [categoryName, setCategoryName] = useState("전체");
   const [categoryIndex, setCategoryIndex] = useState("0");
   const [roomList, setRoomList] = useState([]);
+
   // 카테고리 {index(혹은 id): 0, name:"전체"} 현재 내가 쓰는 거
   // 카테고리 { 0 : "전체"} -> 이렇게 줄 건지?
 
-  function categoryClickHandler(name, index) {
-    console.log(name, index);
-    axios.get(`${BASE_URL}/rooms/tag/${index}`).then((res) => {
-      console.log(res.data.roomList);
-      let data = res.data.roomList;
-      setRoomList(data);
-    });
-    // setRoomList(data);
-    setCategoryName(name);
-    setCategoryIndex(index);
-  }
-  useEffect(() => {}, [categoryName, categoryIndex]);
+  //받아온 메인 룸 리스트
+  const list = useSelector((state) => state.room.roomList);
+  const loadingState = useSelector((state) => state.room?.axiosState);
+  console.log(loadingState);
 
   return (
     <div style={{ width: "1920px" }}>
       <Header />
-      <SearchBanner />
       <MainCont>
+        <SearchBanner />
         <CategorySection>
           <Category />
         </CategorySection>
         <RoomListSection>
-          <RoomList roomList={roomList} />
+          <RoomList roomList={list} />
         </RoomListSection>
       </MainCont>
       <Footer />
@@ -132,6 +119,7 @@ export default MainPage;
 const MainCont = styled.div`
   margin: 0 auto;
   width: 1920px;
+  padding-top: 80px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -141,12 +129,22 @@ const BasicSection = styled.section`
   /* width: 100%; */
 `;
 const CategorySection = styled(BasicSection)`
-  background-color: #f5f5f5;
   width: 100%;
+  margin-bottom: 60px;
 `;
 const RoomListSection = styled(BasicSection)`
-  background-color: #f5f5f5;
+  /* background-color: #f5f5f5; */
+  width: 100%;
   padding: 0 300px;
+`;
+
+const RoomGrid = styled.div`
+  width: 100%;
+  display: grid;
+  justify-content: center;
+  grid-template-columns: repeat(3, 450px);
+  grid-column-gap: 24px;
+  grid-row-gap: 30px;
 `;
 
 //❕ 아래는 카테고리

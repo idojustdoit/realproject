@@ -197,7 +197,7 @@ const Background = styled.div`
 `;
 
 const ModalBlock = styled.div`
-font-family: Pretendard;
+  font-family: Pretendard;
   display: flex;
   flex-direction: column;
   align-content: center;
@@ -223,6 +223,7 @@ font-family: Pretendard;
       opacity: 1;
       margin-top: 0;
     }
+  }
 `;
 
 const Title = styled.div`
