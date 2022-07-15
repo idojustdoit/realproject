@@ -30,7 +30,7 @@ const StyledApp = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: #81ecec;
+  background: mintcream;
 `;
 
 export default App;

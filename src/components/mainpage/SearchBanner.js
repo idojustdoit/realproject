@@ -1,15 +1,19 @@
 import React from "react";
 import styled from "styled-components";
-// import { MdSearch } from "react-icons/md";
+// import "./SearchBar.modules.css";
 import bgImage from "../../shared/mainpage-assets/search_background.png";
 import { ReactComponent as SearchIcon } from "../../shared/mainpage-assets/search_icon.svg";
 
 function SearchBanner() {
   return (
+    // <form action="#">
+    //   <h1>Search Bar Tutorial</h1>
+    //   <input type="search" placeholder="Seach..." />
+    // </form>
     <SearchCont>
       <SearchTitle>어떤 스터디를 찾고 계신가요?</SearchTitle>
       <SearchBox>
-        <SearchInput type="text"></SearchInput>
+        <SearchInput type="search"></SearchInput>
         <SearchBtn type="submit">
           <SearchIcon />
         </SearchBtn>
@@ -22,7 +26,7 @@ export default SearchBanner;
 
 const SearchCont = styled.div`
   width: 100%;
-  height: 260px;
+  height: 500px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -31,16 +35,17 @@ const SearchCont = styled.div`
   background-size: cover;
 `;
 const SearchBox = styled.div`
-  border-radius: 7px;
+  border-radius: 4px;
   width: 25%;
   display: flex;
+  overflow: hidden;
 `;
 const SearchTitle = styled.h1`
   /* filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.5)); */
 
   font-size: 30px;
   font-weight: 700;
-  margin: 10px 20px 20px 20px;
+  margin: 0px 20px 20px 20px;
   line-height: 42px;
   color: white;
 `;
@@ -52,7 +57,7 @@ const SearchBtn = styled.button`
   border-left: none;
   background: #fff;
   color: black;
-  border-radius: 0 4px 4px 0;
+  /* border-radius: 0 4px 4px 0; */
   cursor: pointer;
   font-size: 28px;
   display: flex;
@@ -66,7 +71,7 @@ const SearchInput = styled.input`
   border-right: none;
   padding: 5px 10px;
   height: 40px;
-  border-radius: 4px 0 0 4px;
+  /* border-radius: 4px 0 0 4px; */
   outline: none;
   color: #40407a;
 
