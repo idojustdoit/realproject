@@ -412,7 +412,7 @@ const BtnG = styled.div`
 const Btn1 = styled.button`
 
   margin-right:15px;
-  display: inline-block
+  display: inline-block;
   margin-right: 15px;
   margin-bottom: 12px;
   width: 197px;
@@ -443,7 +443,7 @@ const Btn1 = styled.button`
 `;
 
 const Btn2 = styled.button`
-display: inline-block
+display: inline-block;
   margin-bottom: 12px;
   width: 150px;
   color: #fff;
