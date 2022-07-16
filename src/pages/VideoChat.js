@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import {useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import VideoHeader from "../components/videoPage/mainScreen/VideoHeader";
 import SideView from "../components/videoPage/sideBar/SideView";
@@ -18,12 +18,14 @@ import io from "socket.io-client";
 
 // const socket = io.connect("http://3.35.26.55");
 const socket = io.connect("https://www.e-gloo.link");
+// const socket = io.connect("http://localhost:3001");
 
 const Video = () => {
   const nick = "성인";
 
-
+  // const roomId = "스터디";
   const {roomId} = useParams();
+  console.log(roomId)
 
   const [openBar, setOpenBar] = useState(true);
 
@@ -343,7 +345,12 @@ const Video = () => {
 
         {/* sideBar */}
 
-        <SideView openBar={openBar} socket={socket} nick={nick} roomId={roomId} />
+        <SideView
+          openBar={openBar}
+          socket={socket}
+          nick={nick}
+          roomId={roomId}
+        />
 
         {/* sideBar */}
       </ScreenWrapper>

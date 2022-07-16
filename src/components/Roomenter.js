@@ -15,8 +15,6 @@ console.log(roomId)
   const [personinfo, setPersoninfo] = React.useState([]);
 
 
-  console.log(roomId)
-
   // todo 리스트 불러오기
   // const TodoListAxios = () => {
   //axios.defaults.withCredentials = true;
