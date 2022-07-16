@@ -3,11 +3,19 @@ import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 
-const Login = ({ onClose }) => {
+
+const Login = ({ onClose, roomId }) => {
+console.log(roomId)
+
+  const navigate = useNavigate();
+
   const outZone_ref = React.useRef(null);
 
   const [todolist, setTodolist] = React.useState([]);
   const [personinfo, setPersoninfo] = React.useState([]);
+
+
+  console.log(roomId)
 
   // todo 리스트 불러오기
   // const TodoListAxios = () => {
@@ -185,8 +193,10 @@ const Login = ({ onClose }) => {
             >
               취소
             </Btn1>
+
             <Btn2
               onClick={() => {
+                navigate(`/video/${roomId}`)
                 onClose();
                 //방입장하는 navigate(방상세)
               }}
