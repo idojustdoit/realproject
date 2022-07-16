@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useLocation } from "react-router-dom";
+import {useParams } from "react-router-dom";
 import styled from "styled-components";
 import VideoHeader from "../components/videoPage/mainScreen/VideoHeader";
 import SideView from "../components/videoPage/sideBar/SideView";
@@ -20,9 +20,10 @@ import io from "socket.io-client";
 const socket = io.connect("https://www.e-gloo.link");
 
 const Video = () => {
-  const { state } = useLocation();
   const nick = "성인";
-  const room = "임시방";
+
+
+  const {roomId} = useParams();
 
   const [openBar, setOpenBar] = useState(true);
 
@@ -125,13 +126,13 @@ const Video = () => {
 
         //socket
 
-        socket.emit("join_room", nick, room);
+        socket.emit("join_room", nick, roomId);
 
         socket.on("welcome", async () => {
           const offer = await myPeerConnection.createOffer();
           myPeerConnection.setLocalDescription(offer);
           console.log("sent the offer");
-          socket.emit("offer", offer, room);
+          socket.emit("offer", offer, roomId);
         });
 
         socket.on("offer", async (offer) => {
@@ -139,7 +140,7 @@ const Video = () => {
           await myPeerConnection.setRemoteDescription(offer);
           const answer = await myPeerConnection.createAnswer();
           myPeerConnection.setLocalDescription(answer);
-          socket.emit("answer", answer, room);
+          socket.emit("answer", answer, roomId);
         });
 
         socket.on("answer", async (answer) => {
@@ -167,7 +168,7 @@ const Video = () => {
           ],
         });
         myPeerConnection.addEventListener("icecandidate", (data) => {
-          socket.emit("ice", data.candidate, room);
+          socket.emit("ice", data.candidate, roomId);
           console.log("sent candidate");
         });
         myPeerConnection.addEventListener("addstream", (data) => {
@@ -184,7 +185,7 @@ const Video = () => {
 
     setMute(false);
     setVideoCtrl(false);
-  }, [room, nick, audioId, cameraId]);
+  }, [roomId, nick, audioId, cameraId]);
 
   const cameraSelect = (e) => {
     setCameraId(e.target.value);
@@ -342,7 +343,7 @@ const Video = () => {
 
         {/* sideBar */}
 
-        <SideView openBar={openBar} socket={socket} nick={nick} room={room} />
+        <SideView openBar={openBar} socket={socket} nick={nick} roomId={roomId} />
 
         {/* sideBar */}
       </ScreenWrapper>
