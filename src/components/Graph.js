@@ -12,17 +12,17 @@ import {
 
 function Graph() {
   const data = [
-    { name: "월", 시간: 7 },
-    { name: "화", 시간: 5 },
-    { name: "수", 시간: 2 },
-    { name: "목", 시간: 2 },
-    { name: "금", 시간: 7 },
-    { name: "토", 시간: 5 },
-    { name: "일", 시간: 7 },
+    { name: "월", 공부시간: 7.3 },
+    { name: "화", 공부시간: 5.2 },
+    { name: "수", 공부시간: 2 },
+    { name: "목", 공부시간: 2.1 },
+    { name: "금", 공부시간: 7.5 },
+    { name: "토", 공부시간: 5 },
+    { name: "일", 공부시간: 0 },
   ];
   var result = 1;
   return (
-    <div className="App">
+    <div style={{ marginTop: "40px" }}>
       <BarChart
         width={600}
         height={300}
@@ -41,7 +41,7 @@ function Graph() {
         <Tooltip />
         <Legend />
         <Bar
-          dataKey="시간"
+          dataKey="공부시간"
           fill="url(#colorPv)"
           style={{ borderRadius: "10px" }}
           barSize={30}

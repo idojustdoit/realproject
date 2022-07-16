@@ -40,9 +40,9 @@ const Login = ({ onClose, SignOpen }) => {
         console.log(response.data);
         alert(response.data.msg);
         axios.defaults.withCredentials = true;
-        sessionStorage.setItem("accessToken", response.data.accessToken);
-        sessionStorage.setItem("refreshToken", response.data.refreshToken);
-        sessionStorage.setItem("userId", response.data.userId);
+        localStorage.setItem("accessToken", response.data.accessToken);
+        localStorage.setItem("refreshToken", response.data.refreshToken);
+        localStorage.setItem("userId", response.data.userId);
         onClose();
         // LoginCondition();
         window.location.reload();

@@ -1,28 +1,34 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { BasicBtn } from "../../../elements/Button";
 
 import "../../../App.css";
+import { ReactComponent as LogoIcon } from "../../../shared/header-assets/icon-logo-header.svg";
 
 import { CSSTransition } from "react-transition-group";
 
-const VideoHeader = ({openBar}) => {
-
+const VideoHeader = ({ openBar }) => {
+  const navigate = useNavigate();
   const duration = 700;
   return (
     <CSSTransition
-        in={openBar}
-        timeout={duration}
-        classNames="header"
-        unmountOnExit
-      >
-
-    <Head>
-      <Logo>SGETHER</Logo>
-      <h2>Study Title</h2>
-      <BasicBtn />
-    </Head>
-      </CSSTransition>
+      in={openBar}
+      timeout={duration}
+      classNames="header"
+      unmountOnExit
+    >
+      <Head>
+        <LogoIcon
+          onClick={() => {
+            navigate("/");
+          }}
+          style={{ cursor: "pointer", marginLeft: "40px" }}
+        />
+        <Logo>같이 소방9급 준비해요!</Logo>
+        <BasicBtn />
+      </Head>
+    </CSSTransition>
   );
 };
 
@@ -43,4 +49,3 @@ const Logo = styled.span`
 `;
 
 export default VideoHeader;
-

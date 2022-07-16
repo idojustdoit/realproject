@@ -16,7 +16,7 @@ const Room = ({
 }) => {
   const [likeState, setLikeState] = useState(isLiked);
 
-  const token = sessionStorage.getItem("accessToken");
+  const token = localStorage.getItem("accessToken");
 
   function toggleLike() {
     // setLikeState(!likeState) 하면 안됨 이전 상태를 기반으로 상태를 반전시켜주기

@@ -117,12 +117,12 @@ const Login = ({ onClose }) => {
         console.log(response);
         alert("방생성이 되었습니다.");
         onClose();
-
+        window.location.reload();
         //방상세페이지로 이동.
       })
       .catch((error) => {
         console.log(error);
-        alert(error.response.data.message);
+        alert("방 양식에 맞게 입력해주세요!");
       });
   };
 

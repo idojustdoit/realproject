@@ -9,55 +9,53 @@ const Login = ({ onClose }) => {
   const [todolist, setTodolist] = React.useState([]);
   const [personinfo, setPersoninfo] = React.useState([]);
 
+  const navigate = useNavigate();
+
   // 방에서 만든 스터디명,  TodoList, 방에 소속된 유저의 프로필 URL, nickname , 선택한  방에 roomId
-  // const TodoListAxios = () => {
-  //axios.defaults.withCredentials = true;
-  //   axios({
-  //     method: "get",
-  //     url: "/",
-  //     baseURL: "http://13.124.252.225",
-  // headers: {
-  //   authorization: localStorage.getItem("access_token"),
-  // },
-  //   })
-  //     .then(function (response) {
-  //       console.log(response);
-  //         settitle(response.data);
-  //        setTodolist (response.data);
+  const TodoListAxios = () => {
+    axios.defaults.withCredentials = true;
+    axios({
+      method: "GET",
+      url: "/",
+      baseURL: "http://13.124.252.225",
+      headers: {
+        authorization: localStorage.getItem("access_token"),
+      },
+    })
+      .then(function (response) {
+        console.log(response);
+        settitle(response.data);
+        setTodolist(response.data);
+        setPersoninfo(response.data);
 
-  //        setpersoninfo(response.data); map함수 한번에?
-  //        {setprofileURL(response.data);map함수 사용..  각각? 뭐가맞죠?
-  //        setNicknames(response.data)map함수 사용..}
-  //
-  //     })
-  //     .catch(function (error) {
-  //       alert(error.response.data.message);
-  //       console.log(error);
-  //     });
-  // };
+        //  {setprofileURL(response.data);map함수 사용..  각각? 뭐가맞죠?
+        //  setNicknames(response.data)map함수 사용..}
+      })
+      .catch(function (error) {
+        alert(error.response.data.message);
+        console.log(error);
+      });
+  };
   // 참여 멤버의  url과 닉네임불러오기
-  // const RoomEnterAxios = () => {
-  //axios.defaults.withCredentials = true;
-  //   axios({
-  //     method: "post",
-  //     url: "url/roomId",
-  //     data: {
-  //             password: ""
-  //              },
-  //     baseURL: "http://13.124.252.225",
-  // headers: {
-  //   authorization: localStorage.getItem("access_token"),
-  // },
-  //   })
-
-  //     .then(function (response) {
-  //
-  //     })
-  //     .catch(function (error) {
-  //       alert(error.response.data.message);
-  //       console.log(error);
-  //     });
-  // };
+  const RoomEnterAxios = () => {
+    axios.defaults.withCredentials = true;
+    axios({
+      method: "post",
+      url: "url/roomId",
+      data: {
+        password: "",
+      },
+      baseURL: "http://13.124.252.225",
+      headers: {
+        authorization: localStorage.getItem("access_token"),
+      },
+    })
+      .then(function (response) {})
+      .catch(function (error) {
+        alert(error.response.data.message);
+        console.log(error);
+      });
+  };
 
   return (
     <Container>
@@ -88,8 +86,8 @@ const Login = ({ onClose }) => {
             
             */}
             <div style={{ display: "flex", justifyContent: "center" }}>
-              <Chat1>Todo-List</Chat1>
-              <Todo>오늘은 4시간이상 하자</Todo>
+              <Chat1>스터디내용</Chat1>
+              <Todo>같이 으쌰으쌰 해요!!!!</Todo>
             </div>
           </Label>
           <Label>
@@ -200,7 +198,6 @@ const Login = ({ onClose }) => {
               onClick={() => {
                 onClose();
                 //방입장하는 navigate(방상세)
-                //
               }}
             >
               입장하기
