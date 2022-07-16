@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 // http://13.124.252.225
 
-const RealTimeChat = ({socket, nick, room}) => {
+const RealTimeChat = ({ socket, nick, room }) => {
   const [chatToggle, setChatToggle] = useState(true);
 
   const toggleHandler = () => {
@@ -16,16 +16,10 @@ const RealTimeChat = ({socket, nick, room}) => {
     }
   };
 
-  
-
   return (
     <ChatArea>
       <Title>
-        <span
-         
-        >
-          그룹채팅 {room}
-        </span>
+        <span>그룹채팅 {room}</span>
         {chatToggle ? (
           <IoIosArrowUp
             onClick={toggleHandler}
@@ -40,7 +34,7 @@ const RealTimeChat = ({socket, nick, room}) => {
       </Title>
       <Wrapper>
         {/* 임시 방 생성 */}
-       
+
         {chatToggle && (
           <RealTimeChatList socket={socket} nick={nick} room={room} />
         )}

@@ -6,23 +6,21 @@ import "../../../App.css";
 
 import { CSSTransition } from "react-transition-group";
 
-const VideoHeader = ({openBar}) => {
-
+const VideoHeader = ({ openBar }) => {
   const duration = 700;
   return (
     <CSSTransition
-        in={openBar}
-        timeout={duration}
-        classNames="header"
-        unmountOnExit
-      >
-
-    <Head>
-      <Logo>SGETHER</Logo>
-      <h2>Study Title</h2>
-      <BasicBtn />
-    </Head>
-      </CSSTransition>
+      in={openBar}
+      timeout={duration}
+      classNames="header"
+      unmountOnExit
+    >
+      <Head>
+        <Logo>SGETHER</Logo>
+        <h2>Study Title</h2>
+        <BasicBtn />
+      </Head>
+    </CSSTransition>
   );
 };
 
@@ -43,4 +41,3 @@ const Logo = styled.span`
 `;
 
 export default VideoHeader;
-
