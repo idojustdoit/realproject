@@ -3,13 +3,38 @@ import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 
-const Login = ({ onClose }) => {
+const Login = ({ onClose, roomId }) => {
+  console.log(roomId);
+
+  const navigate = useNavigate();
+
   const outZone_ref = React.useRef(null);
   const [title, settitle] = React.useState("");
   const [todolist, setTodolist] = React.useState([]);
   const [personinfo, setPersoninfo] = React.useState([]);
 
-  const navigate = useNavigate();
+  console.log(roomId);
+
+  // todo 리스트 불러오기
+  // const TodoListAxios = () => {
+  //axios.defaults.withCredentials = true;
+  //   axios({
+  //     method: "get",
+  //     url: "/user/auth",
+  //     baseURL: "http://13.124.252.225",
+  // headers: {
+  //   authorization: localStorage.getItem("access_token"),
+  // },
+  //   })
+  //     .then(function (response) {
+  //       console.log(response);
+  //        setTodolist (response.data);
+  //     })
+  //     .catch(function (error) {
+  //       alert(error.response.data.message);
+  //       console.log(error);
+  //     });
+  // };
 
   // 방에서 만든 스터디명,  TodoList, 방에 소속된 유저의 프로필 URL, nickname , 선택한  방에 roomId
   const TodoListAxios = () => {
@@ -194,8 +219,10 @@ const Login = ({ onClose }) => {
             >
               취소
             </Btn1>
+
             <Btn2
               onClick={() => {
+                navigate(`/video/${roomId}`);
                 onClose();
                 //방입장하는 navigate(방상세)
               }}

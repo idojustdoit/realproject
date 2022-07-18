@@ -4,7 +4,7 @@ import { TiDelete } from "react-icons/ti";
 import styled from "styled-components";
 import HorizonLine from "../../../../elements/HorizonLine";
 
-const RealTimeChatList = ({ socket, nick, room }) => {
+const RealTimeChatList = ({ socket, nick, roomId }) => {
   const [currentMessage, setCurrentMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
 
@@ -34,7 +34,7 @@ const RealTimeChatList = ({ socket, nick, room }) => {
     e.preventDefault();
     if (currentMessage !== "") {
       const messageData = {
-        room: room,
+        roomId: roomId,
         author: nick,
         message: currentMessage,
         time: fullTime,
@@ -60,7 +60,7 @@ const RealTimeChatList = ({ socket, nick, room }) => {
       console.log(`bye(on): ${data}`);
       setMessageList((list) => [{ message: "님이 퇴장하셨습니다." }, ...list]);
     });
-  }, [socket,nick, room]);
+  }, [socket,nick, roomId]);
 
   return (
     <>
