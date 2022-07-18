@@ -13,7 +13,6 @@
     "@testing-library/user-event": "^13.2.1",
     "axios": "^0.27.2",
     "firebase": "^9.9.0",
-    "localtunnel": "^2.0.2",
     "react": "^18.2.0",
     "react-beautiful-dnd": "^13.1.0",
     "react-datepicker": "^4.8.0",
