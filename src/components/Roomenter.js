@@ -3,61 +3,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 
-
 const Login = ({ onClose, roomId }) => {
-console.log(roomId)
+  console.log(roomId);
 
   const navigate = useNavigate();
 
   const outZone_ref = React.useRef(null);
-
-  const [todolist, setTodolist] = React.useState([]);
-  const [personinfo, setPersoninfo] = React.useState([]);
-
-
-  // todo 리스트 불러오기
-  // const TodoListAxios = () => {
-  //axios.defaults.withCredentials = true;
-  //   axios({
-  //     method: "get",
-  //     url: "/user/auth",
-  //     baseURL: "http://13.124.252.225",
-  // headers: {
-  //   authorization: localStorage.getItem("access_token"),
-  // },
-  //   })
-  //     .then(function (response) {
-  //       console.log(response);
-  //        setTodolist (response.data);
-  //     })
-  //     .catch(function (error) {
-  //       alert(error.response.data.message);
-  //       console.log(error);
-  //     });
-  // };
-
-  // 참여 멤버의  url과 닉네임불러오기
-  // const MemberlistAxios = () => {
-  //axios.defaults.withCredentials = true;
-  //   axios({
-  //     method: "get",
-  //     url: "/user/auth",
-  //     baseURL: "http://13.124.252.225",
-  // headers: {
-  //   authorization: localStorage.getItem("access_token"),
-  // },
-  //   })
-
-  //     .then(function (response) {
-  //
-  //
-  //      setPersoninfo(response.data)
-  //     })
-  //     .catch(function (error) {
-  //       alert(error.response.data.message);
-  //       console.log(error);
-  //     });
-  // };
+  const [title, settitle] = React.useState("");
+  const [roomContent, setRoomContent] = React.useState([]);
+  const [personinfo, setPersoninfo] = React.useState([]); // 참여인원의 imgurl ,
 
   return (
     <Container>
@@ -70,6 +24,7 @@ console.log(roomId)
         }}
       >
         <ModalBlock>
+          {/* <Title>Title</Title> */}
           <Title> 자격증 공부</Title>
           <Line />
           <Label>
@@ -87,8 +42,8 @@ console.log(roomId)
             
             */}
             <div style={{ display: "flex", justifyContent: "center" }}>
-              <Chat1>Todo-List</Chat1>
-              <Todo>오늘은 4시간이상 하자</Todo>
+              <Chat1>스터디내용</Chat1>
+              <Todo>같이 으쌰으쌰 해요!!!!</Todo>
             </div>
           </Label>
           <Label>
@@ -127,6 +82,7 @@ console.log(roomId)
               <div>
                 <People>
                   <img
+                    alt=""
                     style={{
                       width: "25px",
                       height: "25px",
@@ -141,6 +97,7 @@ console.log(roomId)
                 <People>
                   {" "}
                   <img
+                    alt=""
                     style={{
                       width: "25px",
                       height: "25px",
@@ -155,6 +112,7 @@ console.log(roomId)
                 <People>
                   {" "}
                   <img
+                    alt=""
                     style={{
                       width: "25px",
                       height: "25px",
@@ -169,6 +127,7 @@ console.log(roomId)
                 <People>
                   {" "}
                   <img
+                    alt=""
                     style={{
                       width: "25px",
                       height: "25px",
@@ -194,7 +153,7 @@ console.log(roomId)
 
             <Btn2
               onClick={() => {
-                navigate(`/video/${roomId}`)
+                navigate(`/video/${roomId}`);
                 onClose();
                 //방입장하는 navigate(방상세)
               }}

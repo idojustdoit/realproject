@@ -16,6 +16,7 @@ import Footer from "../components/Footer";
 import RoomList from "../components/mypage/RoomList";
 import SmallRoom from "../components/mypage/SmallRoom";
 import SmallRoomSlider from "../components/mypage/SmallRoomSlider";
+import Graph from "../components/Graph";
 
 const Mypage = () => {
   const BASE_URL = `서버주소`;
@@ -66,7 +67,9 @@ const Mypage = () => {
                 </li>
               </UserCardBottom>
             </UserCardCont>
-            <GraphCard></GraphCard>
+            <GraphCard>
+              <Graph />
+            </GraphCard>
           </Cont>
         </UserCont>
         <StudyCont className="menu-nav__cont">
@@ -214,7 +217,9 @@ const UserCardBottom = styled.ul`
 `;
 
 const GraphCard = styled(UserCardCont)`
-  background-color: #a6a6fa;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 1px 1px 1px 1px gray;
 `;
 
 const StudyCont = styled.div`

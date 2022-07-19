@@ -7,6 +7,7 @@ import "./shared/font/pretendard.css";
 import MainPage from "./pages/MainPage";
 import MyPage from "./pages/Mypage";
 import Modify from "./pages/Modify";
+import Kakaologin from "./pages/Kakaologin";
 import VideoChat from "./pages/VideoChat";
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
             <Route path="/" element={<MainPage />}></Route>
             <Route path="/mypage" element={<MyPage />}></Route>
             <Route path="Modify" element={<Modify />}></Route>
+            <Route path="/Kakaologin" element={<Kakaologin />}></Route>
             <Route path="/video" element={<VideoChat />}></Route>
             <Route path="/video/:roomId" element={<VideoChat />}></Route>
           </Routes>

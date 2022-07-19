@@ -16,7 +16,7 @@ const Room = ({
 }) => {
   const [likeState, setLikeState] = useState(isLiked);
 
-  const token = sessionStorage.getItem("accessToken");
+  const token = localStorage.getItem("accessToken");
 
   function toggleLike() {
     // setLikeState(!likeState) 하면 안됨 이전 상태를 기반으로 상태를 반전시켜주기
@@ -72,7 +72,9 @@ const Room = ({
             )}
 
             <BlackBtn onClick={EnterModal}>참여하기</BlackBtn>
-            <Portal>{EnterOpen && <Roomenter roomId={roomId} onClose={EnterModal} />}</Portal>
+            <Portal>
+              {EnterOpen && <Roomenter roomId={roomId} onClose={EnterModal} />}
+            </Portal>
           </BtnBox>
         ) : (
           <BtnBox>

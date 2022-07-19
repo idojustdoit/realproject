@@ -23,10 +23,9 @@ const socket = io.connect("https://www.e-gloo.link");
 const Video = () => {
   const nick = "성인";
 
-  // const roomId = "스터디";
-  const {roomId} = useParams();
-  console.log(roomId)
+  const roomId = "스터디";
 
+  console.log(roomId);
   const [openBar, setOpenBar] = useState(true);
 
   const sideBarHandler = () => {

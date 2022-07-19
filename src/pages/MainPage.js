@@ -94,6 +94,7 @@ function MainPage() {
 
   //받아온 메인 룸 리스트
   const list = useSelector((state) => state.room.roomList);
+
   const loadingState = useSelector((state) => state.room?.axiosState);
   console.log(loadingState);
 

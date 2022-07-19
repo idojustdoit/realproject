@@ -91,8 +91,6 @@ const UserScreen = ({ socket, nick, room }) => {
 
         await getCameras();
 
-        
-
         // RTC code
 
         myPeerConnection = new RTCPeerConnection();
@@ -103,13 +101,11 @@ const UserScreen = ({ socket, nick, room }) => {
         console.log(e);
       }
     };
-    
 
     getMedia();
 
     setMute(false);
     setVideoCtrl(false);
-
 
     socket.on("welcome", async () => {
       const offer = await myPeerConnection.createOffer();
@@ -118,8 +114,8 @@ const UserScreen = ({ socket, nick, room }) => {
       socket.emit("offer", offer, room);
     });
 
-    socket.on("offer", async(offer) => {
-      console.log(offer)
+    socket.on("offer", async (offer) => {
+      console.log(offer);
       await myPeerConnection.setRemoteDescription(offer);
     });
   }, [socket, room, audioId, cameraId]);
