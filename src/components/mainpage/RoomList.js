@@ -11,7 +11,6 @@ const RoomList = ({ roomList }) => {
 
   //groupList? 숫자로 지정된 카테고리도 같이 보내주면 좋을듯
 
-  console.log(roomList);
 
   const [visible, setVisible] = useState(6);
   useEffect(() => {}, []);

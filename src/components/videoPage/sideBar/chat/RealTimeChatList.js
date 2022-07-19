@@ -60,7 +60,7 @@ const RealTimeChatList = ({ socket, nick, roomId }) => {
       console.log(`bye(on): ${data}`);
       setMessageList((list) => [{ message: "님이 퇴장하셨습니다." }, ...list]);
     });
-  }, [socket,nick, roomId]);
+  }, [socket, nick, roomId]);
 
   return (
     <>
