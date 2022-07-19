@@ -8,6 +8,7 @@ import MainPage from "./pages/MainPage";
 import MyPage from "./pages/Mypage";
 import Modify from "./pages/Modify";
 import VideoPage from "./pages/VideoPage";
+import Kakaologin from "./pages/Kakaologin";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
             <Route path="/" element={<MainPage />}></Route>
             <Route path="/mypage" element={<MyPage />}></Route>
             <Route path="Modify" element={<Modify />}></Route>
+            <Route path="/Kakaologin" element={<Kakaologin />}></Route>
             <Route path="/video/:roomId" element={<VideoPage />}></Route>
           </Routes>
         </Router>

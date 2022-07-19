@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { changeLoginState } from "../redux/modules/userSlice";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 
 import SignUp from "./Signup";
 import Portal from "./Portal";
@@ -18,17 +18,19 @@ import { ReactComponent as MyPageIcon } from "../shared/header-assets/login_user
 import { ReactComponent as LogoutIcon } from "../shared/header-assets/icon-out-mono.svg";
 
 function Header() {
+  const navigate = useNavigate();
   //loginState 기본값 false
   const loginState = useSelector((state) => state.user.isLogin);
   const dispatch = useDispatch();
   //isLogin 기본 state값 false
-  const token = sessionStorage.getItem("accessToken");
+  const token = localStorage.getItem("accessToken");
   // const dispatch = useDispatch();
 
   const logoutHandler = (e) => {
     // dispatch(authActions.logout());
-    sessionStorage.removeItem("accessToken");
-    sessionStorage.removeItem("refreshToken");
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("userId");
     window.location.reload();
   };
 
@@ -69,7 +71,12 @@ function Header() {
       <FlexBox>
         <LeftCont>
           <LogoCont>
-            <LogoIcon />
+            <LogoIcon
+              onClick={() => {
+                navigate("/");
+              }}
+              style={{ cursor: "pointer" }}
+            />
           </LogoCont>
           <Ul>
             <Li>

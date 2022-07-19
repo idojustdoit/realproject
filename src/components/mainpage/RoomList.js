@@ -35,8 +35,8 @@ const RoomList = ({ roomList }) => {
               key={room._id}
               roomId={room.roomId}
               imageUrl={
-                room.imageUrl
-                  ? room.imageUrl
+                room.imgUrl
+                  ? room.imgUrl
                   : `${process.env.PUBLIC_URL}/img/sgether.JPG`
               }
               title={room.title}

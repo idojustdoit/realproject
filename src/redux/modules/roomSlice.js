@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const BASE_URL = "http://3.35.26.55/";
-const token = sessionStorage.getItem("token");
+const token = localStorage.getItem("token");
 
 // Get All Posting
 export const getAllListsDB = createAsyncThunk("GET/getAllLists", async () => {
