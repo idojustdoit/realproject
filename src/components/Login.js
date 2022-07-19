@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import axios from "axios";
 import kakao from "../shared/kakao.png";
-
 import GoogleButton from "../pages/GoogleButton";
 
 const Login = ({ onClose, SignOpen }) => {

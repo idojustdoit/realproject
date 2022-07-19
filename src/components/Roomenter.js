@@ -10,77 +10,8 @@ const Login = ({ onClose, roomId }) => {
 
   const outZone_ref = React.useRef(null);
   const [title, settitle] = React.useState("");
-  const [todolist, setTodolist] = React.useState([]);
-  const [personinfo, setPersoninfo] = React.useState([]);
-
-  console.log(roomId);
-
-  // todo 리스트 불러오기
-  // const TodoListAxios = () => {
-  //axios.defaults.withCredentials = true;
-  //   axios({
-  //     method: "get",
-  //     url: "/user/auth",
-  //     baseURL: "http://13.124.252.225",
-  // headers: {
-  //   authorization: localStorage.getItem("access_token"),
-  // },
-  //   })
-  //     .then(function (response) {
-  //       console.log(response);
-  //        setTodolist (response.data);
-  //     })
-  //     .catch(function (error) {
-  //       alert(error.response.data.message);
-  //       console.log(error);
-  //     });
-  // };
-
-  // 방에서 만든 스터디명,  TodoList, 방에 소속된 유저의 프로필 URL, nickname , 선택한  방에 roomId
-  const TodoListAxios = () => {
-    axios.defaults.withCredentials = true;
-    axios({
-      method: "GET",
-      url: "/",
-      baseURL: "http://13.124.252.225",
-      headers: {
-        authorization: localStorage.getItem("access_token"),
-      },
-    })
-      .then(function (response) {
-        console.log(response);
-        settitle(response.data);
-        setTodolist(response.data);
-        setPersoninfo(response.data);
-
-        //  {setprofileURL(response.data);map함수 사용..  각각? 뭐가맞죠?
-        //  setNicknames(response.data)map함수 사용..}
-      })
-      .catch(function (error) {
-        alert(error.response.data.message);
-        console.log(error);
-      });
-  };
-  // 참여 멤버의  url과 닉네임불러오기
-  const RoomEnterAxios = () => {
-    axios.defaults.withCredentials = true;
-    axios({
-      method: "post",
-      url: "url/roomId",
-      data: {
-        password: "",
-      },
-      baseURL: "http://13.124.252.225",
-      headers: {
-        authorization: localStorage.getItem("access_token"),
-      },
-    })
-      .then(function (response) {})
-      .catch(function (error) {
-        alert(error.response.data.message);
-        console.log(error);
-      });
-  };
+  const [roomContent, setRoomContent] = React.useState([]);
+  const [personinfo, setPersoninfo] = React.useState([]); // 참여인원의 imgurl ,
 
   return (
     <Container>

@@ -9,7 +9,7 @@ const clientId =
   "983613093044-urr60eu9oldn021gdtsgreb7fnejoqr5.apps.googleusercontent.com";
 
 const GoogleButton = ({ onSocial }) => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   useEffect(() => {
     function start() {
       gapi.client.init({
@@ -21,15 +21,25 @@ const GoogleButton = ({ onSocial }) => {
   }, []);
   const onSuccess = (response) => {
     console.log(response);
-    const accessToken = response.nw.accessToken;
-    const nickname = response.nw.wt.Ad;
-    const uerId = response.nw.wt.cu;
-    axios.post("url", { accessToken, nickname, uerId }).then((res) => {
+    const tokenId = response.tokenId;
+    const nickname = response.profileObj.name;
+    const email = response.profileObj.email;
+    const iconUrl = response.profileObj.imageUrl;
+
+    let body = {
+      data: {
+        tokenId: tokenId,
+        nickname: nickname,
+        email: email,
+        iconUrl: iconUrl,
+      },
+    };
+
+    axios.post("http://3.35.26.55/api/google/login", body).then((res) => {
       console.log(res);
       localStorage.setItem("accessToken", res.data.accessToken);
       localStorage.setItem("refreshToken", res.data.refreshToken);
       localStorage.setItem("userId", res.data.userId);
-      navigate("/");
     });
   };
 

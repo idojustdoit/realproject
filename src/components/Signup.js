@@ -16,16 +16,27 @@ const SignUp = ({ onClose, LoginOpen }) => {
   const [passwordCheck, setpasswordCheck] = React.useState(""); //비밀번호 확인 인풋
   const [nickname, setNickName] = React.useState(""); //닉네임인풋
 
-  // 유효성 검사 email, password,  닉네임 중복검사
-  const [userIdError, setUserIdError] = React.useState(false); // email 중복검사.
+  // 유효성 검사 email, password , nickname
+  const [userIdError, setUserIdError] = React.useState(false); //이메일 유효성검사\
+  const [verEmail, setVerEmail] = React.useState(false); //이메일 인증검사
+  const [nickError, setNickError] = React.useState(false); //닉네임 유효성 검사
 
+  const confirmNumber = (e) => {};
+
+  // 조건 최소 2글자
   const onChangeUserId = (e) => {
     const userIdRegex =
-      /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
+      /^[0-9a-zA-Z]([-_/.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_/.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
     if (!e.target.value || userIdRegex.test(e.target.value))
       setUserIdError(false);
     else setUserIdError(true);
     setemail(e.target.value);
+  };
+
+  const handlerNickName = (e) => {
+    if (e.target.value.length >= 2) setNickError(false);
+    else setNickError(true);
+    setNickName(e.target.value);
   };
 
   //firebase 사용해서 url 추출
@@ -38,6 +49,46 @@ const SignUp = ({ onClose, LoginOpen }) => {
     const file_url = await getDownloadURL(upload_file.ref);
     profile_ref.current = { url: file_url };
     setprofile(profile_ref.current.url);
+  };
+
+  //닉네임 중복확인
+  const exnickname = () => {
+    axios({
+      method: "POST",
+      url: "/api/auth/exnickname",
+      data: {
+        nickname: nickname,
+      },
+      baseURL: "http://3.35.26.55",
+    })
+      .then((response) => {
+        console.log(response);
+        alert("사용가능한 닉네임 입니다.");
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("다른 닉네임을 작성해주세요");
+      });
+  };
+
+  //이메일 인증 확인 통신
+  const confirmMail = () => {
+    axios({
+      method: "POST",
+      url: "/api/mailauth/sendEmail",
+      headers: { "Content-Type": "application/json" },
+      data: {
+        email: email,
+      },
+      baseURL: "http://15.164.164.17:3000",
+    })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    setVerEmail(true);
   };
 
   // 회원가입 통신
@@ -69,10 +120,6 @@ const SignUp = ({ onClose, LoginOpen }) => {
 
   const handlerPw = (e) => {
     setPwd(e.target.value);
-  };
-
-  const handlerNickName = (e) => {
-    setNickName(e.target.value);
   };
 
   const handlerPwcheck = (e) => {
@@ -131,16 +178,34 @@ const SignUp = ({ onClose, LoginOpen }) => {
               <Chat1>이메일</Chat1>
 
               <Input
+                style={{
+                  width: "200px",
+                  marginRight: "10px",
+                }}
                 type="email"
                 placeholder="abc@example.com"
                 onChange={onChangeUserId}
               />
+              <Button3 onClick={confirmMail}> 인증확인</Button3>
               {userIdError && (
                 <div
-                  class="invalid-input"
                   style={{ color: "red", fontSize: "14px", marginTop: "3px" }}
                 >
-                  이메일 형식에 맞춰 작성해주세요.
+                  {" "}
+                  *이메일형식을 바르게 작성해주세요.{" "}
+                </div>
+              )}
+              {verEmail && (
+                <div>
+                  <Input
+                    style={{
+                      width: "200px",
+                      marginRight: "10px",
+                      marginLeft: "76px",
+                    }}
+                    type="email"
+                  />
+                  <Button3 onClick={confirmNumber}> 번호확인</Button3>
                 </div>
               )}
             </div>
@@ -171,7 +236,7 @@ const SignUp = ({ onClose, LoginOpen }) => {
                   style={{ color: "red", fontSize: "14px", marginTop: "3px" }}
                 >
                   {" "}
-                  비밀번호가 같은지 확인해주세요{" "}
+                  *비밀번호가 같은지 확인해주세요{" "}
                 </div>
               )}
             </div>
@@ -180,7 +245,21 @@ const SignUp = ({ onClose, LoginOpen }) => {
             <div>
               <Chat1>닉네임</Chat1>
 
-              <Input type="text" onChange={handlerNickName} />
+              <Input
+                style={{ width: "200px", marginRight: "10px" }}
+                type="text"
+                onChange={handlerNickName}
+              />
+
+              <Button3 onClick={exnickname}> 중복확인</Button3>
+              {nickError && (
+                <div
+                  class="invalid-input"
+                  style={{ color: "red", fontSize: "14px", marginTop: "3px" }}
+                >
+                  *최소 2글자이상 작성해주세요.
+                </div>
+              )}
             </div>
           </Label>
           <LoginBtn>
@@ -344,6 +423,34 @@ const Button2 = styled.button`
   height: 50px;
   border: 1px solid black;
   padding: 0 16px 3px;
+  transition: all 80ms linear;
+  user-select: none;
+  outline: none;
+  cursor: pointer;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  &:hover {
+    background-color: rgba(74, 21, 75, 0.9);
+    border: none;
+  }
+  &:focus {
+    --saf-0: rgba(var(--sk_highlight, 18, 100, 163), 1);
+    box-shadow: 0 0 0 1px var(--saf-0), 0 0 0 5px rgba(29, 155, 209, 0.3);
+  }
+`;
+
+const Button3 = styled.button`
+  align-content: center;
+  text-align: center;
+  color: black;
+  background-color: white;
+  border: none;
+  font-size: 14px;
+  font-weight: 700;
+  width: 70px;
+  height: 36px;
+  border: 1px solid black;
+
   transition: all 80ms linear;
   user-select: none;
   outline: none;

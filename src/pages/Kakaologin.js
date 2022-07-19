@@ -23,22 +23,31 @@ function Kakaologin() {
         console.log(res);
         const access_token = res.data.access_token;
         const refresh_token = res.data.refresh_token;
-
-        axios.post("url", { access_token, refresh_token }).then((res) => {
-          const user_id = res.data.user_id;
-          const user_nickname = res.data.kakao_profile.user_nickname;
-          const user_url = res.data.kakao_profile.image;
-
-          axios
-            .post("url", { user_id, user_nickname, user_url })
-            .then((res) => {
-              console.log(res);
-              localStorage.setItem("accessToken", res.data.accessToken);
-              localStorage.setItem("refreshToken", res.data.refreshToken);
-              localStorage.setItem("userId", res.data.userId);
-              navigate("/");
-            });
-        });
+        axios
+          .post("http://3.35.26.55/api/kakao/login", {
+            access_token,
+            refresh_token,
+          })
+          .then((res) => {
+            const user_id = res.data.id;
+            const user_email = res.data.kakao_account.email;
+            const user_nickname = res.data.kakao_account.nickname;
+            const user_url = res.data.kakao_account.profile.profile_image_url;
+            axios
+              .post("http://3.35.26.55/api/kakao/newuser", {
+                user_id,
+                user_email,
+                user_nickname,
+                user_url,
+              })
+              .then((res) => {
+                console.log(res);
+                localStorage.setItem("accessToken", res.data.accessToken);
+                localStorage.setItem("refreshToken", res.data.refreshToken);
+                localStorage.setItem("userId", res.data.snsId);
+                navigate("/");
+              });
+          });
       });
   }, []);
   return <div> Kakaologin</div>;

@@ -18,11 +18,14 @@ import io from "socket.io-client";
 
 // const socket = io.connect("http://3.35.26.55");
 const socket = io.connect("https://www.e-gloo.link");
+// const socket = io.connect("http://localhost:3001");
 
 const Video = () => {
-  const nick = "율찬";
+  const nick = "성인";
 
-  const { roomId } = useParams();
+  const roomId = "스터디";
+
+  console.log(roomId);
   const [openBar, setOpenBar] = useState(true);
 
   const sideBarHandler = () => {

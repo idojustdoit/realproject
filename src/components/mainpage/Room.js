@@ -72,7 +72,9 @@ const Room = ({
             )}
 
             <BlackBtn onClick={EnterModal}>참여하기</BlackBtn>
-            <Portal>{EnterOpen && <Roomenter roomId={roomId} onClose={EnterModal} />}</Portal>
+            <Portal>
+              {EnterOpen && <Roomenter roomId={roomId} onClose={EnterModal} />}
+            </Portal>
           </BtnBox>
         ) : (
           <BtnBox>

@@ -5,7 +5,7 @@ import axios from "axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./Datepicker.css";
-import roomimg from "../shared/roomimg.png";
+
 import { ko } from "date-fns/esm/locale";
 import { storage } from "../shared/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -93,8 +93,8 @@ const Login = ({ onClose }) => {
 
   // 서버에 방 정보 보내는 통신
   const CreateAxios = () => {
-    const token = sessionStorage.getItem("accessToken");
-    const userId = sessionStorage.getItem("userId");
+    const token = localStorage.getItem("accessToken");
+    const userId = localStorage.getItem("userId");
     axios({
       method: "POST",
       url: `/api/room/create/${userId}`,
@@ -105,6 +105,7 @@ const Login = ({ onClose }) => {
         content: content,
         date: dateRange,
         tagName: ["전체", ...categoryName],
+        isLike: false,
       },
 
       baseURL: "http://3.35.26.55",
@@ -117,12 +118,11 @@ const Login = ({ onClose }) => {
         console.log(response);
         alert("방생성이 되었습니다.");
         onClose();
-        window.location.reload();
         //방상세페이지로 이동.
       })
       .catch((error) => {
         console.log(error);
-        alert("방 양식에 맞게 입력해주세요!");
+        alert("error.message");
       });
   };
 

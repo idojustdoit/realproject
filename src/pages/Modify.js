@@ -4,10 +4,10 @@ import styled from "styled-components";
 import axios from "axios";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import Timer from "../components/Timer";
 
 function Modify() {
   const navigate = useNavigate();
-
   const imgUrl_ref = React.useRef(null); //이미지url
   const [imgUrl, setimgUrl] = React.useState(
     //이미지url
@@ -23,28 +23,28 @@ function Modify() {
   };
 
   //  해당회원의 정보요청
-  // const originData = () => {
-  //   axios.defaults.withCredentials = true;
-  //   axios({
-  //     method: "get",
-  //     url: "/api/mypage/update/",
-  //     baseURL: "http://localhost:5001",
+  const originData = () => {
+    axios.defaults.withCredentials = true;
+    axios({
+      method: "get",
+      url: "/api/mypage/update/",
+      baseURL: "http://localhost:5001",
 
-  //     // headers: {
-  //     //   authorization: localStorage.getItem("access_token"),
-  //   })
-  //     .then((response) => {
-  //       console.log(response);
-  //       setimgUrl(response.data.iconUrl);
-  //       setNickname(response.data.nickname);
-  //       setpassword(response.data.password);
-  //       setpasswordCheck(response.data.passwordCheck);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //       alert(error.response.data);
-  //     });
-  // };
+      // headers: {
+      //   authorization: localStorage.getItem("access_token"),
+    })
+      .then((response) => {
+        console.log(response);
+        setimgUrl(response.data.iconUrl);
+        setNickname(response.data.nickname);
+        setpassword(response.data.password);
+        setpasswordCheck(response.data.passwordCheck);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(error.response.data);
+      });
+  };
 
   // 페이지가 나오자마자 회원정보 불러오기 및 삭제
   // useEffect(() => {
@@ -98,7 +98,8 @@ function Modify() {
       <Background>
         <Header />
         <ModalBlock>
-          <Title>개인정보 수정</Title>
+          <Title>개인정보 수정 </Title>
+          <Timer />
           <Line />
           <Label>
             <span>

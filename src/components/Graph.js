@@ -1,5 +1,5 @@
-import React from "react";
-
+import React, { useEffect } from "react";
+import axios from "axios";
 import {
   BarChart,
   Bar,
@@ -11,6 +11,31 @@ import {
 } from "recharts";
 
 function Graph() {
+  // const [data,setData] = React.useState([])
+
+  const Getdata = () => {
+    axios.defaults.withCredentials = true;
+    axios({
+      method: "GET",
+      url: "지금까지 공부시간받는 api",
+      baseURL: "",
+
+      headers: {
+        authorization: localStorage.getItem("access_token"),
+      },
+    })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(error.response.data);
+      });
+  };
+  useEffect(() => {
+    Getdata();
+  }, []);
+  //단위 변경해서 넣어주고 변수 명 체크하기
   const data = [
     { name: "월", 공부시간: 7.3 },
     { name: "화", 공부시간: 5.2 },
@@ -20,7 +45,7 @@ function Graph() {
     { name: "토", 공부시간: 5 },
     { name: "일", 공부시간: 0 },
   ];
-  var result = 1;
+
   return (
     <div style={{ marginTop: "40px" }}>
       <BarChart
