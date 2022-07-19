@@ -19,7 +19,6 @@ const TodoList = () => {
   const check_ref = useRef(null);
 
   const todoListItem = useSelector((state) => state.todoList);
-  console.log(todoListItem);
 
   const [updateTodo, setUpdateTodo] = useState(false);
   const [inputShow, setInputShow] = useState(false);
