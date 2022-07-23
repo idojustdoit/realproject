@@ -30,7 +30,7 @@ const Login = ({ onClose, SignOpen }) => {
       method: "POST",
       url: "/api/auth/login",
       data: {
-        username: username,
+        email: username,
         password: password,
       },
       baseURL: "http://3.35.26.55",
@@ -40,6 +40,7 @@ const Login = ({ onClose, SignOpen }) => {
         alert(response.data.msg);
         axios.defaults.withCredentials = true;
         localStorage.setItem("accessToken", response.data.accessToken);
+        localStorage.setItem("nickname", response.data.nickname);
         localStorage.setItem("refreshToken", response.data.refreshToken);
         localStorage.setItem("userId", response.data.userId);
         onClose();

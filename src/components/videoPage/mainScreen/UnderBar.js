@@ -36,9 +36,9 @@ const PlusBar = styled.div`
   width: 560px;
   align-items: center;
   padding: 5px;
-  height: ${(props) => (!props.openBar ? "10px" : "90px")};
+  height: ${(props) => (!props.openBar ? "10px" : "10vh")};
   justify-content: center;
-  background-color: orange;
+  background-color: ${(props) => (!props.openBar ? "#FFFFFF" : "#333333")};
   margin-bottom: 30px;
   border-radius: 10px;
   transition: all 0.5s ease-in-out;

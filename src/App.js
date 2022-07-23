@@ -31,6 +31,7 @@ function App() {
 const StyledApp = styled.div`
   /* width: 1920px; */
   /* width: 100%; */
+  /* min-width: 1920px; */
   margin: 0 auto;
   height: auto;
   display: flex;

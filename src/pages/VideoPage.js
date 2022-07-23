@@ -22,10 +22,10 @@ const Video = (props) => {
   const ref = useRef();
 
   useEffect(() => {
-    props.peer.on("stream", (stream) => {
+    props.peer.peer.on("stream", (stream) => {
       ref.current.srcObject = stream;
     });
-  }, []);
+  }, [props.peer]);
 
   return <StyledVideo playsInline autoPlay ref={ref} />;
 };
@@ -41,9 +41,10 @@ const VideoPage = () => {
   const peersRef = useRef([]);
   const { roomId } = useParams();
 
-  const socket = io.connect("https://www.e-gloo.link");
+  const socket = io.connect("http://localhost:3001");
 
-  const nick = "성인";
+
+  const nick = localStorage.getItem("nickname");
 
   // const roomId = "스터디";
 
@@ -58,33 +59,44 @@ const VideoPage = () => {
   };
 
   useEffect(() => {
-    socketRef.current = io.connect("https://www.e-gloo.link");
+    socketRef.current = socket;
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: false })
       .then((stream) => {
         userVideo.current.srcObject = stream;
-        socketRef.current.emit("join room", roomId);
+        socketRef.current.emit("join room", roomId, nick);
         socketRef.current.on("all users", (users) => {
           const peers = [];
           users.forEach((userId) => {
             const peer = createPeer(userId, socketRef.current.id, stream);
-            peersRef.current.push({
+
+            const newPeer = {
               peerID: userId,
               peer,
-            });
+            }
+            peersRef.current.push(newPeer);
             peers.push(peer);
+            setPeers(prev => [...prev, newPeer]);
           });
-          setPeers(peers);
         });
+        
 
         socketRef.current.on("user joined", (payload) => {
+          
           const peer = addPeer(payload.signal, payload.callerId, stream);
-          peersRef.current.push({
-            peerID: payload.callerId,
-            peer,
-          });
 
-          setPeers((users) => [...users, peer]);
+          const peerObj = {
+            peerID: payload.callerId,
+            nick:nick,
+            peer,
+          }
+
+          peersRef.current.push(peerObj);
+
+          
+
+          setPeers((users) => [...users, peerObj]);
+
         });
 
         socketRef.current.on("receiving returned signal", (payload) => {
@@ -92,7 +104,7 @@ const VideoPage = () => {
           item.peer.signal(payload.signal);
         });
       });
-  }, []);
+  }, [roomId]);
 
   function createPeer(userToSignal, callerId, stream) {
     const peer = new Peer({
@@ -289,7 +301,7 @@ const VideoPage = () => {
   // const audioSelect = (e) => {
   //   setAudioId(e.target.value);
   // };
-
+console.log(peers)
   return (
     <>
       <ScreenWrapper>
@@ -310,10 +322,68 @@ const VideoPage = () => {
             className="video-area"
             style={{ display: "flex", alignItems: "center" }}
           >
-            <Screen className="videoGrid" BarState={!openBar}>
+            {/* video 화면 grid */}
+            <Screen BarState={!openBar}>
+
+              {/* 내 화면 */}
+              <div style={{display:"flex", flexDirection:"column",}}>
               <StyledVideo muted ref={userVideo} autoPlay playsInline />
+              <UnderPlusBar
+                  style={{
+                    width: "100%",
+                    height: "17%",
+                    backgroundColor: "#333333",
+                  }}
+                >
+                  <div>
+                    <div className="user_img"></div>
+                    <span className="user_name">{nick}</span>
+                  </div>
+                  <span>00:00:00</span>
+                  <DeviceSelctor className="video_control_btn">
+                    <div className="audio">
+                      {!mute ? <BsFillMicMuteFill /> : <AiFillAudio />}
+                    </div>
+                    <div className="camera">
+                      {!videoCtrl ? <TbVideoOff /> : <TbVideo />}
+                    </div>
+                  </DeviceSelctor>
+                </UnderPlusBar>
+              </div>
+              
               {peers.map((peer, index) => {
-                return <Video key={index} peer={peer} />;
+                console.log(peer);
+                return (
+                  <>
+                
+                {/* 다른 유저 입장시 화면 */}
+                <div key={index} style={{display:"flex", flexDirection:"column",}}>
+                <Video  peer={peer} />
+              <UnderPlusBar
+                  style={{
+                    width: "100%",
+                    height: "17%",
+                    backgroundColor: "#333333",
+                  }}
+                >
+                  <div>
+                    <div className="user_img"></div>
+                    <span className="user_name">{peer.nick}</span>
+                  </div>
+                  <span>00:00:00</span>
+                  <DeviceSelctor className="video_control_btn">
+                    <div className="audio">
+                      {!mute ? <BsFillMicMuteFill /> : <AiFillAudio />}
+                    </div>
+                    <div className="camera">
+                      {!videoCtrl ? <TbVideoOff /> : <TbVideo />}
+                    </div>
+                  </DeviceSelctor>
+                </UnderPlusBar>
+              </div>
+                
+                </>
+                );
               })}
             </Screen>
 
@@ -396,7 +466,7 @@ const VideoPage = () => {
 };
 
 const StyledVideo = styled.video`
-  height: 100%;
+  height: 83%;
   width: 100%;
   object-fit: cover;
   background-color: white;
@@ -422,7 +492,7 @@ const Screen = styled.main`
   gap: ${(props) => (props.BarState ? "5px" : "15px")};
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: ${(props) =>
-    props.BarState ? "22vw 22vw" : "19vw 19vw"};
+    props.BarState ? "25vw 25vw" : "20vw 20vw"};
   transition: all 0.5s;
 `;
 
@@ -483,7 +553,7 @@ const DeviceSelctor = styled.div`
     justify-content: center;
     width: 30px;
     height: 30px;
-    background-color: dimgray;
+    background-color: black;
     color: lightgray;
     border-radius: 50%;
     font-size: 23px;
@@ -496,7 +566,7 @@ const DeviceSelctor = styled.div`
     justify-content: center;
     width: 30px;
     height: 30px;
-    background-color: dimgray;
+    background-color: black;
     color: lightgray;
     border-radius: 50%;
     font-size: 23px;

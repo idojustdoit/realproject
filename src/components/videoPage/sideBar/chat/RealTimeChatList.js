@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 
+
 import { TiDelete } from "react-icons/ti";
 import styled from "styled-components";
 import HorizonLine from "../../../../elements/HorizonLine";
@@ -60,7 +61,7 @@ const RealTimeChatList = ({ socket, nick, roomId }) => {
       console.log(`bye(on): ${data}`);
       setMessageList((list) => [{ message: "님이 퇴장하셨습니다." }, ...list]);
     });
-  }, [socket, nick, roomId]);
+  }, []);
 
   return (
     <>
@@ -205,7 +206,7 @@ const MessageForm = styled.form`
   button {
     width: 70px;
     height: 100%;
-    background-color: black;
+    background-color: #1D9FFD;
     color: white;
     font-weight: bold;
     border-radius: 5px;
@@ -231,8 +232,7 @@ const Message = styled.div`
     background-color: lightgray;
   }
   .nickname {
-    font-size: 1rem;
-    font-weight: bold;
+    font-size: 1.3rem;
   }
   .time {
     display: none;
@@ -244,7 +244,7 @@ const Message = styled.div`
   .message {
     max-width: 70%;
     color: ${(props) => (props.state ? "black" : "white")};
-    background-color: ${(props) => (props.state ? "#f1c40f" : "#95a5a6")};
+    background-color: ${(props) => (props.state ? "#CCE9FF" : "#95a5a6")};
     border-radius: 10px;
     padding: 10px;
     word-break: break-all;
