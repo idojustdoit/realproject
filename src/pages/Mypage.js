@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import "../styles/reset.css";
 import styled from "styled-components";
 import axios from "axios";
+import { Navigate, useNavigate } from "react-router-dom";
 
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
@@ -19,9 +20,13 @@ import SmallRoomSlider from "../components/mypage/SmallRoomSlider";
 import Graph from "../components/Graph";
 
 const Mypage = () => {
+  const navigate = useNavigate();
   const BASE_URL = `서버주소`;
   const [listValue, setListValue] = React.useState("1");
 
+  const modify = () => {
+    navigate("/modify");
+  };
   const handleChange = (event, newValue) => {
     setListValue(newValue);
     //newValue 값으로 axios 요청보내서 해당하는 자료 가져오기
@@ -46,7 +51,7 @@ const Mypage = () => {
                   <UserInfo>
                     <div>
                       스게더님{" "}
-                      <EditButton>
+                      <EditButton onClick={modify}>
                         <EditUserInfoIcon />
                       </EditButton>
                     </div>

@@ -3,13 +3,16 @@ import styled from "styled-components";
 import axios from "axios";
 import { storage } from "../shared/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import userprofile from "../shared/userprofile.png";
 
 const SignUp = ({ onClose, LoginOpen }) => {
+  const MySwal = withReactContent(Swal);
   const outZone_ref = React.useRef(null);
   const profile_ref = React.useRef(null); //유저 이미지 URL
   const [profile, setprofile] = React.useState(
-    //유저 이미지 URL
-    "https://opgg-com-image.akamaized.net/attach/images/20220220075306.1538486.jpg"
+    <img alt="" src={userprofile} />
   );
   const [email, setemail] = React.useState(""); //email 인풋
   const [password, setPwd] = React.useState(""); //비밀번호 인풋
@@ -20,8 +23,19 @@ const SignUp = ({ onClose, LoginOpen }) => {
   const [userIdError, setUserIdError] = React.useState(false); //이메일 유효성검사\
   const [verEmail, setVerEmail] = React.useState(false); //이메일 인증검사
   const [nickError, setNickError] = React.useState(false); //닉네임 유효성 검사
+  const [emailcode, setEmailcode] = React.useState(""); //
+  const [usernum, setUsernum] = React.useState(""); //
 
-  const confirmNumber = (e) => {};
+  const checknum = (e) => {
+    setUsernum(e.target.value);
+  };
+  const confirmNumber = () => {
+    if (usernum === emailcode) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
   // 조건 최소 2글자
   const onChangeUserId = (e) => {
@@ -63,11 +77,21 @@ const SignUp = ({ onClose, LoginOpen }) => {
     })
       .then((response) => {
         console.log(response);
-        alert("사용가능한 닉네임 입니다.");
+        MySwal.fire({
+          title: "success",
+          text: "사용 가능한 닉네임입니다!",
+          icon: "success",
+          confirmButtonText: "확인",
+        });
       })
       .catch((error) => {
         console.log(error);
-        alert("다른 닉네임을 작성해주세요");
+        MySwal.fire({
+          title: "Error!",
+          text: "다른 닉네임을 입력해주세요.",
+          icon: "error",
+          confirmButtonText: "확인",
+        });
       });
   };
 
@@ -75,18 +99,25 @@ const SignUp = ({ onClose, LoginOpen }) => {
   const confirmMail = () => {
     axios({
       method: "POST",
-      url: "/api/mailauth/sendEmail",
+      url: "/api/authMail",
       headers: { "Content-Type": "application/json" },
       data: {
         email: email,
       },
-      baseURL: "http://15.164.164.17:3000",
+      baseURL: "http://3.35.26.55",
     })
       .then((response) => {
         console.log(response);
+        setEmailcode(response.data.authNum);
       })
       .catch((error) => {
         console.log(error);
+        MySwal.fire({
+          title: "Error!",
+          text: "인증번호를 다시 확인해주세요.",
+          icon: "error",
+          confirmButtonText: "확인",
+        });
       });
     setVerEmail(true);
   };
@@ -103,18 +134,22 @@ const SignUp = ({ onClose, LoginOpen }) => {
         nickname: nickname,
         iconUrl: profile,
       },
-      baseURL: "http://3.35.26.55",
+      baseURL: "http://15.164.164.17:3000",
     })
       .then((response) => {
         console.log(response);
-
         alert("회원가입을 축하드립니다!!");
         onClose();
         LoginOpen();
       })
       .catch((error) => {
         console.log(error);
-        alert(error.response.data.message);
+        MySwal.fire({
+          title: "Error!",
+          text: "이메일을 확인해주세요.",
+          icon: "error",
+          confirmButtonText: "확인",
+        });
       });
   };
 
@@ -125,6 +160,8 @@ const SignUp = ({ onClose, LoginOpen }) => {
   const handlerPwcheck = (e) => {
     setpasswordCheck(e.target.value);
   };
+  console.log(emailcode);
+  console.log(usernum);
 
   return (
     <Container>
@@ -150,7 +187,7 @@ const SignUp = ({ onClose, LoginOpen }) => {
                   borderRadius: "50px",
                   position: "relative",
                 }}
-                src={profile}
+                src={userprofile}
               />
               <img
                 alt=""
@@ -159,7 +196,7 @@ const SignUp = ({ onClose, LoginOpen }) => {
                   width: "28px",
                   borderRadius: "50px",
                   position: "absolute",
-                  marginLeft: "-30px",
+                  marginLeft: "-25px",
                   marginTop: "53px",
                 }}
                 src="https://www.shareicon.net/data/2017/05/09/885771_camera_512x512.png"
@@ -189,10 +226,10 @@ const SignUp = ({ onClose, LoginOpen }) => {
               <Button3 onClick={confirmMail}> 인증확인</Button3>
               {userIdError && (
                 <div
-                  style={{ color: "red", fontSize: "14px", marginTop: "3px" }}
+                  style={{ color: "red", fontSize: "12px", marginTop: "3px" }}
                 >
                   {" "}
-                  *이메일형식을 바르게 작성해주세요.{" "}
+                  ※이메일형식을 바르게 작성해주세요.{" "}
                 </div>
               )}
               {verEmail && (
@@ -203,9 +240,22 @@ const SignUp = ({ onClose, LoginOpen }) => {
                       marginRight: "10px",
                       marginLeft: "76px",
                     }}
+                    onChange={checknum}
                     type="email"
                   />
                   <Button3 onClick={confirmNumber}> 번호확인</Button3>
+                  {usernum !== emailcode && (
+                    <div
+                      style={{
+                        marginRight: "40px",
+                        color: "red",
+                        fontSize: "12px",
+                        marginTop: "3px",
+                      }}
+                    >
+                      ※번호가 일치하지않습니다.
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -233,10 +283,10 @@ const SignUp = ({ onClose, LoginOpen }) => {
               />
               {password !== passwordCheck && (
                 <div
-                  style={{ color: "red", fontSize: "14px", marginTop: "3px" }}
+                  style={{ color: "red", fontSize: "12px", marginTop: "3px" }}
                 >
                   {" "}
-                  *비밀번호가 같은지 확인해주세요{" "}
+                  ※비밀번호가 같은지 확인해주세요{" "}
                 </div>
               )}
             </div>
@@ -255,9 +305,9 @@ const SignUp = ({ onClose, LoginOpen }) => {
               {nickError && (
                 <div
                   class="invalid-input"
-                  style={{ color: "red", fontSize: "14px", marginTop: "3px" }}
+                  style={{ color: "red", fontSize: "12px", marginTop: "3px" }}
                 >
-                  *최소 2글자이상 작성해주세요.
+                  ※최소 2글자이상 작성해주세요.
                 </div>
               )}
             </div>

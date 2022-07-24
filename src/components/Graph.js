@@ -11,17 +11,29 @@ import {
 } from "recharts";
 
 function Graph() {
-  // const [data,setData] = React.useState([])
+  // const [minutes, setMinutes] = React.useState(0);
+  // const [hours, setHours] = React.useState(0);
+
+  let hours = 2;
+  let minutes = 44;
+
+  const studytime = ((hours * 60 + minutes) / 60).toFixed(2);
+  // const [data, setData] = React.useState([]);
+  const data = [
+    { name: "월", studytime },
+    { name: "화", studytime },
+  ];
 
   const Getdata = () => {
-    axios.defaults.withCredentials = true;
+    const token = localStorage.getItem("accessToken");
+    const userId = localStorage.getItem("userId");
     axios({
       method: "GET",
-      url: "지금까지 공부시간받는 api",
-      baseURL: "",
+      url: `/api/room/${userId}/studytime`,
+      baseURL: "http://15.164.164.17:3000",
 
       headers: {
-        authorization: localStorage.getItem("access_token"),
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((response) => {
@@ -32,19 +44,11 @@ function Graph() {
         alert(error.response.data);
       });
   };
+  console.log(data);
   useEffect(() => {
     Getdata();
   }, []);
   //단위 변경해서 넣어주고 변수 명 체크하기
-  const data = [
-    { name: "월", 공부시간: 7.3 },
-    { name: "화", 공부시간: 5.2 },
-    { name: "수", 공부시간: 2 },
-    { name: "목", 공부시간: 2.1 },
-    { name: "금", 공부시간: 7.5 },
-    { name: "토", 공부시간: 5 },
-    { name: "일", 공부시간: 0 },
-  ];
 
   return (
     <div style={{ marginTop: "40px" }}>
@@ -66,7 +70,7 @@ function Graph() {
         <Tooltip />
         <Legend />
         <Bar
-          dataKey="공부시간"
+          dataKey="studytime"
           fill="url(#colorPv)"
           style={{ borderRadius: "10px" }}
           barSize={30}

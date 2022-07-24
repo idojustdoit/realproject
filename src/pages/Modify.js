@@ -4,7 +4,7 @@ import styled from "styled-components";
 import axios from "axios";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import Timer from "../components/Timer";
+import userprofile from "../shared/userprofile.png";
 
 function Modify() {
   const navigate = useNavigate();
@@ -23,39 +23,39 @@ function Modify() {
   };
 
   //  해당회원의 정보요청
-  const originData = () => {
-    axios.defaults.withCredentials = true;
-    axios({
-      method: "get",
-      url: "/api/mypage/update/",
-      baseURL: "http://localhost:5001",
+  // const originData = () => {
+  //   axios.defaults.withCredentials = true;
+  //   axios({
+  //     method: "get",
+  //     url: "/api/mypage/update/",
+  //     baseURL: "http://localhost:5001",
 
-      // headers: {
-      //   authorization: localStorage.getItem("access_token"),
-    })
-      .then((response) => {
-        console.log(response);
-        setimgUrl(response.data.iconUrl);
-        setNickname(response.data.nickname);
-        setpassword(response.data.password);
-        setpasswordCheck(response.data.passwordCheck);
-      })
-      .catch((error) => {
-        console.log(error);
-        alert(error.response.data);
-      });
-  };
+  //     // headers: {
+  //     //   authorization: localStorage.getItem("access_token"),
+  //   })
+  //     .then((response) => {
+  //       console.log(response);
+  //       setimgUrl(response.data.iconUrl);
+  //       setNickname(response.data.nickname);
+  //       setpassword(response.data.password);
+  //       setpasswordCheck(response.data.passwordCheck);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       alert(error.response.data);
+  //     });
+  // };
 
   // 페이지가 나오자마자 회원정보 불러오기 및 삭제
   // useEffect(() => {
   //   originData();
   // }, []);
 
-  //수정할 회원정보 등록
+  // 수정할 회원정보 등록
   const signupdata = () => {
     axios({
       method: "PUT",
-      url: "/api/mypage/update/",
+      url: "/api/mypage/update",
       data: {
         nickname: nickname,
         password: password,
@@ -66,7 +66,7 @@ function Modify() {
     })
       .then((response) => {
         console.log(response);
-        // setimgUrl(response.data.iconUrl);
+        setimgUrl(response.data.iconUrl);
         //       setNickname(response.data.nickname);
         //       setpassword(response.data.password);
         //       setpasswordCheck(response.data.passwordCheck);
@@ -94,12 +94,12 @@ function Modify() {
   };
 
   return (
-    <div style={{ width: "1920px", backgroundColor: "lightgray" }}>
+    <div style={{ width: "1920px" }}>
       <Background>
         <Header />
         <ModalBlock>
           <Title>개인정보 수정 </Title>
-          <Timer />
+
           <Line />
           <Label>
             <span>
@@ -112,7 +112,7 @@ function Modify() {
                   borderRadius: "50px",
                   position: "relative",
                 }}
-                src={imgUrl}
+                src={userprofile}
               />
               <img
                 alt=""
@@ -121,7 +121,7 @@ function Modify() {
                   width: "28px",
                   borderRadius: "50px",
                   position: "absolute",
-                  marginLeft: "-30px",
+                  marginLeft: "-25px",
                   marginTop: "53px",
                 }}
                 src="https://www.shareicon.net/data/2017/05/09/885771_camera_512x512.png"
@@ -167,7 +167,7 @@ function Modify() {
                 <div
                   style={{
                     color: "red",
-                    fontSize: "14px",
+                    fontSize: "12px",
                     marginLeft: "14px",
                     marginTop: "5px",
                   }}
@@ -183,7 +183,7 @@ function Modify() {
             <Button1 onClick={signupdata}>변경사항 저장</Button1> <br />
             <Button2
               onClick={() => {
-                navigate("/");
+                navigate("/mypage");
               }}
             >
               취소
@@ -191,7 +191,6 @@ function Modify() {
           </LoginBtn>
         </ModalBlock>
       </Background>
-      <Footer />
     </div>
   );
 }
@@ -199,9 +198,6 @@ function Modify() {
 const Background = styled.div`
   width: 100%;
   height: 100%;
-
-  align-content: center;
-  text-align: center;
 `;
 const ModalBlock = styled.div`
   display: flex;
@@ -211,14 +207,14 @@ const ModalBlock = styled.div`
   background-color: white;
   color: black;
   width: 458px;
-  height: 610px;
+  height: 540px;
   padding: 10px;
   box-shadow: 1px 1px 1px 1px gray;
   margin-top: 20px;
   margin-bottom: 20px;
   transform: translate(150%, 0%);
-  margin-top: 50px;
-  margin-bottom: 50px;
+  margin-top: 225px;
+  margin-bottom: 145px;
 `;
 
 const Title = styled.div`
@@ -234,7 +230,7 @@ const Title = styled.div`
 const Line = styled.hr`
   background-color: black;
   width: 360px;
-  height: 2px;
+  border: 1px solid black;
   margin-top: 12px;
   margin-bottom: 32px;
 `;
@@ -279,7 +275,7 @@ const LoginBtn = styled.div``;
 const Button1 = styled.button`
   margin-top: 42px;
   color: #fff;
-  background-color: black;
+  background-color: #1d9ffd;
   border: none;
   font-size: 18px;
   font-weight: 900;

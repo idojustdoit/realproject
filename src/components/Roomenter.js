@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
+import { useEffect } from "react";
 
 const Login = ({ onClose, roomId }) => {
   console.log(roomId);
@@ -10,8 +11,35 @@ const Login = ({ onClose, roomId }) => {
 
   const outZone_ref = React.useRef(null);
   const [title, settitle] = React.useState("");
-  const [roomContent, setRoomContent] = React.useState([]);
+  const [roomContent, setRoomContent] = React.useState("");
   const [personinfo, setPersoninfo] = React.useState([]); // 참여인원의 imgurl ,
+
+  const Getdata = () => {
+    const token = localStorage.getItem("accessToken");
+    axios({
+      method: "GET",
+      url: `/enter/${roomId}`,
+      baseURL: "http://3.35.26.55",
+
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  useEffect(() => {
+    //악시오스 요청 get방식
+    Getdata();
+  });
+
+  const RoomenterHandler = () => {
+    navigate(`/public-room/${roomId}`);
+  };
 
   return (
     <Container>
@@ -151,15 +179,7 @@ const Login = ({ onClose, roomId }) => {
               취소
             </Btn1>
 
-            <Btn2
-              onClick={() => {
-                navigate(`/video/${roomId}`);
-                onClose();
-                //방입장하는 navigate(방상세)
-              }}
-            >
-              입장하기
-            </Btn2>
+            <Btn2 onClick={RoomenterHandler}>입장하기</Btn2>
           </EnterBtn>
 
           <LinkContainer></LinkContainer>

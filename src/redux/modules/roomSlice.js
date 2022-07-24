@@ -2,7 +2,8 @@ import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const BASE_URL = "http://3.35.26.55/";
+// const BASE_URL = "http://3.35.26.55/";
+const BASE_URL = "http://15.164.164.17:3000/";
 const token = localStorage.getItem("token");
 
 // Get All Posting

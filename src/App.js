@@ -20,7 +20,7 @@ function App() {
             <Route path="/mypage" element={<MyPage />}></Route>
             <Route path="Modify" element={<Modify />}></Route>
             <Route path="/Kakaologin" element={<Kakaologin />}></Route>
-            <Route path="/video/:roomId" element={<VideoPage />}></Route>
+            <Route path="/public-room/:roomId" element={<VideoPage />}></Route>
           </Routes>
         </Router>
       </StyledApp>
