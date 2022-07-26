@@ -1,0 +1,32 @@
+.swiper {
+  padding: 12px;
+  margin: 0 -15px;
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  display: none;
+}
+.swiper-button-prev {
+  background-image: url(../shared/mypage-assets/icon-slider-button-prev.svg);
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  background-position: center;
+  transform: scaleX(-1);
+  z-index: 20;
+  left: 5px;
+  right: auto;
+}
+.swiper-button-next {
+  background-image: url(../shared/mypage-assets/icon-slider-button-next.svg);
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  background-position: center;
+  z-index: 20;
+  right: 5px;
+  left: auto;
+}
+
+.swiper-slide:active {
+  background-image: none;
+}

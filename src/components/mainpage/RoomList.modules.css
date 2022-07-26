@@ -1,0 +1,10 @@
+.-not-active {
+  filter: grayscale(100%);
+}
+.category-img {
+  filter: none;
+}
+
+.-active {
+  filter: none;
+}
