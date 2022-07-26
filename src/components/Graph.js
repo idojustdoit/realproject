@@ -11,40 +11,33 @@ import {
 } from "recharts";
 
 function Graph() {
-  // const [minutes, setMinutes] = React.useState(0);
-  // const [hours, setHours] = React.useState(0);
+  const [data, setData] = React.useState(null);
+  const [weektime, setWeektime] = React.useState(null);
 
-  let hours = 2;
-  let minutes = 44;
-
-  const studytime = ((hours * 60 + minutes) / 60).toFixed(2);
-  // const [data, setData] = React.useState([]);
-  const data = [
-    { name: "월", studytime },
-    { name: "화", studytime },
-  ];
+  // 공부 시간 데이터 얻어오고 그래프 데이터 형식에 맞게 변환하기.
 
   const Getdata = () => {
     const token = localStorage.getItem("accessToken");
     const userId = localStorage.getItem("userId");
     axios({
       method: "GET",
-      url: `/api/room/${userId}/studytime`,
+      url: `/api/mypage/${userId}/time`,
       baseURL: "http://15.164.164.17:3000",
 
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
-      .then((response) => {
-        console.log(response);
+      .then(function (response) {
+        console.log(response.data);
+        setData(response.data.studytime);
+        setWeektime(response.data.studytime.time);
       })
       .catch((error) => {
         console.log(error);
-        alert(error.response.data);
       });
   };
-  console.log(data);
+  console.log(weektime);
   useEffect(() => {
     Getdata();
   }, []);
@@ -52,6 +45,17 @@ function Graph() {
 
   return (
     <div style={{ marginTop: "40px" }}>
+      <div
+        style={{
+          backgroundColor: "lightgray",
+          width: "200px",
+          marginLeft: "20px",
+          bottom: "40",
+        }}
+      >
+        {" "}
+        1주일 공부량:{weektime}시간
+      </div>
       <BarChart
         width={600}
         height={300}
@@ -65,12 +69,12 @@ function Graph() {
           </linearGradient>
         </defs>
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
+        <XAxis dataKey="day" />
         <YAxis />
         <Tooltip />
         <Legend />
         <Bar
-          dataKey="studytime"
+          dataKey="time"
           fill="url(#colorPv)"
           style={{ borderRadius: "10px" }}
           barSize={30}

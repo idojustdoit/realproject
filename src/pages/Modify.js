@@ -3,83 +3,65 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 import Header from "../components/Header";
-import Footer from "../components/Footer";
 import userprofile from "../shared/userprofile.png";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 function Modify() {
   const navigate = useNavigate();
+  const MySwal = withReactContent(Swal);
   const imgUrl_ref = React.useRef(null); //이미지url
-  const [imgUrl, setimgUrl] = React.useState(
-    //이미지url
-    "https://opgg-com-image.akamaized.net/attach/images/20220220075306.1538486.jpg"
-  );
-  // const [email, setemail] = React.useState(""); //이메일 인풋
+  const [imgUrl, setimgUrl] = React.useState(userprofile);
   const [password, setpassword] = React.useState(""); // 비밀번호 인풋
   const [passwordCheck, setpasswordCheck] = React.useState(""); //비밀번호 확인 인풋
   const [nickname, setNickname] = React.useState(""); //닉네임 인풋
 
+  // 프로필이미지 관련 코드
+  const FILE_SIZE_MAX_LIMIT = 5 * 1024 * 1024;
   const UpImageUrl = async (e) => {
-    setimgUrl(imgUrl_ref.current.url);
+    const files = e.target.files[0];
+    if (files.size > FILE_SIZE_MAX_LIMIT) {
+      e.target.value = "";
+      alert("업로드 가능한 최대 용량은 5MB입니다. ");
+      return;
+    } // 5MB로 크기 제한
+    setimgUrl(imgUrl_ref.current.url); // url값 담기.
   };
-
-  //  해당회원의 정보요청
-  // const originData = () => {
-  //   axios.defaults.withCredentials = true;
-  //   axios({
-  //     method: "get",
-  //     url: "/api/mypage/update/",
-  //     baseURL: "http://localhost:5001",
-
-  //     // headers: {
-  //     //   authorization: localStorage.getItem("access_token"),
-  //   })
-  //     .then((response) => {
-  //       console.log(response);
-  //       setimgUrl(response.data.iconUrl);
-  //       setNickname(response.data.nickname);
-  //       setpassword(response.data.password);
-  //       setpasswordCheck(response.data.passwordCheck);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //       alert(error.response.data);
-  //     });
-  // };
-
-  // 페이지가 나오자마자 회원정보 불러오기 및 삭제
-  // useEffect(() => {
-  //   originData();
-  // }, []);
 
   // 수정할 회원정보 등록
   const signupdata = () => {
+    const token = localStorage.getItem("accessToken");
+    const userId = localStorage.getItem("userId");
     axios({
       method: "PUT",
-      url: "/api/mypage/update",
+      url: `/api/mypage/${userId}/update/`,
       data: {
         nickname: nickname,
         password: password,
         passwordCheck: passwordCheck,
-        iconUrl: imgUrl,
+        imgUrl: imgUrl,
       },
-      baseURL: "http://3.35.26.55",
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      baseURL: "http://15.164.164.17:3000",
     })
       .then((response) => {
         console.log(response);
-        setimgUrl(response.data.iconUrl);
-        //       setNickname(response.data.nickname);
-        //       setpassword(response.data.password);
-        //       setpasswordCheck(response.data.passwordCheck);
+        navigate("/mypage");
+        MySwal.fire({
+          title: "success",
+          text: "방이 생성되었습니다!",
+          icon: "success",
+          confirmButtonText: "확인",
+        });
       })
       .catch((error) => {
         console.log(error);
         alert(error.response.data.message);
       });
   };
-
-  // const handlerId = (e) => {
-  //   setemail(e.target.value);
-  // };
 
   const handlerPw = (e) => {
     setpassword(e.target.value);
@@ -112,7 +94,7 @@ function Modify() {
                   borderRadius: "50px",
                   position: "relative",
                 }}
-                src={userprofile}
+                src={imgUrl}
               />
               <img
                 alt=""

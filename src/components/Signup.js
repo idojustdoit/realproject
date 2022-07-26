@@ -11,9 +11,7 @@ const SignUp = ({ onClose, LoginOpen }) => {
   const MySwal = withReactContent(Swal);
   const outZone_ref = React.useRef(null);
   const profile_ref = React.useRef(null); //유저 이미지 URL
-  const [profile, setprofile] = React.useState(
-    <img alt="" src={userprofile} />
-  );
+  const [profile, setprofile] = React.useState(userprofile);
   const [email, setemail] = React.useState(""); //email 인풋
   const [password, setPwd] = React.useState(""); //비밀번호 인풋
   const [passwordCheck, setpasswordCheck] = React.useState(""); //비밀번호 확인 인풋
@@ -30,10 +28,21 @@ const SignUp = ({ onClose, LoginOpen }) => {
     setUsernum(e.target.value);
   };
   const confirmNumber = () => {
+    console.log(emailcode);
     if (usernum === emailcode) {
-      return true;
+      MySwal.fire({
+        title: "success",
+        text: "인증번호가 확인되었습니다.",
+        icon: "success",
+        confirmButtonText: "확인",
+      });
     } else {
-      return false;
+      MySwal.fire({
+        title: "failed",
+        text: "인증번호가 맞지않습니다",
+        icon: "error",
+        confirmButtonText: "확인",
+      });
     }
   };
 
@@ -54,7 +63,14 @@ const SignUp = ({ onClose, LoginOpen }) => {
   };
 
   //firebase 사용해서 url 추출
+  const FILE_SIZE_MAX_LIMIT = 5 * 1024 * 1024;
   const UpImageUrl = async (e) => {
+    const files = e.target.files[0];
+    if (files.size > FILE_SIZE_MAX_LIMIT) {
+      e.target.value = "";
+      alert("업로드 가능한 최대 용량은 5MB입니다. ");
+      return;
+    }
     const upload_file = await uploadBytes(
       ref(storage, `images/${e.target.files[0].name}`),
       e.target.files[0]
@@ -187,7 +203,7 @@ const SignUp = ({ onClose, LoginOpen }) => {
                   borderRadius: "50px",
                   position: "relative",
                 }}
-                src={userprofile}
+                src={profile}
               />
               <img
                 alt=""
@@ -201,7 +217,7 @@ const SignUp = ({ onClose, LoginOpen }) => {
                 }}
                 src="https://www.shareicon.net/data/2017/05/09/885771_camera_512x512.png"
               />
-              <Input
+              <input
                 style={{ display: "none" }}
                 type="file"
                 id="files"
@@ -244,18 +260,6 @@ const SignUp = ({ onClose, LoginOpen }) => {
                     type="email"
                   />
                   <Button3 onClick={confirmNumber}> 번호확인</Button3>
-                  {usernum !== emailcode && (
-                    <div
-                      style={{
-                        marginRight: "40px",
-                        color: "red",
-                        fontSize: "12px",
-                        marginTop: "3px",
-                      }}
-                    >
-                      ※번호가 일치하지않습니다.
-                    </div>
-                  )}
                 </div>
               )}
             </div>
@@ -313,7 +317,13 @@ const SignUp = ({ onClose, LoginOpen }) => {
             </div>
           </Label>
           <LoginBtn>
-            <Button1 onClick={signupdata}>회원가입</Button1> <br />
+            <Button1
+              // disabled={userIdError || verEmail || nickError ? true : false}
+              onClick={signupdata}
+            >
+              회원가입
+            </Button1>{" "}
+            <br />
             <Button2
               onClick={() => {
                 onClose();
@@ -437,7 +447,7 @@ const LoginBtn = styled.div``;
 const Button1 = styled.button`
   margin-top: 42px;
   color: #fff;
-  background-color: #1d9ffd;
+  background-color: ${(props) => (props.disabled ? "gray" : "#1d9ffd;")};
   border: none;
   font-size: 18px;
   font-weight: 900;
@@ -450,9 +460,15 @@ const Button1 = styled.button`
   cursor: pointer;
   border-radius: 4px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-  &:hover {
+  
+  ${(props) =>
+    props.disabled
+      ? ""
+      : `&:hover {
     background-color: rgba(74, 21, 75, 0.9);
     border: none;
+  }`};
+
   }
   &:focus {
     --saf-0: rgba(var(--sk_highlight, 18, 100, 163), 1);

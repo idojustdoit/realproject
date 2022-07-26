@@ -56,7 +56,15 @@ const Login = ({ onClose }) => {
     setPassword(e.target.value);
   };
 
+  const FILE_SIZE_MAX_LIMIT = 5 * 1024 * 1024;
   const UpImageUrl = async (e) => {
+    const files = e.target.files[0];
+    if (files.size > FILE_SIZE_MAX_LIMIT) {
+      e.target.value = "";
+      alert("업로드 가능한 최대 용량은 5MB입니다. ");
+      return;
+    }
+
     const upload_file = await uploadBytes(
       ref(storage, `images/${e.target.files[0].name}`),
       e.target.files[0]
@@ -64,9 +72,6 @@ const Login = ({ onClose }) => {
 
     const file_url = await getDownloadURL(upload_file.ref);
     profile_ref.current = { url: file_url };
-    setImgUrl(profile_ref.current.url);
-  };
-  const fileName = (e) => {
     setImgUrl(profile_ref.current.url);
   };
 
