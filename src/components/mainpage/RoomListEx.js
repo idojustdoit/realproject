@@ -33,7 +33,6 @@ const RoomListEx = () => {
     getMainList(data);
   }, []);
 
-  // 백에서 안될 때 우리 쪽에서 로직 추가로
   const getMainList = (data) => {
     axios.post("/api/prodict/products", data).then((res) => {
       if (res.data.success) {
@@ -65,7 +64,6 @@ const RoomListEx = () => {
     let body = {
       skip: Skip,
       limit: Limit,
-      loadMore: true,
     };
 
     getMainList(body);
