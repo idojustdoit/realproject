@@ -5,8 +5,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import google from "../shared/google.png";
 
-const clientId =
-  "983613093044-urr60eu9oldn021gdtsgreb7fnejoqr5.apps.googleusercontent.com";
+const clientId = process.env.REACT_APP_clientId;
 
 const GoogleButton = ({ onSocial }) => {
   // const navigate = useNavigate();
