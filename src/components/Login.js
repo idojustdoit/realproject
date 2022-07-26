@@ -55,8 +55,7 @@ const Login = ({ onClose, SignOpen }) => {
       });
   };
 
-  const kakaoUrl =
-    "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=b266efe96498090868c78833faf62705&redirect_uri=http://localhost:3000/Kakaologin";
+  const kakaoUrl = process.env.REACT_APP_kakaoUrl;
 
   const MoveModal = () => {
     onClose();
