@@ -217,20 +217,8 @@ const Login = ({ onClose }) => {
             <div style={{ marginLeft: "60px" }}>
               <span>
                 <div>
-                  {/* <Input2
-                    htmlFor="input_file"
-                    value="파일선택"
-                    disabled="disabled"
-                  >
-                    {imgUrl}
-                  </Input2> */}
-                  <input
-                    type="file"
-                    id="input_file"
-                    onChange={UpImageUrl}
-                    // style={{ display: "none" }}
-                  />
-                  {/* <Inlabel htmlFor="input_file">파일선택 </Inlabel> */}
+                  <input type="file" id="input_file" onChange={UpImageUrl} />
+
                   <br />
                   <img
                     alt=""
@@ -343,33 +331,7 @@ const Login = ({ onClose }) => {
     </Container>
   );
 };
-const Input2 = styled.label`
-  --saf-0: rgba(var(--sk_foreground_high_solid, 134, 134, 134), 1);
-  border: 1px solid var(--saf-0);
-  transition: border 80ms ease-out, box-shadow 80ms ease-out;
-  box-sizing: border-box;
-  color: rgba(var(--sk_primary_foreground, 29, 28, 29), 1);
-  background-color: rgba(var(--sk_primary_background, 255, 255, 255), 1);
-  padding: 12px;
-  margin-left: 30px;
-  margin-right: 10px;
-  max-width: 206px;
-  height: 36px;
-  font-size: 15px;
-  line-height: 1.33333333;
-`;
-const Inlabel = styled.label`
-  cursor: pointer;
-  margin-bottom: 12px;
-  width: 197px;
-  color: white;
-  background-color: black;
-  border: 1px solid black;
-  border-radius: 5px;
-  padding: 8px;
-  font-size: 15px;
-  line-height: 1.33333333;
-`;
+
 const CateInput = styled.input``;
 const CateLabel = styled.label`
   display: flex;
