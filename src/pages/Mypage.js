@@ -1,50 +1,41 @@
-import React, { useEffect, useState, useRef } from "react";
 import "../styles/reset.css";
+import React, { useEffect, useState, useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import axios from "axios";
 
-import Box from "@mui/material/Box";
-import Tab from "@mui/material/Tab";
-import TabContext from "@mui/lab/TabContext";
-import TabList from "@mui/lab/TabList";
-import TabPanel from "@mui/lab/TabPanel";
+import { getMypageInfos } from "../redux/modules/roomSlice";
 
 import { ReactComponent as EditUserInfoIcon } from "../shared/mypage-assets/icon-update-userInfo.svg";
+import userAvatar from "../shared/mypage-assets/user-basic-img.png";
 
 import Header from "../components/Header";
-import Footer from "../components/Footer";
-import RoomList from "../components/mypage/RoomList";
-import SmallRoom from "../components/mypage/SmallRoom";
 import SmallRoomSlider from "../components/mypage/SmallRoomSlider";
+import Tab from "../components/mypage/Tab";
+import Footer from "../components/Footer";
 
 const Mypage = () => {
-  const BASE_URL = `서버주소`;
-  const [listValue, setListValue] = React.useState("1");
-
-  const handleChange = (event, newValue) => {
-    setListValue(newValue);
-    //newValue 값으로 axios 요청보내서 해당하는 자료 가져오기
-  };
-
   const [items, setItems] = useState([]);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getMypageInfos());
+  }, []);
 
   return (
-    <div style={{ width: "100%" }}>
+    <MypageCont>
       <Header />
-      <Section>
-        <UserCont>
+      <ContentBox>
+        <UpperCont>
           <h2>마이페이지</h2>
           <Cont>
             <UserCardCont>
               <UserCardTop>
-                <img
-                  alt="user"
-                  src="https://www.rd.com/wp-content/uploads/2021/01/GettyImages-1175550351.jpg"
-                />
+                <img alt="user" src={userAvatar} />
                 <FlexCont>
                   <UserInfo>
                     <div>
-                      스게더님{" "}
+                      스게더님
                       <EditButton>
                         <EditUserInfoIcon />
                       </EditButton>
@@ -53,7 +44,6 @@ const Mypage = () => {
                   </UserInfo>
                 </FlexCont>
               </UserCardTop>
-              <hr />
               <UserCardBottom>
                 <li>
                   참여중<span>3</span>
@@ -68,63 +58,29 @@ const Mypage = () => {
             </UserCardCont>
             <GraphCard></GraphCard>
           </Cont>
-        </UserCont>
-        <StudyCont className="menu-nav__cont">
-          <TabContext value={listValue}>
-            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-              <TabList
-                onChange={handleChange}
-                aria-label="tab list"
-                textColor="inherit"
-                indicatorColor="primary"
-                className="user-list"
-              >
-                <CustomBtn
-                  label="참여중인 스터디"
-                  value="1"
-                  sx={{ fontSize: "20px" }}
-                />
-                <CustomBtn
-                  label="호스팅중인 스터디"
-                  value="2"
-                  sx={{ fontSize: "20px" }}
-                />
-                <CustomBtn
-                  label="찜한 스터디"
-                  value="3"
-                  sx={{ fontSize: "20px" }}
-                />
-              </TabList>
-            </Box>
-            <TabPanel sx={{ padding: "0", paddingTop: "62px" }} value="1">
-              <SmallRoomSlider />
-            </TabPanel>
-            <TabPanel sx={{ padding: "0", paddingTop: "62px" }} value="2">
-              <RoomList />
-            </TabPanel>
-            <TabPanel sx={{ padding: "0", paddingTop: "62px" }} value="3">
-              <RoomList />
-            </TabPanel>
-          </TabContext>
-        </StudyCont>
-      </Section>
+        </UpperCont>
+        <RoomsCont className="menu-nav__cont">
+          <Tab />
+        </RoomsCont>
+      </ContentBox>
       <Footer />
-    </div>
+    </MypageCont>
   );
 };
-
-const Section = styled.section`
-  /* height: calc(100vh - (80px + 149px)); */
-  height: 1561px; //디자이너님이 써주신거
+const MypageCont = styled.div`
+  width: 1920px;
+  margin: 0 auto;
+  height: auto;
+`;
+const ContentBox = styled.div`
   //헤더fixed라서 헤더만큼 공간 띄워주기
   padding-top: 80px;
 `;
-const UserCont = styled.div`
+const UpperCont = styled.section`
   display: flex;
   flex-direction: column;
   padding: 0 300px;
   background-color: #f6f6f6;
-  /* gap: 24px; */
 
   & > h2 {
     margin: 60px 0 40px 0;
@@ -139,29 +95,30 @@ const Cont = styled.div`
 `;
 
 const UserCardCont = styled.div`
-  width: 100%;
+  width: 648px;
   height: 370px;
-  background-color: #ffaab8;
+  background-color: #fff;
   border-radius: 10px;
-  -webkit-box-shadow: 1px 8px 12px -7px #8f8f8f;
-  box-shadow: 1px 8px 12px -7px #8f8f8f;
+  -webkit-box-shadow: var(--card-box-shadow);
+  box-shadow: var(--card-box-shadow);
   overflow: hidden;
 `;
 
 const UserCardTop = styled.div`
-  background-color: antiquewhite;
+  background-color: #fff;
   display: flex;
   gap: 16px;
   align-items: center;
-  /* justify-content: space-between; */
   padding: 47px 28px;
+  border-bottom: 3px solid #e5e5e5;
 
   & > img {
     width: 100px;
     height: 100px;
     border-radius: 50%;
-    background-color: gray;
+    background-color: #d0d0d0;
     object-fit: cover;
+    /* background: center; */
   }
 `;
 
@@ -173,7 +130,7 @@ const UserInfo = styled.div`
     font-weight: 700;
     font-size: 30px;
     display: flex;
-    align-items: stretch;
+    align-items: center;
     gap: 14px;
   }
   & > span {
@@ -187,6 +144,7 @@ const FlexCont = styled.div`
   /* gap: 140px; */
 `;
 const EditButton = styled.button`
+  height: 20px;
   background: none;
   border: none;
   padding: 0;
@@ -194,6 +152,7 @@ const EditButton = styled.button`
 `;
 
 const UserCardBottom = styled.ul`
+  height: 45%;
   padding: 34px 90px;
   display: flex;
   align-items: center;
@@ -213,23 +172,14 @@ const UserCardBottom = styled.ul`
   }
 `;
 
-const GraphCard = styled(UserCardCont)`
-  background-color: #a6a6fa;
-`;
+const GraphCard = styled(UserCardCont)``;
 
-const StudyCont = styled.div`
-  margin-top: 60px;
-  padding: 0 300px;
+const RoomsCont = styled.div`
+  padding: 60px 276px;
   height: 50%;
-  overflow: hidden;
-  /* bottom: 0; */
-`;
-
-const CustomBtn = styled(Tab)`
-  &:active,
-  &:focus {
-    font-weight: 700;
-  }
+  align-items: center;
+  justify-content: center;
+  display: flex;
 `;
 
 export default Mypage;

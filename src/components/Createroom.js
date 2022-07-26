@@ -36,6 +36,8 @@ const names = [
 ];
 
 const Login = ({ onClose }) => {
+  const API_URL = process.env.REACT_APP_API_URL;
+
   //사용하는 변수명 정리
   const navigate = useNavigate();
   const outZone_ref = React.useRef(); //모달창 닫을때
@@ -58,20 +60,26 @@ const Login = ({ onClose }) => {
   const priPassword = (e) => {
     setpwd(e.target.value);
   };
-
+  const userId = localStorage.getItem("userId");
+  const token = localStorage.getItem("accessToken");
   // 서버에 방 정보 보내는 통신
   const CreateAxios = () => {
     axios({
       method: "POST",
-      url: "url",
+      url: `/api/room/create/${userId}`,
       data: {
         title: studyName,
         study: study,
         password: pwd,
         Date: dateRange,
-        tagName: ["전체", categoryName],
+        tagName: ["전체", ...categoryName],
+        isLiked: false,
       },
-      baseURL: "http://13.124.252.225",
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      baseURL: API_URL,
     })
       .then((response) => {
         console.log(response);

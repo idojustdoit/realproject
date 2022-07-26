@@ -16,16 +16,18 @@ import { TbVideo, TbVideoOff } from "react-icons/tb";
 //socket
 import io from "socket.io-client";
 
-// const socket = io.connect("http://3.35.26.55");
-const socket = io.connect("https://www.e-gloo.link");
+// const socket = io.connect("");
+// const socket = io.connect("https://www.e-gloo.link");
 // const socket = io.connect("http://localhost:3001");
+
+const socket = "롱 폴링 막기용"; // (2022 07 19에 임시로 만듦)
 
 const Video = () => {
   const nick = "성인";
 
   // const roomId = "스터디";
-  const {roomId} = useParams();
-  console.log(roomId)
+  const { roomId } = useParams();
+  console.log(roomId);
 
   const [openBar, setOpenBar] = useState(true);
 
@@ -342,16 +344,13 @@ const Video = () => {
 
           <UnderBar openBar={openBar} sideBarHandler={sideBarHandler} />
         </div>
-
         {/* sideBar */}
-
         <SideView
           openBar={openBar}
           socket={socket}
           nick={nick}
           roomId={roomId}
         />
-
         {/* sideBar */}
       </ScreenWrapper>
     </>

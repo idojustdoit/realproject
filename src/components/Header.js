@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { changeLoginState } from "../redux/modules/userSlice";
 import { Link, useNavigate } from "react-router-dom";
+import { logOut } from "../redux/modules/userSlice";
 
 import SignUp from "./Signup";
 import Portal from "./Portal";
@@ -19,19 +20,20 @@ import { ReactComponent as LogoutIcon } from "../shared/header-assets/icon-out-m
 
 function Header() {
   //loginState 기본값 false
-  const loginState = useSelector((state) => state.user.isLogin);
+  // const loginState = useSelector((state) => state.user.isLogin);
   const dispatch = useDispatch();
-  //isLogin 기본 state값 false
-  const token = sessionStorage.getItem("accessToken");
-  // const dispatch = useDispatch();
 
+  const token = localStorage.getItem("accessToken");
+  const isLogin = useSelector((state) => state.user.isLogin);
   const logoutHandler = (e) => {
     // dispatch(authActions.logout());
-    sessionStorage.removeItem("accessToken");
-    sessionStorage.removeItem("refreshToken");
-    window.location.reload();
+    dispatch(logOut());
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("userId");
   };
 
+  console.log(isLogin);
   const [LogInOpen, setIsLogInOpen] = React.useState(false);
   const [SignUpOpen, setSignUpOpen] = React.useState(false);
   const [CreateOpen, setCreateOpen] = React.useState(false);
@@ -42,18 +44,8 @@ function Header() {
     setIsLogInOpen(!LogInOpen);
   };
 
-  // const logoutHandler = () => {
-  //   dispatch(changeLoginState(loginState));
-  // };
-
-  // const loginHandler = () => {
-  //   dispatch(changeLoginState(loginState));
-
-  // };
-
   const SignupModal = () => {
     setSignUpOpen(!SignUpOpen);
-    //회원가입 모달열림
   };
 
   const createModal = () => {
@@ -69,7 +61,9 @@ function Header() {
       <FlexBox>
         <LeftCont>
           <LogoCont>
-            <LogoIcon />
+            <Link to="/">
+              <LogoIcon />
+            </Link>
           </LogoCont>
           <Ul>
             <Li>
@@ -139,16 +133,15 @@ const HeaderCont = styled.header`
   z-index: 10;
   position: fixed;
   top: 0;
-  width: 1920px;
+  min-width: 1920px;
   min-height: 80px;
   display: flex;
   align-items: center;
   background-color: #fff;
   color: black;
   font-size: 15px;
-  padding: 0 300px;
-  /* -webkit-box-shadow: 0px 10px 9px -7px #737373;
-  box-shadow: 0px 10px 9px -7px #737373; */
+  padding: 0 250px;
+  box-shadow: 0 4px 4px -4px #737373;
 `;
 const FlexBox = styled.div`
   width: 100%;

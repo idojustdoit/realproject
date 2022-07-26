@@ -14,6 +14,7 @@ console.log(roomId)
   const [todolist, setTodolist] = React.useState([]);
   const [personinfo, setPersoninfo] = React.useState([]);
 
+  const API_URL = process.env.REACT_APP_API_URL;
 
   // todo 리스트 불러오기
   // const TodoListAxios = () => {
@@ -21,7 +22,7 @@ console.log(roomId)
   //   axios({
   //     method: "get",
   //     url: "/user/auth",
-  //     baseURL: "http://13.124.252.225",
+  //     baseURL: API_URL,
   // headers: {
   //   authorization: localStorage.getItem("access_token"),
   // },
@@ -42,7 +43,7 @@ console.log(roomId)
   //   axios({
   //     method: "get",
   //     url: "/user/auth",
-  //     baseURL: "http://13.124.252.225",
+  //     baseURL: API_URL,
   // headers: {
   //   authorization: localStorage.getItem("access_token"),
   // },

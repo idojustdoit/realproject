@@ -1,36 +1,53 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
-import { setInitialWord, getSearchRooms } from "../../redux/modules/roomSlice";
+import { setSearchWord, getSearchRooms } from "../../redux/modules/roomSlice";
 import { validateWord } from "../../shared/reg";
 
-import bgImage from "../../shared/mainpage-assets/search_background_img.png";
 import { ReactComponent as SearchIcon } from "../../shared/mainpage-assets/search_icon.svg";
 
 function SearchBanner() {
+  useEffect(() => {
+    getSearchRooms(initialWord);
+  }, []);
+  //맨 처음 메인에서 전달해준 keyword
+  let initialWord = useSelector((state) => state.room.initialWord);
+  console.log(initialWord);
   const dispatch = useDispatch();
   const word = useRef();
-  const navigate = useNavigate();
+  //검색된 결과인 방들을 searchResults로 가져온다.
+  const list = useSelector((state) => state.room?.searchRooms);
+  console.log(list);
+  // const [list, setList] = useState(InitialSearchList ? InitialSearchList : []);
+  const isLoading = useSelector((state) => state.room.isLoading);
+
+  const [searchParams] = useSearchParams();
+  // console.log(searchParams);
+  // const detail = searchParams.get("detail") === "true";
 
   function search(e) {
     e.preventDefault();
+    //단어를 테스트해서 clearWord에 결과값을 넣어줌
     let clearWord = validateWord(word.current.value);
-    dispatch(setInitialWord(clearWord));
+    //리덕스있는 word state를 변경하고 해당 검색어로 리스트를 불러오는 함수 실행
+    dispatch(setSearchWord(clearWord));
     dispatch(getSearchRooms(clearWord));
-    navigate("/search");
+    //빈 값으로 재세팅
+    word.current.value = "";
   }
 
   return (
     <SearchCont>
-      <SearchTitle>어떤 스터디를 찾고 계신가요?</SearchTitle>
+      <SearchTitle>관심있는 스터디명을 검색해주세요.</SearchTitle>
       <SearchBox onSubmit={(e) => search(e)}>
         <SearchInput
           type="text"
-          placeholder="찾을 스터디명을 검색하세요."
+          placeholder="찾을 스터디명을 입력하세요."
           ref={word}
+          defaultValue={initialWord ? initialWord : ""}
         ></SearchInput>
-        <SearchBtn>
+        <SearchBtn type="submit">
           <SearchIcon />
         </SearchBtn>
       </SearchBox>
@@ -47,7 +64,7 @@ const SearchCont = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: url(${bgImage}) no-repeat;
+  background: gray;
   background-position: center;
   /* background-size: cover; */
   background-size: 100% auto;
@@ -60,7 +77,6 @@ const SearchBox = styled.form`
   margin-bottom: 120px;
 `;
 const SearchTitle = styled.h1`
-  /* filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.5)); */
   font-size: 30px;
   font-weight: 700;
   margin: 0px 20px 20px 20px;
@@ -90,10 +106,6 @@ const SearchInput = styled.input`
   padding: 5px 10px;
   height: 40px;
   /* border-radius: 4px 0 0 4px; */
-  outline: none;
+  /* outline: none; */
   color: #40407a;
-
-  &:focus,
-  &:active {
-  }
 `;
