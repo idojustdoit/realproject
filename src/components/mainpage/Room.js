@@ -21,7 +21,7 @@ const Room = ({
   const dispatch = useDispatch();
 
   const [likeState, setLikeState] = useState(isLiked);
-
+  const token = localStorage.getItem("accessToken");
   const isLogin = useSelector((state) => state.user.isLogin);
 
   //입장하기버튼: 클릭한 방(roomId)에 해당하는 화상채팅방으로 입장하는 모달
@@ -73,7 +73,7 @@ const Room = ({
             return <Tag key={index}>#{tag}</Tag>;
           })}
         </TagBox>
-        {isLogin ? (
+        {token ? (
           <BtnBox>
             <BlackBtn onClick={EnterModal}>참여하기</BlackBtn>
             <Portal>

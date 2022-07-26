@@ -67,7 +67,7 @@ const Login = ({ onClose, SignOpen }) => {
       });
   };
 
-  const kakaoUrl = process.env.REACT_APP_kakaoUrl;
+  const kakaoUrl = process.env.REACT_APP_KAKAOURL;
 
   const MoveModal = () => {
     onClose();

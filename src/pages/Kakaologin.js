@@ -9,9 +9,7 @@ function Kakaologin() {
     let params = new URL(document.location.toString()).searchParams;
     let code = params.get("code"); // 인가코드 받는 부분
     let grant_type = "authorization_code";
-    let client_id = process.env.REACT_APP_client_id;
-
-    console.log(client_id);
+    let client_id = process.env.REACT_APP_CLIENT_ID;
     axios
       .post(
         `https://kauth.kakao.com/oauth/token?grant_type=${grant_type}&client_id=${client_id}&redirect_uri=http://localhost:3000/Kakaologin&code=${code}`,
