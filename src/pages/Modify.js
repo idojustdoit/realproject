@@ -48,7 +48,6 @@ function Modify() {
       baseURL: "http://15.164.164.17:3000",
     })
       .then((response) => {
-        console.log(response);
         navigate("/mypage");
         MySwal.fire({
           title: "success",
@@ -58,8 +57,12 @@ function Modify() {
         });
       })
       .catch((error) => {
-        console.log(error);
-        alert(error.response.data.message);
+        MySwal.fire({
+          title: "failed ",
+          text: "방 생성을 실패하였습니다",
+          icon: "error",
+          confirmButtonText: "확인",
+        });
       });
   };
 
