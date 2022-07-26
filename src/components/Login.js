@@ -67,8 +67,6 @@ const Login = ({ onClose, SignOpen }) => {
       });
   };
 
-  const kakaoUrl = process.env.REACT_APP_KAKAOURL;
-
   const MoveModal = () => {
     onClose();
     SignOpen();
@@ -136,7 +134,7 @@ const Login = ({ onClose, SignOpen }) => {
                 marginBottom: "10px",
                 marginTop: "24px",
               }}
-              href={kakaoUrl}
+              href={process.env.REACT_APP_KAKAOURL}
             >
               <img
                 alt=""

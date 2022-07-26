@@ -58,9 +58,19 @@ const Room = ({
               </UserCountBox>
             </TitleAndGroupNum>
             {likeState === true ? (
-              <img alt="fiiled-heart" src={fullHeart} onClick={clickLike}></img>
+              <img
+                alt="fiiled-heart"
+                src={fullHeart}
+                onClick={clickLike}
+                style={{ cursor: "pointer" }}
+              ></img>
             ) : (
-              <img alt="empty-heart" src={emptyHeart} onClick={clickLike}></img>
+              <img
+                alt="empty-heart"
+                src={emptyHeart}
+                onClick={clickLike}
+                style={{ cursor: "pointer" }}
+              ></img>
             )}
           </TitleBox>
           <ContentBox>{content}</ContentBox>
