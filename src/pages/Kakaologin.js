@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Kakaologin() {
+  const API_URL = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
   useEffect(() => {
     let params = new URL(document.location.toString()).searchParams;
@@ -25,7 +26,7 @@ function Kakaologin() {
         const access_token = res.data.access_token;
         const refresh_token = res.data.refresh_token;
         axios
-          .post("http://3.35.26.55/api/kakao/login", {
+          .post(`${API_URL}/api/kakao/login`, {
             access_token,
             refresh_token,
           })
@@ -35,7 +36,7 @@ function Kakaologin() {
             const user_nickname = res.data.kakao_account.nickname;
             const user_url = res.data.kakao_account.profile.profile_image_url;
             axios
-              .post("http://3.35.26.55/api/kakao/newuser", {
+              .post(`${API_URL}/api/kakao/newuser`, {
                 user_id,
                 user_email,
                 user_nickname,

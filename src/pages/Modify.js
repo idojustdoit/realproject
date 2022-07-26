@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
 function Modify() {
+  const API_URL = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
   const MySwal = withReactContent(Swal);
   const imgUrl_ref = React.useRef(null); //이미지url
@@ -45,7 +46,7 @@ function Modify() {
         "content-type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      baseURL: "http://15.164.164.17:3000",
+      baseURL: API_URL,
     })
       .then((response) => {
         navigate("/mypage");

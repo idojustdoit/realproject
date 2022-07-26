@@ -4,6 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 export const BasicBtn = ({ roomId }) => {
+  const API_URL = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
 
   const postTimerData = () => {
@@ -16,7 +17,7 @@ export const BasicBtn = ({ roomId }) => {
         Authorization: `Bearer ${token}`,
       },
 
-      baseURL: "http://15.164.164.17:3000",
+      baseURL: API_URL,
     })
       .then((response) => {
         console.log(response);

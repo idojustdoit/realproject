@@ -6,6 +6,7 @@ import Moment from "react-moment";
 import "moment/locale/ko";
 
 const Timer = ({ roomId }) => {
+  const API_URL = process.env.REACT_APP_API_URL;
   const [seconds, setSeconds] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const [hours, setHours] = useState(0);
@@ -36,7 +37,7 @@ const Timer = ({ roomId }) => {
       method: "POST",
       url: `/api/room/public-room/${roomId}`,
 
-      baseURL: "http://15.164.164.17:3000",
+      baseURL: API_URL,
       headers: {
         "content-type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -64,7 +65,7 @@ const Timer = ({ roomId }) => {
         Authorization: `Bearer ${token}`,
       },
 
-      baseURL: "http://15.164.164.17:3000",
+      baseURL: API_URL,
     })
       .then((response) => {
         console.log(response);

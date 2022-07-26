@@ -3,34 +3,30 @@ import styled from "styled-components";
 
 import { BsChatDots, BsChatDotsFill } from "react-icons/bs";
 
-const UnderBar = ({openBar, sideBarHandler}) => {
-    return(
-        <PlusBar openBar={openBar}>
-            <SideBtn
-              className="side_btn"
-              openBar={openBar}
-              onClick={sideBarHandler}
-            >
-              {openBar ? (
-                <MessageIcon>
-                  <BsChatDots />
-                  <Alert />
-                  <span>채팅 닫기</span>
-                </MessageIcon>
-              ) : (
-                <MessageIcon>
-                  <BsChatDotsFill />
-                  <Alert />
-                  <span>채팅 열기</span>
-                </MessageIcon>
-              )}
-            </SideBtn>
-          </PlusBar>
-    );
-}
+const UnderBar = ({ openBar, sideBarHandler }) => {
+  return (
+    <PlusBar openBar={openBar}>
+      <SideBtn className="side_btn" openBar={openBar} onClick={sideBarHandler}>
+        {openBar ? (
+          <MessageIcon>
+            <BsChatDots />
+            <Alert />
+            <span>채팅 닫기</span>
+          </MessageIcon>
+        ) : (
+          <MessageIcon>
+            <BsChatDotsFill />
+            <Alert />
+            <span>채팅 열기</span>
+          </MessageIcon>
+        )}
+      </SideBtn>
+    </PlusBar>
+  );
+};
 
 const PlusBar = styled.div`
-  position:fixed;
+  position: fixed;
   display: flex;
   bottom: 0;
   width: 560px;

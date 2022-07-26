@@ -1,12 +1,17 @@
 import React from "react";
 import styled from "styled-components";
 import axios from "axios";
-import kakao from "../shared/kakao.png";
+import kakao from "../shared/login-assets/kakao.png";
 import GoogleButton from "../pages/GoogleButton";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { useDispatch } from "react-redux";
+import { logIn } from "../redux/modules/userSlice";
 
 const Login = ({ onClose, SignOpen }) => {
+  const API_URL = process.env.REACT_APP_API_URL;
+
+  const dispatch = useDispatch();
   const outZone_ref = React.useRef(null); // 모달창이외에부분 지정
   const [email, setemail] = React.useState(null); //email 아이디
   const [password, setPwd] = React.useState(null); // 비밀번호
@@ -36,13 +41,20 @@ const Login = ({ onClose, SignOpen }) => {
         email: email,
         password: password,
       },
-      baseURL: "http://15.164.164.17:3000",
+      baseURL: API_URL,
     })
       .then(function (response) {
+        dispatch(logIn());
         localStorage.setItem("accessToken", response.data.accessToken);
         localStorage.setItem("refreshToken", response.data.refreshToken);
         localStorage.setItem("userId", response.data.userId);
         onClose();
+        MySwal.fire({
+          title: "Success!",
+          text: "로그인 성공",
+          icon: "success",
+          confirmButtonText: "확인",
+        });
       })
       .catch(function (error) {
         console.log(error);

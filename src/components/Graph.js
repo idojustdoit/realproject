@@ -13,6 +13,7 @@ import {
 function Graph() {
   const [data, setData] = React.useState(null);
   const [weektime, setWeektime] = React.useState(null);
+  const API_URL = process.env.REACT_APP_API_URL;
 
   // 공부 시간 데이터 얻어오고 그래프 데이터 형식에 맞게 변환하기.
 
@@ -22,7 +23,7 @@ function Graph() {
     axios({
       method: "GET",
       url: `/api/mypage/${userId}/time`,
-      baseURL: "http://15.164.164.17:3000",
+      baseURL: API_URL,
 
       headers: {
         Authorization: `Bearer ${token}`,

@@ -29,6 +29,8 @@ const names = [
 ];
 
 const Login = ({ onClose }) => {
+  const API_URL = process.env.REACT_APP_API_URL;
+
   //사용하는 변수명 정리
   const MySwal = withReactContent(Swal); //(에러 및 성공 모달창)
   const outZone_ref = React.useRef(); //모달창 닫을때
@@ -121,7 +123,7 @@ const Login = ({ onClose }) => {
         isLike: false,
       },
 
-      baseURL: "http://15.164.164.17:3000",
+      baseURL: API_URL,
       headers: {
         "content-type": "application/json",
         Authorization: `Bearer ${token}`,

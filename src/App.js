@@ -9,6 +9,7 @@ import MyPage from "./pages/Mypage";
 import Modify from "./pages/Modify";
 import VideoPage from "./pages/VideoPage";
 import Kakaologin from "./pages/Kakaologin";
+import SearchPage from "./pages/SearchPage";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Routes>
             <Route path="/" element={<MainPage />}></Route>
             <Route path="/mypage" element={<MyPage />}></Route>
+            <Route path="/search" element={<SearchPage />}></Route>
             <Route path="Modify" element={<Modify />}></Route>
             <Route path="/Kakaologin" element={<Kakaologin />}></Route>
             <Route path="/public-room/:roomId" element={<VideoPage />}></Route>
@@ -29,15 +31,13 @@ function App() {
 }
 
 const StyledApp = styled.div`
-  /* width: 1920px; */
-  /* width: 100%; */
+  width: 100%;
   margin: 0 auto;
   height: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: mintcream;
 `;
 
 export default App;

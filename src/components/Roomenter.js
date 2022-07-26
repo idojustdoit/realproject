@@ -16,12 +16,13 @@ const Login = ({ onClose, roomId }) => {
   const [personinfo, setPersoninfo] = React.useState([]); // 참여인원의 imgurl ,
 
   const Getdata = () => {
+    const API_URL = process.env.REACT_APP_API_URL;
     const token = localStorage.getItem("accessToken");
-    // const userId = localStorage.getItem("userId");
+
     axios({
       method: "POST",
       url: "/api/room/public-room/8/1",
-      baseURL: "http://54.180.96.136",
+      baseURL: API_URL,
 
       headers: {
         Authorization: `Bearer ${token}`,

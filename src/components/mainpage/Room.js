@@ -3,6 +3,10 @@ import styled from "styled-components";
 import { FaUser } from "react-icons/fa";
 import Portal from "../Portal";
 import Roomenter from "../Roomenter";
+import { useDispatch, useSelector } from "react-redux";
+
+import fullHeart from "../../shared/mainpage-assets/icon-full-heart.svg";
+import emptyHeart from "../../shared/mainpage-assets/icon-empty-heart.svg";
 
 const Room = ({
   roomId,
@@ -14,44 +18,50 @@ const Room = ({
   groupNum,
   isLiked,
 }) => {
+  const dispatch = useDispatch();
+
   const [likeState, setLikeState] = useState(isLiked);
 
-  const token = localStorage.getItem("accessToken");
+  const isLogin = useSelector((state) => state.user.isLogin);
 
-  function toggleLike() {
-    // setLikeState(!likeState) 하면 안됨 이전 상태를 기반으로 상태를 반전시켜주기
-    setLikeState((prevlikeState) => !prevlikeState);
-  }
-  // function enterRoomHandler() {
-  // }
   //입장하기버튼: 클릭한 방(roomId)에 해당하는 화상채팅방으로 입장하는 모달
   const [EnterOpen, setEnterOpen] = React.useState(false);
   const EnterModal = () => {
     setEnterOpen(!EnterOpen);
   };
-  // const [isShow, setIsShow] = useState(false);
 
-  // function toggleShow() {
-  //   setIsShow(!isShow);
-  // }
+  console.log("😎Room 컴포넌트 렌더링!");
 
   //로그인 안했을시에 보여지는 경고창
   const AlertHandler = () => {
-    alert("로그인이후 사용해주세요!");
+    alert("로그인 이후 사용해주세요!");
   };
+
+  function clickLike(event) {
+    //부모 엘리먼트에게 이벤트 전달을 중단 할때 event.stopProgation() 사용
+    // event.stopPropagation();
+    setLikeState((prevlikeState) => !prevlikeState);
+  }
 
   return (
     <RoomCont key={roomId}>
-      <RoomImg src={imageUrl}></RoomImg>
+      <RoomImg imageUrl={imageUrl} alt=""></RoomImg>
       <RoomCotentBox>
         <TopContent>
           <TitleBox className="roomTitle-box">
-            <RoomTitle>{title}</RoomTitle>
-            <UserCountBox className="userCount-box">
-              <FaUser />
-              &nbsp;
-              <span>{groupNum}/4</span>
-            </UserCountBox>
+            <TitleAndGroupNum>
+              <RoomTitle>{title}</RoomTitle>
+              <UserCountBox className="userCount-box">
+                <FaUser />
+                &nbsp;
+                <span>{groupNum}/4</span>
+              </UserCountBox>
+            </TitleAndGroupNum>
+            {likeState === true ? (
+              <img alt="fiiled-heart" src={fullHeart} onClick={clickLike}></img>
+            ) : (
+              <img alt="empty-heart" src={emptyHeart} onClick={clickLike}></img>
+            )}
           </TitleBox>
           <ContentBox>{content}</ContentBox>
           <DueDate>{date}까지</DueDate>
@@ -63,14 +73,8 @@ const Room = ({
             return <Tag key={index}>#{tag}</Tag>;
           })}
         </TagBox>
-        {token ? (
+        {isLogin ? (
           <BtnBox>
-            {!likeState ? (
-              <WhiteBtn onClick={toggleLike}>찜하기</WhiteBtn>
-            ) : (
-              <LikedWhiteBtn onClick={toggleLike}>찜취소</LikedWhiteBtn>
-            )}
-
             <BlackBtn onClick={EnterModal}>참여하기</BlackBtn>
             <Portal>
               {EnterOpen && <Roomenter roomId={roomId} onClose={EnterModal} />}
@@ -78,7 +82,6 @@ const Room = ({
           </BtnBox>
         ) : (
           <BtnBox>
-            <WhiteBtn onClick={AlertHandler}>찜하기</WhiteBtn>
             <BlackBtn onClick={AlertHandler}>참여하기</BlackBtn>
           </BtnBox>
         )}
@@ -87,23 +90,26 @@ const Room = ({
   );
 };
 
-export default Room;
+export default memo(Room);
 
 const RoomCont = styled.div`
   background-color: #fff;
+  max-width: 424px;
   height: 500px;
   display: flex;
   flex-direction: column;
   -webkit-margin-collapse: collapse;
   overflow: hidden;
   border-radius: 10px;
-  -webkit-box-shadow: 1px 8px 12px -7px #8f8f8f;
-  box-shadow: 1px 8px 12px -7px #8f8f8f;
+  -webkit-box-shadow: var(--card-box-shadow);
+  box-shadow: var(--card-box-shadow);
 `;
-const RoomImg = styled.img`
+const RoomImg = styled.div`
   width: 100%;
   height: 50%;
-  background-image: url(${(props) => props.imageUr});
+  background: url(${(props) => props.imageUrl}) no-repeat center;
+  object-fit: cover;
+  background-color: pink;
 `;
 const RoomCotentBox = styled.div`
   height: 50%;
@@ -121,7 +127,7 @@ const TopContent = styled.div`
 `;
 const TitleBox = styled.div`
   display: flex;
-  /* justify-content: space-between; */
+  justify-content: space-between;
   align-items: center;
 `;
 const RoomTitle = styled.h3`
@@ -142,6 +148,11 @@ const UserCountBox = styled.div`
   font-weight: 700;
 `;
 
+const TitleAndGroupNum = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
 const ContentBox = styled.p`
   overflow: hidden;
   text-overflow: ellipsis;
@@ -150,6 +161,7 @@ const ContentBox = styled.p`
   -webkit-box-orient: vertical;
   word-wrap: break-word;
   font-size: 16px;
+  font-weight: 500;
 `;
 
 const DueDate = styled.span`
@@ -161,9 +173,11 @@ const DueDate = styled.span`
 `;
 const TagBox = styled.div`
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 5px;
   font-size: 16px;
+  margin-bottom: 20px;
 `;
 const Tag = styled.span`
   font-size: 16px;
@@ -180,22 +194,16 @@ const Tag = styled.span`
 
 const BtnBox = styled.div`
   display: flex;
-  /* justify-content: space-between; */
   gap: 0.5rem;
-  /* margin-top: 20px; */
 `;
 const WhiteBtn = styled.button`
   /* position: relative; */
-  width: 50%;
+  width: 100%;
   height: 60px;
   border-radius: 4px;
   font-size: 20px;
   font-weight: 700;
   background-color: #fff;
-`;
-
-const LikedWhiteBtn = styled(WhiteBtn)`
-  background-color: #b8e994;
 `;
 
 const BlackBtn = styled(WhiteBtn)`

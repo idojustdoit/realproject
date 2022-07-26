@@ -3,11 +3,12 @@ import GoogleLogin from "react-google-login";
 import { gapi } from "gapi-script";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import google from "../shared/google.png";
+import google from "../shared/login-assets/google.png";
 
 const clientId = process.env.REACT_APP_clientId;
 
 const GoogleButton = ({ onSocial }) => {
+  const API_URL = process.env.REACT_APP_API_URL;
   // const navigate = useNavigate();
   useEffect(() => {
     function start() {
@@ -19,7 +20,6 @@ const GoogleButton = ({ onSocial }) => {
     gapi.load("client:auth2", start);
   }, []);
   const onSuccess = (response) => {
-    console.log(response);
     const tokenId = response.tokenId;
     const nickname = response.profileObj.name;
     const email = response.profileObj.email;
@@ -34,7 +34,7 @@ const GoogleButton = ({ onSocial }) => {
       },
     };
 
-    axios.post("http://3.35.26.55/api/google/login", body).then((res) => {
+    axios.post(`${API_URL}/api/google/login`, body).then((res) => {
       console.log(res);
       localStorage.setItem("accessToken", res.data.accessToken);
       localStorage.setItem("refreshToken", res.data.refreshToken);
