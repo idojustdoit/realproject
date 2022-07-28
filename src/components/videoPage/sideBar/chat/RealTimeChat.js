@@ -22,7 +22,7 @@ const RealTimeChat = ({socket, nick, roomId}) => {
         <span
          
         >
-          그룹채팅 {roomId}
+          그룹채팅
         </span>
         {chatToggle ? (
           <IoIosArrowUp

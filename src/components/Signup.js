@@ -100,7 +100,7 @@ const SignUp = ({ onClose, LoginOpen }) => {
       data: {
         nickname: nickname,
       },
-      baseURL: API_URL,
+      baseURL: "http://3.37.87.171",
     })
       .then((response) => {
         console.log(response);

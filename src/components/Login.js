@@ -46,6 +46,7 @@ const Login = ({ onClose, SignOpen }) => {
       .then(function (response) {
         dispatch(logIn());
         localStorage.setItem("accessToken", response.data.accessToken);
+        localStorage.setItem("nickname", response.data.nickname);
         localStorage.setItem("refreshToken", response.data.refreshToken);
         localStorage.setItem("userId", response.data.userId);
         onClose();

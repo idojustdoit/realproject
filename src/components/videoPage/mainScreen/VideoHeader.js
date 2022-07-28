@@ -8,7 +8,7 @@ import { ReactComponent as LogoIcon } from "../../../shared/header-assets/icon-l
 
 import { CSSTransition } from "react-transition-group";
 
-const VideoHeader = ({ openBar, roomId }) => {
+const VideoHeader = ({exitRoomHandler, openBar, roomId }) => {
   const navigate = useNavigate();
   const duration = 700;
 
@@ -21,13 +21,11 @@ const VideoHeader = ({ openBar, roomId }) => {
     >
       <Head>
         <LogoIcon
-          onClick={() => {
-            navigate("/");
-          }}
+          onClick={exitRoomHandler}
           style={{ cursor: "pointer", marginLeft: "40px" }}
         />
         <Logo>같이 소방9급 준비해요!</Logo>
-        <BasicBtn roomId={roomId} />
+        <BasicBtn exitRoomHandler={exitRoomHandler} roomId={roomId}/>
       </Head>
     </CSSTransition>
   );

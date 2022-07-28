@@ -8667,6 +8667,11 @@ react-smooth@^2.0.1:
     fast-equals "^2.0.0"
     react-transition-group "2.9.0"
 
+react-spinners@^0.13.3:
+  version "0.13.3"
+  resolved "https://registry.yarnpkg.com/react-spinners/-/react-spinners-0.13.3.tgz#9d00d10fb2a0869b21efdc13fb0fddbcecd05731"
+  integrity sha512-FHQMH6dAl1Vw4Lxv0H7hbGsjBs0aKNVwjGrDJLuD9R/C3h9+IuBhKJOJyCcegxMaLiBSBV96Tp+XV3OwPK8Vtw==
+
 react-transition-group@2.9.0:
   version "2.9.0"
   resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-2.9.0.tgz#df9cdb025796211151a436c69a8f3b97b5b07c8d"
@@ -9660,15 +9665,15 @@ svgo@^2.7.0:
     picocolors "^1.0.0"
     stable "^0.1.8"
 
-sweetalert2-react-content@^5.0.1:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/sweetalert2-react-content/-/sweetalert2-react-content-5.0.1.tgz#fc993470a2e673d2f63c388708eb8d170cbf7c70"
-  integrity sha512-waB/aDHeVSBdxHEFioy0OmQVi+bupr/S1M+GW54WbFkuO86uxVLRzzFomeddhGzrl6R4JwNJAmuKYDhQVN+uyw==
+sweetalert2-react-content@^5.0.2:
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/sweetalert2-react-content/-/sweetalert2-react-content-5.0.2.tgz#5b6ef75df72d5136156c95eee3a5a8fb1852776a"
+  integrity sha512-c5nBiqOhBDNaoBuI9x6bYPDlHmaCo1Yd0N4hq+VD2PgZdxIaqRCahjzvsZ0zasT/IRi2vjpntU98Sq/zzNQ2zQ==
 
-sweetalert2@^11.4.23:
-  version "11.4.23"
-  resolved "https://registry.yarnpkg.com/sweetalert2/-/sweetalert2-11.4.23.tgz#a29b1d43bbfd579c1a54952da2a18a8d1a41cf0e"
-  integrity sha512-BfO0gIIHu4SJiixBHpCmd74W+EkORJPX9zy5HLp6vkMAz7RsUED7BhrOBEYrYYgw9nnbxYOwzJDDVPNuK1JQtQ==
+sweetalert2@^11.4.24:
+  version "11.4.24"
+  resolved "https://registry.yarnpkg.com/sweetalert2/-/sweetalert2-11.4.24.tgz#9dbe1e3096d6fd739e03d5c5fe2d218638fceaf4"
+  integrity sha512-wbD3SbaOhWyebVfnrY9rMjjVf7ZKUHjmn5Ch83NWUg84b/SYn0N4F0Dhxq3QYSAbnAQ7ArovQb2JfxZi5+Ieug==
 
 swiper@^8.3.1:
   version "8.3.1"
