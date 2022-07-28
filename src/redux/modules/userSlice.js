@@ -18,9 +18,11 @@ const userSlice = createSlice({
     email: "",
   },
   reducers: {
-    changeLoginState(state, action) {
-      //여기에 current? 있던거같은데 그게 뭐지
-      state.isLogin = !action.payload;
+    logOut(state, action) {
+      state.isLogin = false;
+    },
+    logIn(state, action) {
+      state.isLogin = true;
     },
     setHostId(state, action) {
       if (state.isLogin === true) {
@@ -31,6 +33,6 @@ const userSlice = createSlice({
 });
 //내보내진(export된) actions은 사용되는 컴포넌트에서 불러와서 쓰임
 // e.g.)dispatch(authActions.logout()); 이런식으로 쓰임!
-export const { changeLoginState } = userSlice.actions;
+export const { changeLoginState, logIn, logOut } = userSlice.actions;
 //auth 리듀서는 store로 불러와서 리듀서들끼리 뭉쳐놓을 때 쓰인다.
 export default userSlice.reducer;

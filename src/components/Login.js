@@ -1,17 +1,25 @@
 import React from "react";
 import styled from "styled-components";
 import axios from "axios";
-import kakao from "../shared/kakao.png";
+import kakao from "../shared/login-assets/kakao.png";
 import GoogleButton from "../pages/GoogleButton";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { useDispatch } from "react-redux";
+import { logIn } from "../redux/modules/userSlice";
 
 const Login = ({ onClose, SignOpen }) => {
+  const API_URL = process.env.REACT_APP_API_URL;
+
+  const dispatch = useDispatch();
   const outZone_ref = React.useRef(null); // 모달창이외에부분 지정
-
-  const [username, setUserName] = React.useState(null); //email 아이디
+  const [email, setemail] = React.useState(null); //email 아이디
   const [password, setPwd] = React.useState(null); // 비밀번호
+  const MySwal = withReactContent(Swal); //통신 확인패키지
 
+  //각 input 창 onChange로 이벤트 감지
   const handlerId = (e) => {
-    setUserName(e.target.value);
+    setemail(e.target.value);
   };
 
   const handlerPw = (e) => {
@@ -30,31 +38,35 @@ const Login = ({ onClose, SignOpen }) => {
       method: "POST",
       url: "/api/auth/login",
       data: {
-        email: username,
+        email: email,
         password: password,
       },
-      baseURL: "http://3.37.87.171",
+      baseURL: "http://15.164.164.17:3000",
     })
       .then(function (response) {
-        console.log(response.data);
-        alert(response.data.msg);
-        axios.defaults.withCredentials = true;
+        dispatch(logIn());
         localStorage.setItem("accessToken", response.data.accessToken);
         localStorage.setItem("nickname", response.data.nickname);
         localStorage.setItem("refreshToken", response.data.refreshToken);
         localStorage.setItem("userId", response.data.userId);
         onClose();
-        // LoginCondition();
-        window.location.reload();
+        MySwal.fire({
+          title: "Success!",
+          text: "로그인 성공",
+          icon: "success",
+          confirmButtonText: "확인",
+        });
       })
       .catch(function (error) {
-        alert(error.response.data.msg);
         console.log(error);
+        MySwal.fire({
+          title: "Error!",
+          text: "로그인이 실패하였습니다.",
+          icon: "error",
+          confirmButtonText: "확인",
+        });
       });
   };
-
-  const kakaoUrl =
-    "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=b266efe96498090868c78833faf62705&redirect_uri=http://localhost:3000/Kakaologin";
 
   const MoveModal = () => {
     onClose();
@@ -104,7 +116,7 @@ const Login = ({ onClose, SignOpen }) => {
             <Button
               id="login_btn"
               onClick={loginAxios}
-              disabled={username === "" || password === "" ? true : false}
+              disabled={email === "" || password === "" ? true : false}
             >
               로그인
             </Button>
@@ -123,7 +135,7 @@ const Login = ({ onClose, SignOpen }) => {
                 marginBottom: "10px",
                 marginTop: "24px",
               }}
-              href={kakaoUrl}
+              href={process.env.REACT_APP_KAKAOURL}
             >
               <img
                 alt=""
@@ -192,6 +204,16 @@ const ModalBlock = styled.div`
     to {
       opacity: 1;
       margin-top: 0;
+    }
+  }
+  @keyframes modal-out {
+    from {
+      opacity: 1;
+      margin-top: 0px;
+    }
+    to {
+      opacity: 0;
+      margin-top: -50px;
     }
   }
 `;

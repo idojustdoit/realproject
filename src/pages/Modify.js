@@ -3,83 +3,86 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 import Header from "../components/Header";
-import Footer from "../components/Footer";
-import Timer from "../components/Timer";
+import userprofile from "../shared/userprofile.png";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 function Modify() {
+  const API_URL = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
-  const imgUrl_ref = React.useRef(null); //이미지url
-  const [imgUrl, setimgUrl] = React.useState(
-    //이미지url
-    "https://opgg-com-image.akamaized.net/attach/images/20220220075306.1538486.jpg"
-  );
-  // const [email, setemail] = React.useState(""); //이메일 인풋
+  const MySwal = withReactContent(Swal);
+  const profile_ref = React.useRef(null); //이미지url
+  const formData = new FormData();
+  const [profile, setProfile] = React.useState(userprofile);
   const [password, setpassword] = React.useState(""); // 비밀번호 인풋
   const [passwordCheck, setpasswordCheck] = React.useState(""); //비밀번호 확인 인풋
   const [nickname, setNickname] = React.useState(""); //닉네임 인풋
 
-  const UpImageUrl = async (e) => {
-    setimgUrl(imgUrl_ref.current.url);
+  // 프로필이미지 관련 코드
+  const FILE_SIZE_MAX_LIMIT = 5 * 1024 * 1024;
+  const UpImageUrl = (e) => {
+    const files = e.target.files[0];
+    if (files.size > FILE_SIZE_MAX_LIMIT) {
+      e.target.value = "";
+      alert("업로드 가능한 최대 용량은 5MB입니다. ");
+      return;
+    }
+    encodeFileToBase64(files);
+    setProfile(e.target.value);
   };
 
-  //  해당회원의 정보요청
-  const originData = () => {
-    axios.defaults.withCredentials = true;
-    axios({
-      method: "get",
-      url: "/api/mypage/update/",
-      baseURL: "http://localhost:5001",
-
-      // headers: {
-      //   authorization: localStorage.getItem("access_token"),
-    })
-      .then((response) => {
-        console.log(response);
-        setimgUrl(response.data.iconUrl);
-        setNickname(response.data.nickname);
-        setpassword(response.data.password);
-        setpasswordCheck(response.data.passwordCheck);
-      })
-      .catch((error) => {
-        console.log(error);
-        alert(error.response.data);
-      });
+  const encodeFileToBase64 = (fileBlob) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(fileBlob);
+    return new Promise((resolve) => {
+      reader.onload = () => {
+        setProfile(reader.result);
+        resolve();
+      };
+    });
   };
 
-  // 페이지가 나오자마자 회원정보 불러오기 및 삭제
-  // useEffect(() => {
-  //   originData();
-  // }, []);
-
-  //수정할 회원정보 등록
-  const signupdata = () => {
+  // 수정할 회원정보 등록
+  const signupdata = (e) => {
+    e.preventDefault();
+    let file = profile_ref.current.files[0];
+    console.log(file);
+    formData.append("profile_url", file);
+    formData.append("password", password);
+    formData.append("passwordCheck", passwordCheck);
+    formData.append("nickname", nickname);
+    const token = localStorage.getItem("accessToken");
+    const userId = localStorage.getItem("userId");
     axios({
       method: "PUT",
-      url: "/api/mypage/update/",
-      data: {
-        nickname: nickname,
-        password: password,
-        passwordCheck: passwordCheck,
-        iconUrl: imgUrl,
+      url: `/api/mypage/${userId}/update`,
+      data: formData,
+      headers: {
+        "content-type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
       },
-      baseURL: "http://3.35.26.55",
+      baseURL: "http://15.164.164.17:3000",
     })
       .then((response) => {
         console.log(response);
-        // setimgUrl(response.data.iconUrl);
-        //       setNickname(response.data.nickname);
-        //       setpassword(response.data.password);
-        //       setpasswordCheck(response.data.passwordCheck);
+        navigate("/mypage");
+        MySwal.fire({
+          title: "success",
+          text: "정보수정이 완료되었습니다!",
+          icon: "success",
+          confirmButtonText: "확인",
+        });
       })
       .catch((error) => {
         console.log(error);
-        alert(error.response.data.message);
+        MySwal.fire({
+          title: "error",
+          text: "정보수정을 실패하였습니다",
+          icon: "error",
+          confirmButtonText: "확인",
+        });
       });
   };
-
-  // const handlerId = (e) => {
-  //   setemail(e.target.value);
-  // };
 
   const handlerPw = (e) => {
     setpassword(e.target.value);
@@ -94,12 +97,12 @@ function Modify() {
   };
 
   return (
-    <div style={{ width: "1920px", backgroundColor: "lightgray" }}>
+    <div style={{ width: "1920px" }}>
       <Background>
         <Header />
         <ModalBlock>
           <Title>개인정보 수정 </Title>
-          <Timer />
+
           <Line />
           <Label>
             <span>
@@ -112,7 +115,7 @@ function Modify() {
                   borderRadius: "50px",
                   position: "relative",
                 }}
-                src={imgUrl}
+                src={profile}
               />
               <img
                 alt=""
@@ -121,7 +124,7 @@ function Modify() {
                   width: "28px",
                   borderRadius: "50px",
                   position: "absolute",
-                  marginLeft: "-30px",
+                  marginLeft: "-25px",
                   marginTop: "53px",
                 }}
                 src="https://www.shareicon.net/data/2017/05/09/885771_camera_512x512.png"
@@ -130,6 +133,7 @@ function Modify() {
                 style={{ display: "none" }}
                 type="file"
                 id="file"
+                ref={profile_ref}
                 onChange={UpImageUrl}
               />
               <br />
@@ -158,7 +162,7 @@ function Modify() {
               <Chat3></Chat3>
               <Input
                 type="password"
-                style={{ fontSize: "15px" }}
+                style={{ fontSize: "15px", marginRight: "10px" }}
                 onChange={handlerPwcheck}
                 value={passwordCheck}
               />
@@ -167,7 +171,7 @@ function Modify() {
                 <div
                   style={{
                     color: "red",
-                    fontSize: "14px",
+                    fontSize: "12px",
                     marginLeft: "14px",
                     marginTop: "5px",
                   }}
@@ -183,7 +187,7 @@ function Modify() {
             <Button1 onClick={signupdata}>변경사항 저장</Button1> <br />
             <Button2
               onClick={() => {
-                navigate("/");
+                navigate("/mypage");
               }}
             >
               취소
@@ -191,7 +195,6 @@ function Modify() {
           </LoginBtn>
         </ModalBlock>
       </Background>
-      <Footer />
     </div>
   );
 }
@@ -199,9 +202,6 @@ function Modify() {
 const Background = styled.div`
   width: 100%;
   height: 100%;
-
-  align-content: center;
-  text-align: center;
 `;
 const ModalBlock = styled.div`
   display: flex;
@@ -211,14 +211,14 @@ const ModalBlock = styled.div`
   background-color: white;
   color: black;
   width: 458px;
-  height: 610px;
+  height: 540px;
   padding: 10px;
   box-shadow: 1px 1px 1px 1px gray;
   margin-top: 20px;
   margin-bottom: 20px;
   transform: translate(150%, 0%);
-  margin-top: 50px;
-  margin-bottom: 50px;
+  margin-top: 225px;
+  margin-bottom: 145px;
 `;
 
 const Title = styled.div`
@@ -234,7 +234,7 @@ const Title = styled.div`
 const Line = styled.hr`
   background-color: black;
   width: 360px;
-  height: 2px;
+  border: 1px solid black;
   margin-top: 12px;
   margin-bottom: 32px;
 `;
@@ -279,7 +279,7 @@ const LoginBtn = styled.div``;
 const Button1 = styled.button`
   margin-top: 42px;
   color: #fff;
-  background-color: black;
+  background-color: #1d9ffd;
   border: none;
   font-size: 18px;
   font-weight: 900;

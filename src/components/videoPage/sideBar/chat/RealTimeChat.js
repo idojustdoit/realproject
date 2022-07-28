@@ -16,8 +16,6 @@ const RealTimeChat = ({socket, nick, roomId}) => {
     }
   };
 
-  
-
   return (
     <ChatArea>
       <Title>
@@ -40,7 +38,7 @@ const RealTimeChat = ({socket, nick, roomId}) => {
       </Title>
       <Wrapper>
         {/* 임시 방 생성 */}
-       
+
         {chatToggle && (
           <RealTimeChatList socket={socket} nick={nick} roomId={roomId} />
         )}

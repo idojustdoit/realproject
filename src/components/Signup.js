@@ -3,14 +3,17 @@ import styled from "styled-components";
 import axios from "axios";
 import { storage } from "../shared/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import userprofile from "../shared/mypage-assets/user-basic-img.png";
 
 const SignUp = ({ onClose, LoginOpen }) => {
+  const API_URL = process.env.REACT_APP_API_URL;
+  const formData = new FormData();
+  const MySwal = withReactContent(Swal);
   const outZone_ref = React.useRef(null);
   const profile_ref = React.useRef(null); //유저 이미지 URL
-  const [profile, setprofile] = React.useState(
-    //유저 이미지 URL
-    "https://opgg-com-image.akamaized.net/attach/images/20220220075306.1538486.jpg"
-  );
+  const [profile, setprofile] = React.useState(userprofile);
   const [email, setemail] = React.useState(""); //email 인풋
   const [password, setPwd] = React.useState(""); //비밀번호 인풋
   const [passwordCheck, setpasswordCheck] = React.useState(""); //비밀번호 확인 인풋
@@ -20,8 +23,34 @@ const SignUp = ({ onClose, LoginOpen }) => {
   const [userIdError, setUserIdError] = React.useState(false); //이메일 유효성검사\
   const [verEmail, setVerEmail] = React.useState(false); //이메일 인증검사
   const [nickError, setNickError] = React.useState(false); //닉네임 유효성 검사
+  const [emailcode, setEmailcode] = React.useState(""); //
+  const [usernum, setUsernum] = React.useState(""); //
+  const [checknick, setChecknick] = React.useState(false); //
+  const [checknumber, setChecknumber] = React.useState(false); //
 
-  const confirmNumber = (e) => {};
+  const vernumber = (e) => {
+    setUsernum(e.target.value);
+  };
+
+  const confirmNumber = () => {
+    console.log(emailcode);
+    if (usernum === emailcode) {
+      MySwal.fire({
+        title: "success",
+        text: "인증번호가 확인되었습니다.",
+        icon: "success",
+        confirmButtonText: "확인",
+      });
+      setChecknumber(true);
+    } else {
+      MySwal.fire({
+        title: "failed",
+        text: "인증번호가 맞지않습니다",
+        icon: "error",
+        confirmButtonText: "확인",
+      });
+    }
+  };
 
   // 조건 최소 2글자
   const onChangeUserId = (e) => {
@@ -39,16 +68,28 @@ const SignUp = ({ onClose, LoginOpen }) => {
     setNickName(e.target.value);
   };
 
-  //firebase 사용해서 url 추출
-  const UpImageUrl = async (e) => {
-    const upload_file = await uploadBytes(
-      ref(storage, `images/${e.target.files[0].name}`),
-      e.target.files[0]
-    );
+  // 사용해서 url 추출
+  const FILE_SIZE_MAX_LIMIT = 5 * 1024 * 1024;
+  const UpImageUrl = (e) => {
+    const files = e.target.files[0];
+    if (files.size > FILE_SIZE_MAX_LIMIT) {
+      e.target.value = "";
+      alert("업로드 가능한 최대 용량은 5MB입니다. ");
+      return;
+    }
+    encodeFileToBase64(files);
+    setprofile(e.target.value);
+  };
 
-    const file_url = await getDownloadURL(upload_file.ref);
-    profile_ref.current = { url: file_url };
-    setprofile(profile_ref.current.url);
+  const encodeFileToBase64 = (fileBlob) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(fileBlob);
+    return new Promise((resolve) => {
+      reader.onload = () => {
+        setprofile(reader.result);
+        resolve();
+      };
+    });
   };
 
   //닉네임 중복확인
@@ -63,11 +104,22 @@ const SignUp = ({ onClose, LoginOpen }) => {
     })
       .then((response) => {
         console.log(response);
-        alert("사용가능한 닉네임 입니다.");
+        MySwal.fire({
+          title: "success",
+          text: "사용 가능한 닉네임입니다!",
+          icon: "success",
+          confirmButtonText: "확인",
+        });
+        setChecknick(true);
       })
       .catch((error) => {
         console.log(error);
-        alert("다른 닉네임을 작성해주세요");
+        MySwal.fire({
+          title: "Error!",
+          text: "다른 닉네임을 입력해주세요.",
+          icon: "error",
+          confirmButtonText: "확인",
+        });
       });
   };
 
@@ -75,46 +127,61 @@ const SignUp = ({ onClose, LoginOpen }) => {
   const confirmMail = () => {
     axios({
       method: "POST",
-      url: "/api/mailauth/sendEmail",
+      url: "/api/authMail",
       headers: { "Content-Type": "application/json" },
       data: {
         email: email,
       },
-      baseURL: "http://15.164.164.17:3000",
+      baseURL: API_URL,
     })
       .then((response) => {
         console.log(response);
+        setEmailcode(response.data.authNum);
       })
       .catch((error) => {
         console.log(error);
+        MySwal.fire({
+          title: "Error!",
+          text: "인증번호를 다시 확인해주세요.",
+          icon: "error",
+          confirmButtonText: "확인",
+        });
       });
     setVerEmail(true);
   };
 
   // 회원가입 통신
-  const signupdata = () => {
+  const signupdata = (e) => {
+    e.preventDefault();
+    let file = profile_ref.current.files[0];
+    formData.append("profile_url", file);
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append("passwordCheck", passwordCheck);
+    formData.append("nickname", nickname);
     axios({
       method: "POST",
       url: "/api/auth/signup",
-      data: {
-        email: email,
-        password: password,
-        passwordCheck: passwordCheck,
-        nickname: nickname,
-        iconUrl: profile,
+      data: formData,
+      baseURL: "http://15.164.164.17:3000",
+      headers: {
+        "content-type": "multipart/form-data",
       },
-      baseURL: "http://3.37.87.171",
     })
       .then((response) => {
         console.log(response);
-
         alert("회원가입을 축하드립니다!!");
         onClose();
         LoginOpen();
       })
       .catch((error) => {
         console.log(error);
-        alert(error.response.data.message);
+        MySwal.fire({
+          title: "Error!",
+          text: "이메일을 확인해주세요.",
+          icon: "error",
+          confirmButtonText: "확인",
+        });
       });
   };
 
@@ -159,25 +226,27 @@ const SignUp = ({ onClose, LoginOpen }) => {
                   width: "28px",
                   borderRadius: "50px",
                   position: "absolute",
-                  marginLeft: "-30px",
+                  marginLeft: "-25px",
                   marginTop: "53px",
                 }}
                 src="https://www.shareicon.net/data/2017/05/09/885771_camera_512x512.png"
               />
-              <Input
+              <input
                 style={{ display: "none" }}
                 type="file"
                 id="files"
+                ref={profile_ref}
                 onChange={UpImageUrl}
               />
               <br />
             </span>
           </Label>
           <Label>
-            <div>
+            <div style={{ display: "flex" }}>
               <Chat1>이메일</Chat1>
 
               <Input
+                required
                 style={{
                   width: "200px",
                   marginRight: "10px",
@@ -189,10 +258,10 @@ const SignUp = ({ onClose, LoginOpen }) => {
               <Button3 onClick={confirmMail}> 인증확인</Button3>
               {userIdError && (
                 <div
-                  style={{ color: "red", fontSize: "14px", marginTop: "3px" }}
+                  style={{ color: "red", fontSize: "12px", marginTop: "3px" }}
                 >
                   {" "}
-                  *이메일형식을 바르게 작성해주세요.{" "}
+                  ※이메일형식을 바르게 작성해주세요.{" "}
                 </div>
               )}
               {verEmail && (
@@ -203,6 +272,7 @@ const SignUp = ({ onClose, LoginOpen }) => {
                       marginRight: "10px",
                       marginLeft: "76px",
                     }}
+                    onChange={vernumber}
                     type="email"
                   />
                   <Button3 onClick={confirmNumber}> 번호확인</Button3>
@@ -215,6 +285,7 @@ const SignUp = ({ onClose, LoginOpen }) => {
             <div>
               <Chat2>비밀번호</Chat2>
               <Input
+                required
                 style={{ fontSize: "15px" }}
                 type="password"
                 onChange={handlerPw}
@@ -226,6 +297,7 @@ const SignUp = ({ onClose, LoginOpen }) => {
             <div>
               <Chat3></Chat3>
               <Input
+                required
                 type="password"
                 style={{ fontSize: "15px", marginRight: "8px" }}
                 placeholder="비밀번호 확인"
@@ -233,10 +305,10 @@ const SignUp = ({ onClose, LoginOpen }) => {
               />
               {password !== passwordCheck && (
                 <div
-                  style={{ color: "red", fontSize: "14px", marginTop: "3px" }}
+                  style={{ color: "red", fontSize: "12px", marginTop: "3px" }}
                 >
                   {" "}
-                  *비밀번호가 같은지 확인해주세요{" "}
+                  ※비밀번호가 같은지 확인해주세요{" "}
                 </div>
               )}
             </div>
@@ -246,6 +318,7 @@ const SignUp = ({ onClose, LoginOpen }) => {
               <Chat1>닉네임</Chat1>
 
               <Input
+                required
                 style={{ width: "200px", marginRight: "10px" }}
                 type="text"
                 onChange={handlerNickName}
@@ -255,15 +328,21 @@ const SignUp = ({ onClose, LoginOpen }) => {
               {nickError && (
                 <div
                   class="invalid-input"
-                  style={{ color: "red", fontSize: "14px", marginTop: "3px" }}
+                  style={{ color: "red", fontSize: "12px", marginTop: "3px" }}
                 >
-                  *최소 2글자이상 작성해주세요.
+                  ※최소 2글자이상 작성해주세요.
                 </div>
               )}
             </div>
           </Label>
           <LoginBtn>
-            <Button1 onClick={signupdata}>회원가입</Button1> <br />
+            <Button1
+              disabled={checknick && checknumber ? false : true}
+              onClick={signupdata}
+            >
+              회원가입
+            </Button1>{" "}
+            <br />
             <Button2
               onClick={() => {
                 onClose();
@@ -387,7 +466,7 @@ const LoginBtn = styled.div``;
 const Button1 = styled.button`
   margin-top: 42px;
   color: #fff;
-  background-color: #1d9ffd;
+  background-color: ${(props) => (props.disabled ? "gray" : "#1d9ffd;")};
   border: none;
   font-size: 18px;
   font-weight: 900;
@@ -400,10 +479,15 @@ const Button1 = styled.button`
   cursor: pointer;
   border-radius: 4px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-  &:hover {
+
+  ${(props) =>
+    props.disabled
+      ? ""
+      : `&:hover {
     background-color: rgba(74, 21, 75, 0.9);
     border: none;
-  }
+  }`};
+
   &:focus {
     --saf-0: rgba(var(--sk_highlight, 18, 100, 163), 1);
     box-shadow: 0 0 0 1px var(--saf-0), 0 0 0 5px rgba(29, 155, 209, 0.3);

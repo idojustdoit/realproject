@@ -2,16 +2,87 @@ import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
+import { useEffect } from "react";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
-const Login = ({ onClose, roomId }) => {
+const Login = ({ onClose, roomId, lock }) => {
   console.log(roomId);
-
+  const API_URL = process.env.REACT_APP_API_URL;
+  const MySwal = withReactContent(Swal);
   const navigate = useNavigate();
-
   const outZone_ref = React.useRef(null);
-  const [title, settitle] = React.useState("");
-  const [roomContent, setRoomContent] = React.useState([]);
-  const [personinfo, setPersoninfo] = React.useState([]); // 참여인원의 imgurl ,
+
+  const [title, setTitle] = React.useState("");
+  const [content, setContent] = React.useState("");
+  const [profile, setProfile] = React.useState([]);
+  const [nickname, setNickname] = React.useState([]);
+  const [Password, setPassword] = React.useState(0);
+  const [personinfo, setPersoninfo] = React.useState([]);
+
+  //유저가 선택한 방에대한 정보
+  const roomData = () => {
+    const token = localStorage.getItem("accessToken");
+
+    axios({
+      method: "POST",
+      url: "url",
+      baseURL: API_URL,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        console.log(response);
+        setTitle(response.data.title);
+        setContent(response.data.content);
+        // setProfile(response.data.profile);
+        // setNickname(response.data.nickname);
+        // setPersoninfo(response.data.personinfo);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  useEffect(() => {
+    roomData();
+  });
+
+  // 비밀방 입장 할때
+  // const secretRoom = () => {
+  //   const token = localStorage.getItem("accessToken");
+  //   axios({
+  //     method: "POST",
+  //     url: "url",
+  //     baseURL: API_URL,
+  //     data: {
+  //       password: password,
+  //     },
+  //     headers: {
+  //       Authorization: `Bearer ${token}`,
+  //     },
+  //   })
+  //     .then((response) => {
+  //       console.log(response);
+  //       navigate(`/privacy-room/${roomId}`);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       MySwal.fire({
+  //         title: "Error!",
+  //         text: "방 입장에 실패하였습니다.",
+  //         icon: "error",
+  //         confirmButtonText: "확인",
+  //       });
+  //     });
+  // };
+
+  // const pwhandler = (e) => {
+  //   setPassword(e.target.value);
+  // };
+  const RoomenterHandler = () => {
+    navigate(`/public-room/${roomId}`);
+  };
 
   return (
     <Container>
@@ -24,23 +95,68 @@ const Login = ({ onClose, roomId }) => {
         }}
       >
         <ModalBlock>
-          {/* <Title>Title</Title> */}
-          <Title> 자격증 공부</Title>
+          {/* <Title>{title}</Title>
           <Line />
           <Label>
-            {/* 해당 방에 있는 TodoList 데이터 받아 map함수로 뿌리기 
-            {todolist.map((list,index) => {
-              return (
-                <div
-                key={index}>
-                <div>
-                {todolist}
-                </div>
-                </div>
-              )
-            })}
-            
-            */}
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <Chat1>스터디내용</Chat1>
+              <Todo>{content}</Todo>
+            </div>
+          </Label>
+          <Label>
+            {}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+              }}
+            ></div>
+            <img
+              alt=""
+              src={list.iconUrl}
+              style={{
+                width: "50px",
+                height: "50px",
+                borderRadius: "10px",
+              }}
+            />
+            <div style={{ textAlign: "left", margin: "0 10px" }}>
+              <div>{list.nickname}</div>
+            </div>
+          </Label>
+          {lock ? (
+            <div>
+              <span>비밀번호</span>
+              <Input type="password" onChange={pwhandler} />
+              <EnterBtn>
+                <Btn1
+                  onClick={() => {
+                    onClose();
+                  }}
+                >
+                  취소
+                </Btn1>
+
+                <Btn2 >비밀방 입장하기</Btn2>
+              </EnterBtn>
+            </div>
+          ) : (
+            <EnterBtn>
+              <Btn1
+                onClick={() => {
+                  onClose();
+                }}
+              >
+                취소
+              </Btn1>
+
+              <Btn2 onClick={RoomenterHandler}>공개방 입장하기</Btn2>
+            </EnterBtn>
+          )} */}
+
+          <Title> title</Title>
+          <Line />
+          <Label>
             <div style={{ display: "flex", justifyContent: "center" }}>
               <Chat1>스터디내용</Chat1>
               <Todo>같이 으쌰으쌰 해요!!!!</Todo>
@@ -53,30 +169,6 @@ const Login = ({ onClose, roomId }) => {
                 justifyContent: "center",
               }}
             >
-              {/* 참여 인원 정보 닉네임과 url받아서 map 함수로 뿌리기
-              
-               {personinfo.map((list,index) => {
-              return (
-                 <div
-                    key={index}>
-                 <img
-                      src={list.iconUrl}
-                      style={{
-                        width: "50px",
-                        height: "50px",
-                        borderRadius: "10px",
-                      }}
-                    />
-                     <div style={{ textAlign: "left", margin: "0 10px" }}>
-                    <div>
-                    {list.nickname}
-                    </div>
-                    <div>
-                </div>
-              )
-            })}
-              
-              */}
               <Chat2>참여인원</Chat2>
 
               <div>
@@ -151,18 +243,8 @@ const Login = ({ onClose, roomId }) => {
               취소
             </Btn1>
 
-            <Btn2
-              onClick={() => {
-                navigate(`/video/${roomId}`);
-                onClose();
-                //방입장하는 navigate(방상세)
-              }}
-            >
-              입장하기
-            </Btn2>
+            <Btn2 onClick={RoomenterHandler}>입장하기</Btn2>
           </EnterBtn>
-
-          <LinkContainer></LinkContainer>
         </ModalBlock>
       </Background>
     </Container>
@@ -245,6 +327,21 @@ const Label = styled.label`
   text-align: center;
 `;
 
+const Input = styled.input`
+  margin-top: 16px;
+  --saf-0: rgba(var(--sk_foreground_high_solid, 134, 134, 134), 1);
+  border: 1px solid var(--saf-0);
+  transition: border 80ms ease-out, box-shadow 80ms ease-out;
+  box-sizing: border-box;
+  width: 280px;
+  height: 36px;
+  color: rgba(var(--sk_primary_foreground, 29, 28, 29), 1);
+  background-color: rgba(var(--sk_primary_background, 255, 255, 255), 1);
+  padding: 12px;
+  border-radius: 4px;
+  font-size: 18px;
+  line-height: 1.33333333;
+`;
 const Chat1 = styled.div`
   margin-right: 25px;
   width: 84px;
@@ -280,13 +377,6 @@ const Chat2 = styled.div`
 `;
 const EnterBtn = styled.div`
   margin-top: 20px;
-`;
-
-const LinkContainer = styled.div`
-  font-size: 13px;
-  color: #616061;
-  margin: auto;
-  align-content: center;
 `;
 
 const Btn1 = styled.button`

@@ -56,10 +56,11 @@ const Footer = () => {
 
 export default Footer;
 
-const FooterCont = styled.div`
-  /* width: 100%; */
+const FooterCont = styled.footer`
+  width: 100%;
+  min-width: 1920px;
   height: 250px;
-  padding: 40px 300px 45px 300px;
+  padding: 40px 250px 45px;
   background-color: #000000;
   display: flex;
   justify-content: space-between;

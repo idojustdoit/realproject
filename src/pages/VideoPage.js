@@ -1,8 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import VideoHeader from "../components/videoPage/mainScreen/VideoHeader";
 import SideView from "../components/videoPage/sideBar/SideView";
+
+import Timer from "../components/Timer";
+import axios from "axios";
 
 import Peer from "simple-peer";
 
@@ -503,7 +506,8 @@ const VideoPage = () => {
             alignItems: "center",
           }}
         >
-          <VideoHeader exitRoomHandler={exitRoomHandler} openBar={openBar} />
+          <VideoHeader exitRoomHandler={exitRoomHandler} openBar={openBar} roomId={roomId} />
+          <Timer roomId={roomId} />
 
           <div
             className="video-area"

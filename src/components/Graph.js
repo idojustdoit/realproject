@@ -11,43 +11,52 @@ import {
 } from "recharts";
 
 function Graph() {
-  // const [data,setData] = React.useState([])
+  const [data, setData] = React.useState(null);
+  const [weektime, setWeektime] = React.useState(null);
+  const API_URL = process.env.REACT_APP_API_URL;
+
+  // 공부 시간 데이터 얻어오고 그래프 데이터 형식에 맞게 변환하기.
 
   const Getdata = () => {
-    axios.defaults.withCredentials = true;
+    const token = localStorage.getItem("accessToken");
+    const userId = localStorage.getItem("userId");
     axios({
       method: "GET",
-      url: "지금까지 공부시간받는 api",
-      baseURL: "",
+      url: `/api/mypage/${userId}/time`,
+      baseURL: API_URL,
 
       headers: {
-        authorization: localStorage.getItem("access_token"),
+        Authorization: `Bearer ${token}`,
       },
     })
-      .then((response) => {
-        console.log(response);
+      .then(function (response) {
+        console.log(response.data);
+        setData(response.data.studytime);
+        setWeektime(response.data.studytime.time);
       })
       .catch((error) => {
         console.log(error);
-        alert(error.response.data);
       });
   };
+  console.log(weektime);
   useEffect(() => {
     Getdata();
   }, []);
   //단위 변경해서 넣어주고 변수 명 체크하기
-  const data = [
-    { name: "월", 공부시간: 7.3 },
-    { name: "화", 공부시간: 5.2 },
-    { name: "수", 공부시간: 2 },
-    { name: "목", 공부시간: 2.1 },
-    { name: "금", 공부시간: 7.5 },
-    { name: "토", 공부시간: 5 },
-    { name: "일", 공부시간: 0 },
-  ];
 
   return (
     <div style={{ marginTop: "40px" }}>
+      <div
+        style={{
+          backgroundColor: "lightgray",
+          width: "200px",
+          marginLeft: "20px",
+          bottom: "40",
+        }}
+      >
+        {" "}
+        1주일 공부량:{weektime}시간
+      </div>
       <BarChart
         width={600}
         height={300}
@@ -61,12 +70,12 @@ function Graph() {
           </linearGradient>
         </defs>
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
+        <XAxis dataKey="day" />
         <YAxis />
         <Tooltip />
         <Legend />
         <Bar
-          dataKey="공부시간"
+          dataKey="time"
           fill="url(#colorPv)"
           style={{ borderRadius: "10px" }}
           barSize={30}
