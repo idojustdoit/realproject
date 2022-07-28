@@ -11,56 +11,73 @@ function Modify() {
   const API_URL = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
   const MySwal = withReactContent(Swal);
-  const imgUrl_ref = React.useRef(null); //이미지url
-  const [imgUrl, setimgUrl] = React.useState(userprofile);
+  const profile_ref = React.useRef(null); //이미지url
+  const formData = new FormData();
+  const [profile, setProfile] = React.useState(userprofile);
   const [password, setpassword] = React.useState(""); // 비밀번호 인풋
   const [passwordCheck, setpasswordCheck] = React.useState(""); //비밀번호 확인 인풋
   const [nickname, setNickname] = React.useState(""); //닉네임 인풋
 
   // 프로필이미지 관련 코드
   const FILE_SIZE_MAX_LIMIT = 5 * 1024 * 1024;
-  const UpImageUrl = async (e) => {
+  const UpImageUrl = (e) => {
     const files = e.target.files[0];
     if (files.size > FILE_SIZE_MAX_LIMIT) {
       e.target.value = "";
       alert("업로드 가능한 최대 용량은 5MB입니다. ");
       return;
-    } // 5MB로 크기 제한
-    setimgUrl(imgUrl_ref.current.url); // url값 담기.
+    }
+    encodeFileToBase64(files);
+    setProfile(e.target.value);
+  };
+
+  const encodeFileToBase64 = (fileBlob) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(fileBlob);
+    return new Promise((resolve) => {
+      reader.onload = () => {
+        setProfile(reader.result);
+        resolve();
+      };
+    });
   };
 
   // 수정할 회원정보 등록
-  const signupdata = () => {
+  const signupdata = (e) => {
+    e.preventDefault();
+    let file = profile_ref.current.files[0];
+    console.log(file);
+    formData.append("profile_url", file);
+    formData.append("password", password);
+    formData.append("passwordCheck", passwordCheck);
+    formData.append("nickname", nickname);
     const token = localStorage.getItem("accessToken");
     const userId = localStorage.getItem("userId");
     axios({
       method: "PUT",
-      url: `/api/mypage/${userId}/update/`,
-      data: {
-        nickname: nickname,
-        password: password,
-        passwordCheck: passwordCheck,
-        imgUrl: imgUrl,
-      },
+      url: `/api/mypage/${userId}/update`,
+      data: formData,
       headers: {
-        "content-type": "application/json",
+        "content-type": "multipart/form-data",
         Authorization: `Bearer ${token}`,
       },
-      baseURL: API_URL,
+      baseURL: "http://15.164.164.17:3000",
     })
       .then((response) => {
+        console.log(response);
         navigate("/mypage");
         MySwal.fire({
           title: "success",
-          text: "방이 생성되었습니다!",
+          text: "정보수정이 완료되었습니다!",
           icon: "success",
           confirmButtonText: "확인",
         });
       })
       .catch((error) => {
+        console.log(error);
         MySwal.fire({
-          title: "failed ",
-          text: "방 생성을 실패하였습니다",
+          title: "error",
+          text: "정보수정을 실패하였습니다",
           icon: "error",
           confirmButtonText: "확인",
         });
@@ -98,7 +115,7 @@ function Modify() {
                   borderRadius: "50px",
                   position: "relative",
                 }}
-                src={imgUrl}
+                src={profile}
               />
               <img
                 alt=""
@@ -116,6 +133,7 @@ function Modify() {
                 style={{ display: "none" }}
                 type="file"
                 id="file"
+                ref={profile_ref}
                 onChange={UpImageUrl}
               />
               <br />
@@ -144,7 +162,7 @@ function Modify() {
               <Chat3></Chat3>
               <Input
                 type="password"
-                style={{ fontSize: "15px" }}
+                style={{ fontSize: "15px", marginRight: "10px" }}
                 onChange={handlerPwcheck}
                 value={passwordCheck}
               />

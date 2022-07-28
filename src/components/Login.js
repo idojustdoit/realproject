@@ -41,7 +41,7 @@ const Login = ({ onClose, SignOpen }) => {
         email: email,
         password: password,
       },
-      baseURL: API_URL,
+      baseURL: "http://15.164.164.17:3000",
     })
       .then(function (response) {
         dispatch(logIn());
@@ -203,6 +203,16 @@ const ModalBlock = styled.div`
     to {
       opacity: 1;
       margin-top: 0;
+    }
+  }
+  @keyframes modal-out {
+    from {
+      opacity: 1;
+      margin-top: 0px;
+    }
+    to {
+      opacity: 0;
+      margin-top: -50px;
     }
   }
 `;

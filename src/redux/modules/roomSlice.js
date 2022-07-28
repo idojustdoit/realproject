@@ -19,9 +19,8 @@ export const addRoom = createAsyncThunk("ADD/addRoom", async (formData) => {
 
 //메인 room list 불러오기
 export const getMainList = createAsyncThunk("POST/getRoom", async () => {
-  return await axios
-    .post(`${API_URL}/api/main/tag/전체`)
-    .then((res) => res.data);
+  return await axios.get(`${API_URL}/api/main`).then((res) => res.data);
+
   // .catch((e) => rejectWithValue(e.message));
 });
 

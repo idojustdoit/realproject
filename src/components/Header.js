@@ -7,7 +7,7 @@ import { logOut } from "../redux/modules/userSlice";
 import SignUp from "./Signup";
 import Portal from "./Portal";
 import LogIn from "./Login";
-import Creatroom from "./Createroom";
+import Createroom from "./Createroom";
 // import Invite from "../components/Invite";
 import "../styles/reset.css";
 
@@ -85,7 +85,7 @@ function Header() {
             <li>
               <StudyBtn onClick={createModal}>+스터디 생성</StudyBtn>
               <Portal>
-                {CreateOpen && <Creatroom onClose={createModal} />}
+                {CreateOpen && <Createroom onClose={createModal} />}
               </Portal>
             </li>
             <li>
