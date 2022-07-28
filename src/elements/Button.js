@@ -3,11 +3,12 @@ import styled from "styled-components";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-export const BasicBtn = ({ roomId }) => {
+export const BasicBtn = ({exitRoomHandler, roomId }) => {
   const API_URL = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
 
   const postTimerData = () => {
+    exitRoomHandler();
     navigate("/");
     const token = localStorage.getItem("accessToken");
     axios({
@@ -41,7 +42,7 @@ const Button = styled.button`
   width: 90px;
   height: 35px;
   border-radius: 5px;
-  background-color: black;
+  background-color: #1D9FFD;
   font-weight: bold;
   font-size: 1rem;
   color: white;

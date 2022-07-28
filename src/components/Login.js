@@ -46,6 +46,7 @@ const Login = ({ onClose, SignOpen }) => {
       .then(function (response) {
         dispatch(logIn());
         localStorage.setItem("accessToken", response.data.accessToken);
+        localStorage.setItem("nickname", response.data.nickname);
         localStorage.setItem("refreshToken", response.data.refreshToken);
         localStorage.setItem("userId", response.data.userId);
         onClose();
@@ -66,8 +67,6 @@ const Login = ({ onClose, SignOpen }) => {
         });
       });
   };
-
-  const kakaoUrl = process.env.REACT_APP_KAKAOURL;
 
   const MoveModal = () => {
     onClose();
@@ -136,7 +135,7 @@ const Login = ({ onClose, SignOpen }) => {
                 marginBottom: "10px",
                 marginTop: "24px",
               }}
-              href={kakaoUrl}
+              href={process.env.REACT_APP_KAKAOURL}
             >
               <img
                 alt=""
@@ -205,6 +204,16 @@ const ModalBlock = styled.div`
     to {
       opacity: 1;
       margin-top: 0;
+    }
+  }
+  @keyframes modal-out {
+    from {
+      opacity: 1;
+      margin-top: 0px;
+    }
+    to {
+      opacity: 0;
+      margin-top: -50px;
     }
   }
 `;

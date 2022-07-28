@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import google from "../shared/login-assets/google.png";
 
-const clientId = process.env.REACT_APP_CLIENT_ID;
+const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
 const GoogleButton = ({ onSocial }) => {
   const API_URL = process.env.REACT_APP_API_URL;
@@ -34,12 +34,17 @@ const GoogleButton = ({ onSocial }) => {
       },
     };
 
-    axios.post(`${API_URL}/api/google/login`, body).then((res) => {
-      console.log(res);
-      localStorage.setItem("accessToken", res.data.accessToken);
-      localStorage.setItem("refreshToken", res.data.refreshToken);
-      localStorage.setItem("userId", res.data.userId);
-    });
+    axios
+      .post(`${API_URL}/api/google/login`, body, {
+        "content-type": "application/json",
+        withCredentials: true,
+      })
+      .then((res) => {
+        console.log(res);
+        localStorage.setItem("accessToken", res.data.accessToken);
+        localStorage.setItem("refreshToken", res.data.refreshToken);
+        localStorage.setItem("userId", res.data.userId);
+      });
   };
 
   const onFailure = (response) => {

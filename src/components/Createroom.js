@@ -28,7 +28,7 @@ const names = [
   { id: 9, name: "자유주제" },
 ];
 
-const Login = ({ onClose }) => {
+const Creatroom = ({ onClose }) => {
   const API_URL = process.env.REACT_APP_API_URL;
 
   //사용하는 변수명 정리
@@ -38,13 +38,14 @@ const Login = ({ onClose }) => {
   const [title, setTitle] = React.useState(""); // 스터디 방이름
   const [content, setContent] = React.useState(""); // 스터디 내용
   const [password, setPassword] = React.useState(""); // 비공개방 비밀번호
-  const [close, setClose] = React.useState(false); //비공개방 비밀번호 창띄우기
+  const [lock, setlock] = React.useState(false); //비공개방 비밀번호 창띄우기
   const [loading, setLoading] = React.useState(true); //라디오 박스 체크 관련
   const [dateRange, setDateRange] = React.useState("", ""); //날짜
   const [startDate, endDate] = dateRange;
   const [imgUrl, setImgUrl] = React.useState(
     "https://media.istockphoto.com/vectors/photo-album-icon-vector-id1023892724?k=20&m=1023892724&s=170667a&w=0&h=zXZB3iWNnwhrDA055eJgxh4Sq814_ZNRSVAJT7lBgLY="
   );
+  const formData = new FormData();
 
   const handlerName = (e) => {
     setTitle(e.target.value);
@@ -57,31 +58,34 @@ const Login = ({ onClose }) => {
   const priPassword = (e) => {
     setPassword(e.target.value);
   };
-
   const FILE_SIZE_MAX_LIMIT = 5 * 1024 * 1024;
-  const UpImageUrl = async (e) => {
+  const UpImageUrl = (e) => {
     const files = e.target.files[0];
     if (files.size > FILE_SIZE_MAX_LIMIT) {
       e.target.value = "";
       alert("업로드 가능한 최대 용량은 5MB입니다. ");
       return;
     }
+    encodeFileToBase64(files);
+    setImgUrl(e.target.value);
+  };
 
-    const upload_file = await uploadBytes(
-      ref(storage, `images/${e.target.files[0].name}`),
-      e.target.files[0]
-    );
-
-    const file_url = await getDownloadURL(upload_file.ref);
-    profile_ref.current = { url: file_url };
-    setImgUrl(profile_ref.current.url);
+  const encodeFileToBase64 = (fileBlob) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(fileBlob);
+    return new Promise((resolve) => {
+      reader.onload = () => {
+        setImgUrl(reader.result);
+        resolve();
+      };
+    });
   };
 
   // 공개 비공개 라디오박스 1개만 체크 되도록.
 
   const checkOnlyOne = (checkThis) => {
     setLoading(!loading);
-    setClose(!close);
+    setlock(!lock);
     const checkboxes = document.getElementsByName("test");
     for (let i = 0; i < checkboxes.length; i++) {
       if (checkboxes[i] !== checkThis) {
@@ -107,25 +111,26 @@ const Login = ({ onClose }) => {
   console.log(categoryName);
 
   // 서버에 방 정보 보내는 통신
-  const CreateAxios = () => {
+  const CreateAxios = (e) => {
+    e.preventDefault();
+    let file = profile_ref.current.files[0];
+    formData.append("imgUrl", file);
+    formData.append("title", title);
+    formData.append("password", password);
+    formData.append("lock", lock);
+    formData.append("content", content);
+    formData.append("date", moment(dateRange[1]).format("YYYY년MM월DD일"));
+    formData.append("tagName", ["전체", ...categoryName]);
+    formData.append("isLike", false);
     const token = localStorage.getItem("accessToken");
     const userId = localStorage.getItem("userId");
     axios({
       method: "POST",
       url: `/api/room/create/${userId}`,
-      data: {
-        title: title,
-        imgUrl: imgUrl,
-        password: password,
-        content: content,
-        date: dateRange,
-        tagName: ["전체", ...categoryName],
-        isLike: false,
-      },
-
+      data: formData,
       baseURL: API_URL,
       headers: {
-        "content-type": "application/json",
+        "content-type": "multipart/form-data",
         Authorization: `Bearer ${token}`,
       },
     })
@@ -151,6 +156,9 @@ const Login = ({ onClose }) => {
       });
   };
 
+  console.log(dateRange, endDate);
+  const a = moment(dateRange[1]).format("YYYY-MM-DD");
+  console.log(a);
   return (
     <Container>
       <Background
@@ -168,6 +176,7 @@ const Login = ({ onClose }) => {
             <div>
               <Chat2>스터디명</Chat2>
               <Input
+                required
                 type="text"
                 placeholder="스터디 명을 입력해주세요."
                 onChange={handlerName}
@@ -198,7 +207,7 @@ const Login = ({ onClose }) => {
             />
             비공개
           </div>
-          {close ? (
+          {lock ? (
             <Label1>
               <div>
                 <Chat2>비밀번호</Chat2>
@@ -217,20 +226,13 @@ const Login = ({ onClose }) => {
             <div style={{ marginLeft: "60px" }}>
               <span>
                 <div>
-                  {/* <Input2
-                    htmlFor="input_file"
-                    value="파일선택"
-                    disabled="disabled"
-                  >
-                    {imgUrl}
-                  </Input2> */}
                   <input
                     type="file"
                     id="input_file"
+                    ref={profile_ref}
                     onChange={UpImageUrl}
-                    // style={{ display: "none" }}
                   />
-                  {/* <Inlabel htmlFor="input_file">파일선택 </Inlabel> */}
+
                   <br />
                   <img
                     alt=""
@@ -253,6 +255,8 @@ const Login = ({ onClose }) => {
             <div>
               <Chat1>스터디 내용</Chat1>
               <Input
+                style={{ marginLeft: "6px" }}
+                required
                 type="text"
                 placeholder="스터디 내용을 입력해주세요."
                 onChange={handlercontent}
@@ -265,6 +269,7 @@ const Login = ({ onClose }) => {
             >
               <Chat3> 기간설정</Chat3>
               <DatePicker
+                required
                 selectsRange={true}
                 locale={ko} // 한글로 변경
                 dateFormat="yyyy년MM월dd일(eee)" // 시간 포맷 변경
@@ -330,46 +335,14 @@ const Login = ({ onClose }) => {
             >
               취소
             </Btn1>
-            <Btn2
-              onClick={() => {
-                CreateAxios();
-              }}
-            >
-              스터디 생성
-            </Btn2>
+            <Btn2 onClick={CreateAxios}>스터디 생성</Btn2>
           </BtnG>
         </ModalBlock>
       </Background>
     </Container>
   );
 };
-const Input2 = styled.label`
-  --saf-0: rgba(var(--sk_foreground_high_solid, 134, 134, 134), 1);
-  border: 1px solid var(--saf-0);
-  transition: border 80ms ease-out, box-shadow 80ms ease-out;
-  box-sizing: border-box;
-  color: rgba(var(--sk_primary_foreground, 29, 28, 29), 1);
-  background-color: rgba(var(--sk_primary_background, 255, 255, 255), 1);
-  padding: 12px;
-  margin-left: 30px;
-  margin-right: 10px;
-  max-width: 206px;
-  height: 36px;
-  font-size: 15px;
-  line-height: 1.33333333;
-`;
-const Inlabel = styled.label`
-  cursor: pointer;
-  margin-bottom: 12px;
-  width: 197px;
-  color: white;
-  background-color: black;
-  border: 1px solid black;
-  border-radius: 5px;
-  padding: 8px;
-  font-size: 15px;
-  line-height: 1.33333333;
-`;
+
 const CateInput = styled.input``;
 const CateLabel = styled.label`
   display: flex;
@@ -533,6 +506,7 @@ const Input1 = styled.input`
   height: 36px;
   font-size: 15px;
   line-height: 1.33333333;
+  border-radius: 4px;
 `;
 
 const BtnG = styled.div`
@@ -614,5 +588,6 @@ const Input = styled.input`
   height: 36px;
   font-size: 18px;
   line-height: 1.33333333;
+  border-radius: 4px;
 `;
-export default Login;
+export default Creatroom;
