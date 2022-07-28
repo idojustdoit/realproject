@@ -41,7 +41,7 @@ const Login = ({ onClose, SignOpen }) => {
         email: email,
         password: password,
       },
-      baseURL: "http://15.164.164.17:3000",
+      baseURL: API_URL,
     })
       .then(function (response) {
         dispatch(logIn());

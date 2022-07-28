@@ -163,7 +163,7 @@ const SignUp = ({ onClose, LoginOpen }) => {
       method: "POST",
       url: "/api/auth/signup",
       data: formData,
-      baseURL: "http://15.164.164.17:3000",
+      baseURL: API_URL,
       headers: {
         "content-type": "multipart/form-data",
       },
