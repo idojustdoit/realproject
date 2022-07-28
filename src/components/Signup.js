@@ -9,7 +9,7 @@ import userprofile from "../shared/mypage-assets/user-basic-img.png";
 
 const SignUp = ({ onClose, LoginOpen }) => {
   const API_URL = process.env.REACT_APP_API_URL;
-
+  const formData = new FormData();
   const MySwal = withReactContent(Swal);
   const outZone_ref = React.useRef(null);
   const profile_ref = React.useRef(null); //유저 이미지 URL
@@ -25,10 +25,13 @@ const SignUp = ({ onClose, LoginOpen }) => {
   const [nickError, setNickError] = React.useState(false); //닉네임 유효성 검사
   const [emailcode, setEmailcode] = React.useState(""); //
   const [usernum, setUsernum] = React.useState(""); //
+  const [checknick, setChecknick] = React.useState(false); //
+  const [checknumber, setChecknumber] = React.useState(false); //
 
-  const checknum = (e) => {
+  const vernumber = (e) => {
     setUsernum(e.target.value);
   };
+
   const confirmNumber = () => {
     console.log(emailcode);
     if (usernum === emailcode) {
@@ -38,6 +41,7 @@ const SignUp = ({ onClose, LoginOpen }) => {
         icon: "success",
         confirmButtonText: "확인",
       });
+      setChecknumber(true);
     } else {
       MySwal.fire({
         title: "failed",
@@ -64,23 +68,28 @@ const SignUp = ({ onClose, LoginOpen }) => {
     setNickName(e.target.value);
   };
 
-  //firebase 사용해서 url 추출
+  // 사용해서 url 추출
   const FILE_SIZE_MAX_LIMIT = 5 * 1024 * 1024;
-  const UpImageUrl = async (e) => {
+  const UpImageUrl = (e) => {
     const files = e.target.files[0];
     if (files.size > FILE_SIZE_MAX_LIMIT) {
       e.target.value = "";
       alert("업로드 가능한 최대 용량은 5MB입니다. ");
       return;
     }
-    const upload_file = await uploadBytes(
-      ref(storage, `images/${e.target.files[0].name}`),
-      e.target.files[0]
-    );
+    encodeFileToBase64(files);
+    setprofile(e.target.value);
+  };
 
-    const file_url = await getDownloadURL(upload_file.ref);
-    profile_ref.current = { url: file_url };
-    setprofile(profile_ref.current.url);
+  const encodeFileToBase64 = (fileBlob) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(fileBlob);
+    return new Promise((resolve) => {
+      reader.onload = () => {
+        setprofile(reader.result);
+        resolve();
+      };
+    });
   };
 
   //닉네임 중복확인
@@ -91,7 +100,7 @@ const SignUp = ({ onClose, LoginOpen }) => {
       data: {
         nickname: nickname,
       },
-      baseURL: API_URL,
+      baseURL: "http://3.37.87.171",
     })
       .then((response) => {
         console.log(response);
@@ -101,6 +110,7 @@ const SignUp = ({ onClose, LoginOpen }) => {
           icon: "success",
           confirmButtonText: "확인",
         });
+        setChecknick(true);
       })
       .catch((error) => {
         console.log(error);
@@ -141,18 +151,22 @@ const SignUp = ({ onClose, LoginOpen }) => {
   };
 
   // 회원가입 통신
-  const signupdata = () => {
+  const signupdata = (e) => {
+    e.preventDefault();
+    let file = profile_ref.current.files[0];
+    formData.append("profile_url", file);
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append("passwordCheck", passwordCheck);
+    formData.append("nickname", nickname);
     axios({
       method: "POST",
       url: "/api/auth/signup",
-      data: {
-        email: email,
-        password: password,
-        passwordCheck: passwordCheck,
-        nickname: nickname,
-        iconUrl: profile,
-      },
+      data: formData,
       baseURL: API_URL,
+      headers: {
+        "content-type": "multipart/form-data",
+      },
     })
       .then((response) => {
         console.log(response);
@@ -178,8 +192,6 @@ const SignUp = ({ onClose, LoginOpen }) => {
   const handlerPwcheck = (e) => {
     setpasswordCheck(e.target.value);
   };
-  console.log(emailcode);
-  console.log(usernum);
 
   return (
     <Container>
@@ -223,16 +235,18 @@ const SignUp = ({ onClose, LoginOpen }) => {
                 style={{ display: "none" }}
                 type="file"
                 id="files"
+                ref={profile_ref}
                 onChange={UpImageUrl}
               />
               <br />
             </span>
           </Label>
           <Label>
-            <div>
+            <div style={{ display: "flex" }}>
               <Chat1>이메일</Chat1>
 
               <Input
+                required
                 style={{
                   width: "200px",
                   marginRight: "10px",
@@ -258,7 +272,7 @@ const SignUp = ({ onClose, LoginOpen }) => {
                       marginRight: "10px",
                       marginLeft: "76px",
                     }}
-                    onChange={checknum}
+                    onChange={vernumber}
                     type="email"
                   />
                   <Button3 onClick={confirmNumber}> 번호확인</Button3>
@@ -271,6 +285,7 @@ const SignUp = ({ onClose, LoginOpen }) => {
             <div>
               <Chat2>비밀번호</Chat2>
               <Input
+                required
                 style={{ fontSize: "15px" }}
                 type="password"
                 onChange={handlerPw}
@@ -282,6 +297,7 @@ const SignUp = ({ onClose, LoginOpen }) => {
             <div>
               <Chat3></Chat3>
               <Input
+                required
                 type="password"
                 style={{ fontSize: "15px", marginRight: "8px" }}
                 placeholder="비밀번호 확인"
@@ -302,6 +318,7 @@ const SignUp = ({ onClose, LoginOpen }) => {
               <Chat1>닉네임</Chat1>
 
               <Input
+                required
                 style={{ width: "200px", marginRight: "10px" }}
                 type="text"
                 onChange={handlerNickName}
@@ -320,7 +337,7 @@ const SignUp = ({ onClose, LoginOpen }) => {
           </Label>
           <LoginBtn>
             <Button1
-              // disabled={userIdError || verEmail || nickError ? true : false}
+              disabled={checknick && checknumber ? false : true}
               onClick={signupdata}
             >
               회원가입

@@ -4,7 +4,6 @@ import {
   getMainList,
   getRoomListByCategory,
   setCategoryState,
-  setRoomList,
 } from "../../redux/modules/roomSlice";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
@@ -91,71 +90,20 @@ const CATEGORY_LIST = [
 
 const RoomList = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-
+  const param = useParams();
   //받아온 메인 룸 리스트
+
   console.log("😎룸리스트 렌더링..!");
-  const roomList = useSelector((state) => state.room.roomList);
+  const list = useSelector((state) => state.room.roomList);
   const isLoading = useSelector((state) => state.room.isLoading);
 
-  // const [rooms, setRooms] = useState([]);
-  const category = useSelector((state) => state.room.category);
+  let [visible, setVisible] = useState(6);
+  const [limit, setLimit] = useState(0);
+  const [category, setCategory] = useState("전체");
   const [isActive, setIsActive] = useState(null);
   //초기에는 모든 이미지가 컬러인 상태로 보여야해서 추가한 state
   const [isClicked, setIsClicked] = useState(false);
-
-  const API_URL = "서버주소";
-
-  // const [rooms, setRooms] = useState([])
-  const [offset, setOffset] = useState(0);
-  const LIMIT = 6;
-  const [roomsLength, setRoomsLength] = useState(0);
-
-  useEffect(() => {
-    let body = {
-      offset: offset,
-      limit: LIMIT,
-      category: category,
-      loadMore: false,
-    };
-
-    getRoomList(body);
-  }, []);
-  const getRoomList = (body) => {
-    axios.post(`${API_URL}/api/main`, body).then((res) => {
-      if (res.data.success) {
-        console.log(res.data.roomList);
-        if (body.loadMore) {
-          //더보기 버튼 클릭시
-          setRoomList([...roomList, ...res.data.roomList]);
-        } else {
-          setRoomList([...res.data.roomList]);
-        }
-        setRoomsLength(res.data.tagLength);
-      } else {
-        alert("게시물을 가져오는데 실패했음");
-      }
-    });
-  };
-
-  const loadMoreHandler = () => {
-    let newOffset = offset + LIMIT;
-
-    let body = {
-      offset: offset,
-      limit: LIMIT,
-      category: category,
-      loadMore: true,
-    };
-    getRoomList(body);
-    setOffset(newOffset);
-  };
-
-  //😎페이지네이션
-  //limit : 한 페이지에 보여줄 데이터 수
-  //offset: 데이터가 시작하는 위치(index)
-  //category: 카테고리 명
-  //loadMore: 프론트에서 쓰려고 넣은 데이터 true, false
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(getMainList());
@@ -167,9 +115,9 @@ const RoomList = () => {
 
   function categoryClickHandler(e, clickedCategory) {
     e.preventDefault();
-    // setCategory(clickedCategory);
-    setCategoryState(clickedCategory);
-    setOffset(0);
+    // setIsActive((prevState) => e.target.value)
+    setCategory(clickedCategory);
+    navigate(`/main/${clickedCategory}`);
   }
 
   return (
@@ -200,11 +148,7 @@ const RoomList = () => {
                 height: "200px",
               }}
               className={
-                isClicked
-                  ? idx === isActive
-                    ? " -active"
-                    : " -not-active"
-                  : ""
+                isClicked ? (idx == isActive ? " -active" : " -not-active") : ""
               }
               onClick={(e) => {
                 categoryClickHandler(e, cate.name);
@@ -219,10 +163,10 @@ const RoomList = () => {
       </Container>
       <div>
         {!isLoading ? (
-          roomList.length > 0 ? (
+          list.length > 0 ? (
             <>
               <RoomListCont>
-                {roomList.map((room) => {
+                {list.slice(0, visible).map((room) => {
                   return (
                     <Room
                       key={room._id}
@@ -248,11 +192,17 @@ const RoomList = () => {
         )}
         {/* 만약 현재보고있는 room의 수가 게시물의 길이보다 같거나 크다면 showmore
         버튼을 숨긴다. */}
-        {roomsLength > roomList.length && (
-          <ButtonBox>
-            <LoadMoreBtn onClick={() => loadMoreHandler()}>더보기</LoadMoreBtn>
-          </ButtonBox>
-        )}
+        {/* {visible >= list.length ? (
+          <div></div>
+        ) : ( */}
+        <ButtonBox>
+          <LoadMoreBtn
+            onClick={() => dispatch(getRoomListByCategory(category))}
+          >
+            더보기
+          </LoadMoreBtn>
+        </ButtonBox>
+        {/* )} */}
       </div>
     </>
   );

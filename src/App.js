@@ -2,7 +2,9 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 // import Main from "./pages/Main";
 // import Mypage from "./pages/Mypage";
 import styled from "styled-components";
+import GlobalStyle from "./shared/font/GlobalStyle";
 import "./App.css";
+
 import "./shared/font/pretendard.css";
 import MainPage from "./pages/MainPage";
 import MyPage from "./pages/Mypage";
@@ -14,6 +16,7 @@ import SearchPage from "./pages/SearchPage";
 function App() {
   return (
     <div className="App">
+      <GlobalStyle />
       <StyledApp>
         <Router>
           <Routes>

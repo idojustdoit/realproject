@@ -11,9 +11,6 @@ const Timer = ({ roomId }) => {
   const [minutes, setMinutes] = useState(0);
   const [hours, setHours] = useState(0);
   const time_ref = useRef(null);
-  const startTime = moment().format("HH");
-
-  console.log(startTime);
 
   useEffect(() => {
     time_ref.current = setInterval(() => {

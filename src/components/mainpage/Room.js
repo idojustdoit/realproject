@@ -4,7 +4,7 @@ import { FaUser } from "react-icons/fa";
 import Portal from "../Portal";
 import Roomenter from "../Roomenter";
 import { useDispatch, useSelector } from "react-redux";
-
+import axios from "axios";
 import fullHeart from "../../shared/mainpage-assets/icon-full-heart.svg";
 import emptyHeart from "../../shared/mainpage-assets/icon-empty-heart.svg";
 
@@ -18,11 +18,39 @@ const Room = ({
   groupNum,
   isLiked,
 }) => {
+  const API_URL = process.env.REACT_APP_API_URL;
   const dispatch = useDispatch();
 
   const [likeState, setLikeState] = useState(isLiked);
   const token = localStorage.getItem("accessToken");
   const isLogin = useSelector((state) => state.user.isLogin);
+
+  //좋아요 버튼
+  // const likeAxios = () => {
+  //   axios({
+  //     method: "POST",
+  //     url: `/api/room/create/${userId}`,
+  //     data: {
+  //       isLike: likeState,
+  //     },
+
+  //     baseURL: API_URL,
+  //     headers: {
+  //       "content-type": "application/json",
+  //       Authorization: `Bearer ${token}`,
+  //     },
+  //   })
+  //     .then((response) => {
+  //       console.log(response);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
+
+  // useEffect(() => {
+  //   likeAxios();
+  // }, [likeState]);
 
   //입장하기버튼: 클릭한 방(roomId)에 해당하는 화상채팅방으로 입장하는 모달
   const [EnterOpen, setEnterOpen] = React.useState(false);
@@ -58,9 +86,19 @@ const Room = ({
               </UserCountBox>
             </TitleAndGroupNum>
             {likeState === true ? (
-              <img alt="fiiled-heart" src={fullHeart} onClick={clickLike}></img>
+              <img
+                alt="fiiled-heart"
+                src={fullHeart}
+                onClick={clickLike}
+                style={{ cursor: "pointer" }}
+              ></img>
             ) : (
-              <img alt="empty-heart" src={emptyHeart} onClick={clickLike}></img>
+              <img
+                alt="empty-heart"
+                src={emptyHeart}
+                onClick={clickLike}
+                style={{ cursor: "pointer" }}
+              ></img>
             )}
           </TitleBox>
           <ContentBox>{content}</ContentBox>
@@ -78,6 +116,7 @@ const Room = ({
             <BlackBtn onClick={EnterModal}>참여하기</BlackBtn>
             <Portal>
               {EnterOpen && <Roomenter roomId={roomId} onClose={EnterModal} />}
+              {/* lock={lock} */}
             </Portal>
           </BtnBox>
         ) : (
