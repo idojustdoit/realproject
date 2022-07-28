@@ -1,10 +1,36 @@
 import React from "react";
 import styled from "styled-components";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-export const BasicBtn = () => {
+export const BasicBtn = ({ roomId }) => {
+  const API_URL = process.env.REACT_APP_API_URL;
+  const navigate = useNavigate();
+
+  const postTimerData = () => {
+    navigate("/");
+    const token = localStorage.getItem("accessToken");
+    axios({
+      method: "POST",
+      url: `/api/room/exit/${roomId}`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+
+      baseURL: API_URL,
+    })
+      .then((response) => {
+        console.log(response);
+        alert("성공");
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("실패");
+      });
+  };
   return (
     <div>
-      <Button>스터디 종료</Button>
+      <Button onClick={postTimerData}>스터디 종료</Button>
     </div>
   );
 };

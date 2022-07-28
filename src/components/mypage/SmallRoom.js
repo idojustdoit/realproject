@@ -1,11 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { FaUser } from "react-icons/fa";
 
+import Portal from "../Portal";
+import Roomenter from "../Roomenter";
+
 function SmallRoom({ roomId, imageUrl, title, date, groupNum }) {
-  function enterRoomHandler() {
-    //입장하기버튼: 클릭한 방(roomId)에 해당하는 화상채팅방으로 입장하는 모달
-  }
+  function studyOutHandler() {}
+
+  function joinRoomHandler() {}
+
+  const [EnterOpen, setEnterOpen] = useState(false);
+  const EnterModal = () => {
+    setEnterOpen(!EnterOpen);
+  };
   return (
     <RoomCont key={roomId}>
       <RoomImgDiv imageUrl={imageUrl}>
@@ -23,8 +31,13 @@ function SmallRoom({ roomId, imageUrl, title, date, groupNum }) {
       </RoomImgDiv>
       <RoomButtonCont>
         <BtnBox>
-          <WhiteBtn>스터디 나가기</WhiteBtn>
-          <BlackBtn onClick={enterRoomHandler}>참여하기</BlackBtn>
+          <WhiteBtn onClick={() => studyOutHandler(roomId)}>
+            스터디 탈퇴
+          </WhiteBtn>
+          <BlackBtn onClick={EnterModal}>입장하기</BlackBtn>
+          <Portal>
+            {EnterOpen && <Roomenter roomId={roomId} onClose={EnterModal} />}
+          </Portal>
         </BtnBox>
       </RoomButtonCont>
     </RoomCont>
@@ -37,20 +50,19 @@ const RoomCont = styled.div`
   background-color: #fff;
   height: 316px;
   display: flex;
-  width: 424px;
   flex-direction: column;
   -webkit-margin-collapse: collapse;
   overflow: hidden;
   border-radius: 10px;
-  -webkit-box-shadow: 1px 8px 12px -7px #8f8f8f;
-  box-shadow: 1px 8px 12px -7px #8f8f8f;
+  -webkit-box-shadow: var(--card-box-shadow);
+  box-shadow: var(--card-box-shadow);
 `;
 const RoomImgDiv = styled.div`
   width: 100%;
   height: 224px;
   padding: 20px;
-  background: url(${(props) => props.imageUrl});
-  background-position: center;
+  background: no-repeat center/30% url(${(props) => props.imageUrl});
+  background-color: #f6f6f6;
 `;
 const RoomButtonCont = styled.div`
   height: 92px;
@@ -112,6 +124,7 @@ const WhiteBtn = styled.button`
   font-size: 20px;
   font-weight: 700;
   background-color: #fff;
+  border: 1px solid black;
 `;
 
 const BlackBtn = styled(WhiteBtn)`

@@ -1,33 +1,20 @@
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
+
 import styled from "styled-components";
 import axios from "axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./Datepicker.css";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import moment from "moment";
+import Moment from "react-moment";
+import "moment/locale/ko";
 
 import { ko } from "date-fns/esm/locale";
 import { storage } from "../shared/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import ListItemText from "@mui/material/ListItemText";
-import Select from "@mui/material/Select";
-import Checkbox from "@mui/material/Checkbox";
 
-// import "bootstrap/dist/css/bootstrap.min.css";
-// import Select from "react-select";
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: "309px",
-    },
-  },
-};
 // 카테고리 명 표시
 const names = [
   { id: 1, name: "자격증" },
@@ -41,21 +28,11 @@ const names = [
   { id: 9, name: "자유주제" },
 ];
 
-const techCompanies = [
-  { label: "자격증", value: 1 },
-  { label: "대입", value: 2 },
-  { label: "독서", value: 3 },
-  { label: "자기계발", value: 4 },
-  { label: "취미", value: 5 },
-  { label: "어학", value: 6 },
-  { label: "코딩", value: 7 },
-  { label: "공무원", value: 8 },
-  { label: "자유주제", value: 9 },
-];
-
 const Login = ({ onClose }) => {
+  const API_URL = process.env.REACT_APP_API_URL;
+
   //사용하는 변수명 정리
-  const navigate = useNavigate();
+  const MySwal = withReactContent(Swal); //(에러 및 성공 모달창)
   const outZone_ref = React.useRef(); //모달창 닫을때
   const profile_ref = React.useRef(null);
   const [title, setTitle] = React.useState(""); // 스터디 방이름
@@ -68,6 +45,7 @@ const Login = ({ onClose }) => {
   const [imgUrl, setImgUrl] = React.useState(
     "https://media.istockphoto.com/vectors/photo-album-icon-vector-id1023892724?k=20&m=1023892724&s=170667a&w=0&h=zXZB3iWNnwhrDA055eJgxh4Sq814_ZNRSVAJT7lBgLY="
   );
+
   const handlerName = (e) => {
     setTitle(e.target.value);
   };
@@ -80,7 +58,15 @@ const Login = ({ onClose }) => {
     setPassword(e.target.value);
   };
 
+  const FILE_SIZE_MAX_LIMIT = 5 * 1024 * 1024;
   const UpImageUrl = async (e) => {
+    const files = e.target.files[0];
+    if (files.size > FILE_SIZE_MAX_LIMIT) {
+      e.target.value = "";
+      alert("업로드 가능한 최대 용량은 5MB입니다. ");
+      return;
+    }
+
     const upload_file = await uploadBytes(
       ref(storage, `images/${e.target.files[0].name}`),
       e.target.files[0]
@@ -90,6 +76,35 @@ const Login = ({ onClose }) => {
     profile_ref.current = { url: file_url };
     setImgUrl(profile_ref.current.url);
   };
+
+  // 공개 비공개 라디오박스 1개만 체크 되도록.
+
+  const checkOnlyOne = (checkThis) => {
+    setLoading(!loading);
+    setClose(!close);
+    const checkboxes = document.getElementsByName("test");
+    for (let i = 0; i < checkboxes.length; i++) {
+      if (checkboxes[i] !== checkThis) {
+        checkboxes[i].checked = false;
+      }
+    }
+  };
+
+  // 카테고리 표시
+  const [categoryName, setcategoryName] = React.useState([]);
+  //  onChange함수를 사용하여 이벤트 감지, 필요한 값 받아오기
+  const onCheckedElement = (checked, item) => {
+    if (checked) {
+      setcategoryName([...categoryName, item]);
+    } else if (!checked) {
+      setcategoryName(categoryName.filter((el) => el !== item));
+    } // x를 누르면 리스팅 목록에서 카테고리가 삭제되며 체크도 해제 된다
+    if (categoryName.length > 1) {
+      setcategoryName(categoryName.filter((el) => el !== item));
+    }
+  };
+
+  console.log(categoryName);
 
   // 서버에 방 정보 보내는 통신
   const CreateAxios = () => {
@@ -108,7 +123,7 @@ const Login = ({ onClose }) => {
         isLike: false,
       },
 
-      baseURL: "http://3.35.26.55",
+      baseURL: API_URL,
       headers: {
         "content-type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -116,43 +131,25 @@ const Login = ({ onClose }) => {
     })
       .then((response) => {
         console.log(response);
-        alert("방생성이 되었습니다.");
+        MySwal.fire({
+          title: "success",
+          text: "방이 생성되었습니다!",
+          icon: "success",
+          confirmButtonText: "확인",
+        });
         onClose();
         //방상세페이지로 이동.
       })
       .catch((error) => {
         console.log(error);
-        alert("error.message");
+        MySwal.fire({
+          title: "Error!",
+          text: "방생성에 실패하였습니다.",
+          icon: "error",
+          confirmButtonText: "확인",
+        });
       });
   };
-
-  // 공개 비공개 라디오박스 1개만 체크 되도록.
-
-  const checkOnlyOne = (checkThis) => {
-    setLoading(!loading);
-    setClose(!close);
-    const checkboxes = document.getElementsByName("test");
-    for (let i = 0; i < checkboxes.length; i++) {
-      if (checkboxes[i] !== checkThis) {
-        checkboxes[i].checked = false;
-      }
-    }
-  };
-  // 카테고리 표시
-  const [categoryName, setcategoryName] = React.useState([]);
-
-  const handleChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setcategoryName(typeof value === "string" ? value.split(",") : value);
-  };
-
-  // // console.log(title);
-  // console.log(password);
-  // console.log(content);
-  // console.log(dateRange);
-  // console.log(categoryName);
 
   return (
     <Container>
@@ -165,22 +162,6 @@ const Login = ({ onClose }) => {
         }}
       >
         <ModalBlock>
-          {/* <div className="container">
-            <div
-              className="row"
-              style={{ display: "flex", justifyContent: "center" }}
-            >
-              <div className="col-md-4"></div>
-              <div className="col-md-4">
-                <Select
-                  options={techCompanies}
-                  selectOption={handleChange}
-                  isMulti
-                />
-              </div>
-              <div className="col-md-4"></div>
-            </div>
-          </div> */}
           <Title> 스터디 생성</Title>
           <Line />
           <Label>
@@ -193,7 +174,6 @@ const Login = ({ onClose }) => {
               />
             </div>
           </Label>
-
           <div
             style={{
               display: "inline-block",
@@ -218,7 +198,6 @@ const Login = ({ onClose }) => {
             />
             비공개
           </div>
-
           {close ? (
             <Label1>
               <div>
@@ -234,30 +213,27 @@ const Login = ({ onClose }) => {
           ) : (
             ""
           )}
-
           <Label>
             <div style={{ marginLeft: "60px" }}>
               <span>
-                <img
-                  alt=""
-                  style={{
-                    cursor: "pointer",
-                    width: "160px",
-                    height: "100px",
-                    position: "relative",
-                    marginTop: "10px",
-                    marginBottom: "10px",
-                  }}
-                  src={imgUrl}
-                />
-                <br />
-                <input
-                  style={{}}
-                  type="file"
-                  id="files"
-                  onChange={UpImageUrl}
-                />
-                <br />
+                <div>
+                  <input type="file" id="input_file" onChange={UpImageUrl} />
+
+                  <br />
+                  <img
+                    alt=""
+                    style={{
+                      cursor: "pointer",
+                      width: "160px",
+                      height: "100px",
+                      position: "relative",
+                      marginTop: "10px",
+                      marginBottom: "10px",
+                    }}
+                    src={imgUrl}
+                  />
+                  <br />
+                </div>
               </span>
             </div>
           </Label>
@@ -267,15 +243,13 @@ const Login = ({ onClose }) => {
               <Input
                 type="text"
                 placeholder="스터디 내용을 입력해주세요."
-                style={{}}
                 onChange={handlercontent}
               />
             </div>
           </Label>
-
           <Label>
             <div
-              style={{ display: "flex", justifyContent: "center", gap: "32px" }}
+              style={{ display: "flex", justifyContent: "center", gap: "34px" }}
             >
               <Chat3> 기간설정</Chat3>
               <DatePicker
@@ -286,7 +260,7 @@ const Login = ({ onClose }) => {
                 endDate={endDate}
                 minDate={new Date()}
                 popperPlacement="auto"
-                customInput={<Input />}
+                customInput={<Input1 />}
                 onChange={(date) => {
                   setDateRange(date);
                 }}
@@ -300,26 +274,40 @@ const Login = ({ onClose }) => {
             >
               <Chat1> 카테고리</Chat1>
 
-              <FormControl sx={{ width: "309px", height: "36px" }}>
-                <Select
-                  labelId="demo-multiple-checkbox-label"
-                  id="demo-multiple-checkbox"
-                  multiple
-                  value={categoryName}
-                  onChange={handleChange}
-                  renderValue={(selected) => selected.join(", ")}
-                  MenuProps={MenuProps}
-                >
-                  {names.map((name) => (
-                    <MenuItem key={name.id} value={name.name}>
-                      <Checkbox
-                        checked={categoryName.indexOf(name.name) > -1}
+              <div
+                style={{
+                  display: "flex",
+                  width: "309px",
+                  justifyContent: "flex-start",
+                  flexWrap: "wrap",
+                }}
+              >
+                {names.map((item) => {
+                  return (
+                    <CateLabel
+                      key={item.id}
+                      checked={categoryName.includes(item.name) ? true : false}
+                    >
+                      <CateInput
+                        type="checkbox"
+                        style={{ display: "none" }}
+                        // 이때 value값으로 name를 지정해준다.
+                        value={item.name}
+                        // onChange이벤트가 발생하면 check여부와 value(name)값을 전달하여 배열에 name를 넣어준다.
+                        onChange={(e) => {
+                          onCheckedElement(e.target.checked, e.target.value);
+                        }}
+                        //  체크표시 & 해제를 시키는 로직. 배열에 name이 있으면 true, 없으면 false
+                        checked={
+                          categoryName.includes(item.name) ? true : false
+                        }
                       />
-                      <ListItemText primary={name.name} />
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+
+                      <div>{item.name}</div>
+                    </CateLabel>
+                  );
+                })}
+              </div>
             </div>
           </Label>
           <BtnG>
@@ -333,7 +321,6 @@ const Login = ({ onClose }) => {
             <Btn2
               onClick={() => {
                 CreateAxios();
-                onClose();
               }}
             >
               스터디 생성
@@ -344,6 +331,28 @@ const Login = ({ onClose }) => {
     </Container>
   );
 };
+
+const CateInput = styled.input``;
+const CateLabel = styled.label`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 5px;
+  text-align: center;
+  margin-bottom: 10px;
+  height: 32px;
+  border-radius: 15px;
+  padding: 5px;
+  background-color: ${(props) => (props.checked ? "#1D9FFD" : "white")};
+  color: ${(props) => (props.checked ? "white" : "#808080")};
+  border: solid 1px #808080;
+  font-size: 15px;
+  transition: all 80ms linear;
+  user-select: none;
+  outline: none;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+`;
 
 const Container = styled.div`
   position: fixed;
@@ -375,7 +384,7 @@ const ModalBlock = styled.div`
   background-color: white;
   color: black;
   width: 508px;
-  height: 600px;
+  height: 690px;
   box-shadow: 1px 1px 1px 1px gray;
   position: fixed;
   top: 50%;
@@ -484,7 +493,7 @@ const Input1 = styled.input`
   padding: 12px;
   width: 309px;
   height: 36px;
-  font-size: 18px;
+  font-size: 15px;
   line-height: 1.33333333;
 `;
 

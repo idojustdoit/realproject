@@ -6,130 +6,128 @@ import { TbVideo, TbVideoOff } from "react-icons/tb";
 
 import styled from "styled-components";
 
-
-
 const UserScreens = ({ socket, nick, room }) => {
-
   const video_ref = useRef();
-//camera, mute control
-const [videoCtrl, setVideoCtrl] = useState(false);
-const [mute, setMute] = useState(false);
+  //camera, mute control
+  const [videoCtrl, setVideoCtrl] = useState(false);
+  const [mute, setMute] = useState(false);
 
-//camera, audio device select
-const [cameraDevice, setCameraDevice] = useState([]);
-const [audioDevice, setAudioDevice] = useState([]);
+  //camera, audio device select
+  const [cameraDevice, setCameraDevice] = useState([]);
+  const [audioDevice, setAudioDevice] = useState([]);
 
-//선택한 device 적용
-const [audioId, setAudioId] = useState();
-const [cameraId, setCameraId] = useState();
+  //선택한 device 적용
+  const [audioId, setAudioId] = useState();
+  const [cameraId, setCameraId] = useState();
 
-const user_video = video_ref.current; //video tag ref값 추출
+  const user_video = video_ref.current; //video tag ref값 추출
 
-//camera on/off btn click
-const cameraClick = () => {
-  user_video.srcObject
-    .getVideoTracks()
-    .forEach((track) => (track.enabled = !track.enabled));
-  if (!videoCtrl) {
-    setVideoCtrl(true);
-  } else {
-    setVideoCtrl(false);
-  }
-};
+  //camera on/off btn click
+  const cameraClick = () => {
+    user_video.srcObject
+      .getVideoTracks()
+      .forEach((track) => (track.enabled = !track.enabled));
+    if (!videoCtrl) {
+      setVideoCtrl(true);
+    } else {
+      setVideoCtrl(false);
+    }
+  };
 
-//mute on/off btn click
-const muteClick = () => {
-  user_video.srcObject
-    .getAudioTracks()
-    .forEach((track) => (track.enabled = !track.enabled));
-  if (!mute) {
-    setMute(true);
-  } else {
+  //mute on/off btn click
+  const muteClick = () => {
+    user_video.srcObject
+      .getAudioTracks()
+      .forEach((track) => (track.enabled = !track.enabled));
+    if (!mute) {
+      setMute(true);
+    } else {
+      setMute(false);
+    }
+  };
+
+  //Media 실행(user video, audio)
+  useEffect(() => {
+    let myStream;
+    let myPeerConnection;
+    //user device(camera) 정보 불러오기
+
+    const getCameras = async () => {
+      try {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const cameras = devices.filter(
+          (device) => device.kind === "videoinput"
+        );
+        const audios = devices.filter((device) => device.kind === "audioinput");
+        // console.log(devices);
+
+        //enumerateDevices로 kind = videoinput 정보 불러와서  sellect -> option에 state 값으로 value, label 삽입.
+        setCameraDevice(cameras);
+        setAudioDevice(audios);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    const getMedia = async () => {
+      // console.log(`오디오 선택: ${audioId}`);
+      const initialConstrains = {
+        audio: false,
+        // video: { facingMode: "user" }, //selfie mode
+        video: true,
+      };
+
+      const deviceConstraints = {
+        audio: { deviceId: { exact: audioId } },
+        video: { deviceId: { exact: cameraId } },
+      };
+
+      try {
+        myStream = await navigator.mediaDevices.getUserMedia(
+          audioId || cameraId ? deviceConstraints : initialConstrains
+        );
+
+        video_ref.current.srcObject = myStream;
+        console.log(myStream.getAudioTracks());
+
+        await getCameras();
+
+        // RTC code
+
+        myPeerConnection = new RTCPeerConnection();
+        myStream
+          .getTracks()
+          .forEach((track) => myPeerConnection.addTrack(track, myStream));
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    getMedia();
+
     setMute(false);
-  }
-};
+    setVideoCtrl(false);
 
-//Media 실행(user video, audio)
-useEffect(() => {
-  let myStream;
-  let myPeerConnection;
-  //user device(camera) 정보 불러오기
+    socket.on("welcome", async () => {
+      const offer = await myPeerConnection.createOffer();
+      myPeerConnection.setLocalDescription(offer);
+      console.log("sent the offer");
+      socket.emit("offer", offer, room);
+    });
 
-  const getCameras = async () => {
-    try {
-      const devices = await navigator.mediaDevices.enumerateDevices();
-      const cameras = devices.filter((device) => device.kind === "videoinput");
-      const audios = devices.filter((device) => device.kind === "audioinput");
-      // console.log(devices);
+    socket.on("offer", async (offer) => {
+      console.log(offer);
+      await myPeerConnection.setRemoteDescription(offer);
+    });
+  }, [socket, room, audioId, cameraId]);
 
-      //enumerateDevices로 kind = videoinput 정보 불러와서  sellect -> option에 state 값으로 value, label 삽입.
-      setCameraDevice(cameras);
-      setAudioDevice(audios);
-    } catch (e) {
-      console.log(e);
-    }
+  const cameraSelect = (e) => {
+    setCameraId(e.target.value);
   };
 
-  const getMedia = async () => {
-    // console.log(`오디오 선택: ${audioId}`);
-    const initialConstrains = {
-      audio: false,
-      // video: { facingMode: "user" }, //selfie mode
-      video: true,
-    };
-
-    const deviceConstraints = {
-      audio: { deviceId: { exact: audioId } },
-      video: { deviceId: { exact: cameraId } },
-    };
-
-    try {
-      myStream = await navigator.mediaDevices.getUserMedia(
-        audioId || cameraId ? deviceConstraints : initialConstrains
-      );
-
-      video_ref.current.srcObject = myStream;
-      console.log(myStream.getAudioTracks());
-
-      await getCameras();
-
-      // RTC code
-
-      myPeerConnection = new RTCPeerConnection();
-      myStream
-        .getTracks()
-        .forEach((track) => myPeerConnection.addTrack(track, myStream));
-    } catch (e) {
-      console.log(e);
-    }
+  const audioSelect = (e) => {
+    setAudioId(e.target.value);
   };
-
-  getMedia();
-
-  setMute(false);
-  setVideoCtrl(false);
-
-  socket.on("welcome", async () => {
-    const offer = await myPeerConnection.createOffer();
-    myPeerConnection.setLocalDescription(offer);
-    console.log("sent the offer");
-    socket.emit("offer", offer, room);
-  });
-
-  socket.on("offer", async (offer) => {
-    console.log(offer);
-    await myPeerConnection.setRemoteDescription(offer);
-  });
-}, [socket, room, audioId, cameraId]);
-
-const cameraSelect = (e) => {
-  setCameraId(e.target.value);
-};
-
-const audioSelect = (e) => {
-  setAudioId(e.target.value);
-};
-
 
   return (
     <Wrapper>

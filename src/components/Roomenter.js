@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
+import { useEffect } from "react";
 
 const Login = ({ onClose, roomId }) => {
   console.log(roomId);
@@ -9,9 +10,40 @@ const Login = ({ onClose, roomId }) => {
   const navigate = useNavigate();
 
   const outZone_ref = React.useRef(null);
-  const [title, settitle] = React.useState("");
-  const [roomContent, setRoomContent] = React.useState([]);
+  const [roomData, setRoomData] = React.useState([]);
+  const [title, setTitle] = React.useState("");
+  const [roomContent, setRoomContent] = React.useState("");
   const [personinfo, setPersoninfo] = React.useState([]); // 참여인원의 imgurl ,
+
+  const Getdata = () => {
+    const API_URL = process.env.REACT_APP_API_URL;
+    const token = localStorage.getItem("accessToken");
+
+    axios({
+      method: "POST",
+      url: "/api/room/public-room/8/1",
+      baseURL: API_URL,
+
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        console.log(response);
+        setRoomData(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  useEffect(() => {
+    //악시오스 요청 get방식
+    Getdata();
+  });
+
+  const RoomenterHandler = () => {
+    navigate(`/public-room/${roomId}`);
+  };
 
   return (
     <Container>
@@ -24,23 +56,48 @@ const Login = ({ onClose, roomId }) => {
         }}
       >
         <ModalBlock>
-          {/* <Title>Title</Title> */}
-          <Title> 자격증 공부</Title>
+          {/* roomData.map((list,index) => {
+
+            return (
+              <div
+              key={index}>
+              <Title>{title}</Title>
+               <Line />
+                  <Label>
+                    <div style={{ display: "flex", justifyContent: "center" }}>
+                    <Chat1>스터디내용</Chat1>
+                    <Todo>{content}</Todo>
+                    </div>
+                   </Label>
+              </div>
+
+               <Label>
+                <div
+                  style={{
+                 display: "flex",
+                 justifyContent: "center",
+                   }}
+                    >
+                                <img
+                                      src={list.iconUrl}
+                                      style={{
+                                        width: "50px",
+                                        height: "50px",
+                                        borderRadius: "10px",
+                                      }}
+                                    />
+                                    <div style={{ textAlign: "left", margin: "0 10px" }}>
+                                    <div>
+                                    {list.nickname}
+                                    </div>
+
+                      </div>
+                      </Label>
+            )
+          }) */}
+          <Title> title</Title>
           <Line />
           <Label>
-            {/* 해당 방에 있는 TodoList 데이터 받아 map함수로 뿌리기 
-            {todolist.map((list,index) => {
-              return (
-                <div
-                key={index}>
-                <div>
-                {todolist}
-                </div>
-                </div>
-              )
-            })}
-            
-            */}
             <div style={{ display: "flex", justifyContent: "center" }}>
               <Chat1>스터디내용</Chat1>
               <Todo>같이 으쌰으쌰 해요!!!!</Todo>
@@ -53,30 +110,6 @@ const Login = ({ onClose, roomId }) => {
                 justifyContent: "center",
               }}
             >
-              {/* 참여 인원 정보 닉네임과 url받아서 map 함수로 뿌리기
-              
-               {personinfo.map((list,index) => {
-              return (
-                 <div
-                    key={index}>
-                 <img
-                      src={list.iconUrl}
-                      style={{
-                        width: "50px",
-                        height: "50px",
-                        borderRadius: "10px",
-                      }}
-                    />
-                     <div style={{ textAlign: "left", margin: "0 10px" }}>
-                    <div>
-                    {list.nickname}
-                    </div>
-                    <div>
-                </div>
-              )
-            })}
-              
-              */}
               <Chat2>참여인원</Chat2>
 
               <div>
@@ -151,15 +184,7 @@ const Login = ({ onClose, roomId }) => {
               취소
             </Btn1>
 
-            <Btn2
-              onClick={() => {
-                navigate(`/video/${roomId}`);
-                onClose();
-                //방입장하는 navigate(방상세)
-              }}
-            >
-              입장하기
-            </Btn2>
+            <Btn2 onClick={RoomenterHandler}>입장하기</Btn2>
           </EnterBtn>
 
           <LinkContainer></LinkContainer>

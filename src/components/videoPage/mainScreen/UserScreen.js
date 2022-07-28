@@ -5,7 +5,7 @@ import { AiFillAudio } from "react-icons/ai";
 import { BsFillMicMuteFill } from "react-icons/bs";
 import { TbVideo, TbVideoOff } from "react-icons/tb";
 
-const UserScreen = ({ socket, nick, room }) => {
+const UserScreen = ({ socket, nick, room, roomId }) => {
   const video_ref = useRef();
   //camera, mute control
   const [videoCtrl, setVideoCtrl] = useState(false);

@@ -1,11 +1,17 @@
 * {
   box-sizing: border-box;
 }
-
+/* 아래는 전역변수 선언 */
+:root {
+  --card-box-shadow: 1px 8px 8px -5px #8f8f8f;
+}
 .App {
   position: relative;
+  /*👾 vw vh와  %의 차이점은 스크롤바 사이즈 포함여부(전자는 포함, 후자는 미포함)입니다!
+  100vw으로 주니 가로 스크롤바가 조금씩 생겨서 100vw에서 1%를 빼줬더니 사라졌습니당
+  해당 설정으로 문제가 생기시면 알려주세용 -07 20 원희 수정-*/
   height: 100vh;
-  width: 100vw;
+  width: 100vw - 1%;
   transition: all 0.5s ease-in-out;
 }
 
