@@ -49,7 +49,7 @@ const Mypage = () => {
                 <FlexCont>
                   <UserInfo>
                     <div>
-                      스게더님{" "}
+                      스게더님
                       <EditButton onClick={modify}>
                         <EditUserInfoIcon />
                       </EditButton>
@@ -191,7 +191,7 @@ const UserCardBottom = styled.ul`
 const GraphCard = styled(UserCardCont)`
   background-color: white;
   border-radius: 10px;
-  box-shadow: 1px 1px 1px 1px gray;
+  box-shadow: var(--card-box-shadow);
 `;
 // const GraphCard = styled(UserCardCont)``;
 
