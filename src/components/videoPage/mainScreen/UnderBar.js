@@ -1,36 +1,35 @@
 import React from "react";
 import styled from "styled-components";
 
-import { BsChatDots, BsChatDotsFill } from "react-icons/bs";
+import { BsChatFill } from "react-icons/bs";
+import { AiFillAudio } from "react-icons/ai";
+import { TbVideo } from "react-icons/tb";
 
-const UnderBar = ({openBar, sideBarHandler}) => {
-    return(
-        <PlusBar openBar={openBar}>
-            <SideBtn
-              className="side_btn"
-              openBar={openBar}
-              onClick={sideBarHandler}
-            >
-              {openBar ? (
-                <MessageIcon>
-                  <BsChatDots />
-                  <Alert />
-                  <span>채팅 닫기</span>
-                </MessageIcon>
-              ) : (
-                <MessageIcon>
-                  <BsChatDotsFill />
-                  <Alert />
-                  <span>채팅 열기</span>
-                </MessageIcon>
-              )}
-            </SideBtn>
-          </PlusBar>
-    );
-}
+const UnderBar = ({ openBar, sideBarHandler, cameraHandler, audioHandler, videoState, audioState }) => {
+  return (
+    <PlusBar openBar={openBar}>
+      <SideBtn className="side_btn" openBar={openBar}>
+        <Icon>
+          <AiFillAudio onClick={audioHandler} />
+          {audioState? <span>마이크 off</span> : <span>마이크 on</span>}
+        </Icon>
+        <Icon>
+          <TbVideo onClick={cameraHandler} />
+          {videoState ? <span>비디오 off</span> : <span>비디오 on</span>}
+        </Icon>
+
+        <Icon>
+          <BsChatFill onClick={sideBarHandler} />
+          <Alert />
+          {openBar ? <span>채팅 닫기</span> : <span>채팅 열기</span>}
+        </Icon>
+      </SideBtn>
+    </PlusBar>
+  );
+};
 
 const PlusBar = styled.div`
-  position:fixed;
+  position: fixed;
   display: flex;
   bottom: 0;
   width: 560px;
@@ -46,19 +45,21 @@ const PlusBar = styled.div`
     opacity: 1;
   }
   &:hover {
-    height: 90px;
+    height: 10vh;
+    background-color: #333333;
   }
 `;
 
 const SideBtn = styled.div`
+  display: flex;
   transition: all 0.5s ease-in-out;
   opacity: ${(props) => (!props.openBar ? "0" : "1")};
-  font-size: 30px;
   color: white;
+  gap: 15px;
   cursor: pointer;
 `;
 
-const MessageIcon = styled.div`
+const Icon = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;

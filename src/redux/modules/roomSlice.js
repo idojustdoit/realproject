@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const BASE_URL = "http://3.35.26.55/";
+const BASE_URL = "http://3.37.87.171/";
 const token = localStorage.getItem("token");
 
 // Get All Posting
@@ -32,7 +32,7 @@ export const addRoom = createAsyncThunk("ADD/addRoom", async (formData) => {
 //메인 room list 불러오기
 export const getMainList = createAsyncThunk("GET/getRoom", async () => {
   return await axios
-    .get(`${BASE_URL}api/room/rooms`)
+    .get(`${BASE_URL}api/main`)
     .then((res) => res.data)
     .catch((e) => console.log(e));
 });

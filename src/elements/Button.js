@@ -1,10 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 
-export const BasicBtn = () => {
+export const BasicBtn = ({exitRoomHandler}) => {
   return (
     <div>
-      <Button>스터디 종료</Button>
+      <Button onClick={exitRoomHandler}>스터디 종료</Button>
     </div>
   );
 };

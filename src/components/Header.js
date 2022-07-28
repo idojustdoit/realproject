@@ -31,6 +31,7 @@ function Header() {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("userId");
+    localStorage.removeItem("nickname");
     window.location.reload();
   };
 

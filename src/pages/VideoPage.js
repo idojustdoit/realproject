@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import VideoHeader from "../components/videoPage/mainScreen/VideoHeader";
 import SideView from "../components/videoPage/sideBar/SideView";
@@ -17,38 +17,31 @@ import { TbVideo, TbVideoOff } from "react-icons/tb";
 
 //socket
 import io from "socket.io-client";
-
-const Video = (props) => {
-  const ref = useRef();
-
-  useEffect(() => {
-    props.peer.peer.on("stream", (stream) => {
-      ref.current.srcObject = stream;
-    });
-  }, [props.peer]);
-
-  return <StyledVideo playsInline autoPlay ref={ref} />;
-};
+import { setSelectionRange } from "@testing-library/user-event/dist/utils";
 
 // const socket = io.connect("http://3.35.26.55");
 // const socket = io.connect("https://www.e-gloo.link");
 // const peer = new Peer();
 
+const socket = io.connect("https://www.e-gloo.link");
+
 const VideoPage = () => {
+  const navigate = useNavigate();
+  const { roomId } = useParams();
+
   const [peers, setPeers] = useState([]);
+  const [stream, setStream] = useState([]);
   const socketRef = useRef();
   const userVideo = useRef();
   const peersRef = useRef([]);
-  const { roomId } = useParams();
 
-  const socket = io.connect("http://localhost:3001");
-
-
-  const nick = localStorage.getItem("nickname");
-
-  // const roomId = "스터디";
+  //camera, audioState control
+  const [videoState, setVideoState] = useState(false);
+  const [audioState, setAudioState] = useState(false);
 
   const [openBar, setOpenBar] = useState(true);
+
+  const nickname = localStorage.getItem("nickname");
 
   const sideBarHandler = () => {
     if (openBar) {
@@ -58,45 +51,82 @@ const VideoPage = () => {
     }
   };
 
+  //camera on/off btn click
+  const cameraClick = () => {
+    userVideo.current.srcObject
+      .getVideoTracks()
+      .forEach((track) => (track.enabled = !track.enabled));
+    if (!videoState) {
+      setVideoState(true);
+    } else {
+      setVideoState(false);
+    }
+  };
+
+  //audioState on/off btn click
+  const muteClick = () => {
+    userVideo.current.srcObject
+      .getAudioTracks()
+      .forEach((track) => (track.enabled = !track.enabled));
+    if (!audioState) {
+      setAudioState(true);
+    } else {
+      setAudioState(false);
+    }
+  };
+
+  const exitRoomHandler = () => {
+    console.log(userVideo.current.srcObject)
+    alert("진짜 나감?")
+    userVideo.current.srcObject.getVideoTracks().forEach((track) => {
+      track.stop();
+    });
+    userVideo.current.srcObject.getAudioTracks().forEach((track) => {
+      track.stop();
+    });
+  navigate("/");
+  window.location.reload();
+  };
+
   useEffect(() => {
     socketRef.current = socket;
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: false })
       .then((stream) => {
         userVideo.current.srcObject = stream;
-        socketRef.current.emit("join room", roomId, nick);
+        setStream(stream);
+        const data = {
+          roomId,
+          nickname,
+        };
+        socketRef.current.emit("join room", data);
         socketRef.current.on("all users", (users) => {
-          const peers = [];
-          users.forEach((userId) => {
-            const peer = createPeer(userId, socketRef.current.id, stream);
-
-            const newPeer = {
-              peerID: userId,
+          users.forEach((user) => {
+            const peer = createPeer(
+              user.socketId,
+              socketRef.current.id,
+              stream
+            );
+            const peerObj = {
+              peerID: user.socketId,
+              peerNickname: user.nickname,
               peer,
-            }
-            peersRef.current.push(newPeer);
-            peers.push(peer);
-            setPeers(prev => [...prev, newPeer]);
+            };
+            peersRef.current.push(peerObj);
+            setPeers((users) =>[...users, peerObj]);
           });
         });
-        
 
         socketRef.current.on("user joined", (payload) => {
-          
-          const peer = addPeer(payload.signal, payload.callerId, stream);
-
-          const peerObj = {
-            peerID: payload.callerId,
-            nick:nick,
+          const peer = addPeer(payload.signal, payload.callerID, stream);
+          const newPeer = {
+            peerId: payload.callerID,
+            peerNickname: payload.callerNickname,
             peer,
-          }
+          };
+          peersRef.current.push(newPeer);
 
-          peersRef.current.push(peerObj);
-
-          
-
-          setPeers((users) => [...users, peerObj]);
-
+          setPeers((users) => [...users, newPeer]);
         });
 
         socketRef.current.on("receiving returned signal", (payload) => {
@@ -104,9 +134,33 @@ const VideoPage = () => {
           item.peer.signal(payload.signal);
         });
       });
-  }, [roomId]);
 
-  function createPeer(userToSignal, callerId, stream) {
+      socketRef.current.on("user left",  payload => {
+        alert(payload.userInfo.nickname + "님이 나갔습니다.")
+        console.log("user left")
+        const peerObj = peersRef.current.find(
+          (p) => p.peerNickname === payload.userInfo.nickname
+        );
+        if (peerObj) {
+          peerObj.peer.on("close", () => {
+            //peer연결 끊기
+            peerObj.peer.destroy();
+          });
+        }
+        const newPeers = peersRef.current.filter(
+          (p) => p.peerId !== payload.socketId
+        );
+        peersRef.current = newPeers;
+  
+        setPeers((oldPeers) =>
+          oldPeers.filter((p) => p.peerNickname !== payload.userInfo.nickname)
+        );
+      })
+  }, [roomId, nickname]);
+
+
+
+  function createPeer(userToSignal, callerID, stream) {
     const peer = new Peer({
       initiator: true,
       trickle: false,
@@ -116,7 +170,7 @@ const VideoPage = () => {
     peer.on("signal", (signal) => {
       socketRef.current.emit("sending signal", {
         userToSignal,
-        callerId,
+        callerID,
         signal,
       });
     });
@@ -124,7 +178,7 @@ const VideoPage = () => {
     return peer;
   }
 
-  function addPeer(incomingSignal, callerId, stream) {
+  function addPeer(incomingSignal, callerID, stream) {
     const peer = new Peer({
       initiator: false,
       trickle: false,
@@ -132,19 +186,153 @@ const VideoPage = () => {
     });
 
     peer.on("signal", (signal) => {
-      socketRef.current.emit("returning signal", { signal, callerId });
+      socketRef.current.emit("returning signal", { signal, callerID });
     });
 
     peer.signal(incomingSignal);
 
     return peer;
   }
+  // const [peers, setPeers] = useState([]);
+  // const socketRef = useRef();
+  // const userVideo = useRef();
+  // const peersRef = useRef([]);
+
+  // const socket = io.connect("http://localhost:3001");
+
+  // const nickname = localStorage.getItem("nickname");
+
+  // // const roomId = "스터디";
+
+  // const [openBar, setOpenBar] = useState(true);
+
+  // const sideBarHandler = () => {
+  //   if (openBar) {
+  //     setOpenBar(false);
+  //   } else {
+  //     setOpenBar(true);
+  //   }
+  // };
+  // useEffect(() => {
+  //   socketRef.current = socket;
+  //   navigator.mediaDevices
+  //     .getUserMedia({ video: true, audio: false })
+  //     .then((stream) => {
+  //       userVideo.current.srcObject = stream;
+
+  //       const data = {
+  //         roomId,
+  //         nickname,
+  //       };
+
+  //       socketRef.current.emit("join room", data);
+  //     });
+  // }, [nickname, roomId]);
+
+  // useEffect(() => {
+  //   // 유저 입장했을 때
+
+  //   //방에 나를 제외한 누군가가 있는지 보여줌
+  //   socketRef.current.on("send users", (payload) => {
+  //     console.log(payload);
+  //     let peers = [];
+  //     payload.otherSockets.forEach((user) => {
+  //       //유저 한명당 create를 해줌
+  //       console.log(stream);
+  //       const peer = createPeer(user.socketId, socket.id, stream);
+  //       console.log(peer);
+
+  //       const peerObj = {
+  //         peerId: user.socketId,
+  //         peerNickname: user.nickname,
+  //         peer,
+  //       };
+
+  //       peersRef.current.push(peerObj);
+  //       peers.push(peer);
+  //       setPeers(peers);
+  //     });
+  //   });
+
+  //   return () => {
+  //     socketRef.current.off("send users");
+  //   };
+  // }, []);
+
+  // useEffect(() => {
+  //   // 다른 사람이 입장했을 때
+  //   const onUserJoined = (payload) => {
+  //     console.log(payload);
+  //     const peer = addPeer(payload.signal, payload.callerId, stream);
+  //     console.log(peer);
+  //     const newPeer = {
+  //       peerId: payload.callerId,
+  //       peerNickname: payload.callerNickname,
+  //       peer,
+  //     };
+  //     peersRef.current.push(newPeer);
+  //     setPeers((prevPeers) => [...prevPeers, newPeer]);
+  //   };
+
+  //   socketRef.current.on("user joined", onUserJoined);
+
+  //   return () => {
+  //     socketRef.current.off("user joined", onUserJoined);
+  //   };
+  // }, [stream]);
+
+  // useEffect(() => {
+  //   //잘 받았다고 확인하는 용(?)
+  //   socketRef.current.on("receive returned signal", (payload) => {
+  //     console.log(payload);
+  //     const item = peersRef.current.find((p) => p.peerId === payload.id);
+  //     item.peer.signal(payload.signal);
+  //   });
+
+  //   return () => {
+  //     socketRef.current.off("receive returned signal");
+  //   };
+  // }, [stream, peers]);
+
+  // function createPeer(userToSignal, callerId, stream) {
+  //   const peer = new Peer({
+  //     initiator: true,
+  //     trickle: false,
+  //     stream,
+  //   });
+
+  //   peer.on("signal", (signal) => {
+  //     console.log(signal);
+  //     socketRef.current.emit("send signal", {
+  //       config: { iceServers: [{ url: "stun:stun.l.google.com:19302" }] },
+  //       userToSignal,
+  //       callerId,
+  //       signal,
+  //     });
+  //   });
+
+  //   return peer;
+  // }
+
+  // function addPeer(incomingSignal, callerId, stream) {
+  //   const peer = new Peer({
+  //     initiator: false,
+  //     trickle: false,
+  //     stream,
+  //   });
+
+  //   peer.on("signal", (signal) => {
+  //     console.log(signal);
+  //     socketRef.current.emit("returning signal", { signal, callerId });
+  //   });
+
+  //   peer.signal(incomingSignal);
+
+  //   return peer;
+  // }
 
   const video_ref = useRef();
   const second_video_ref = useRef();
-  //camera, mute control
-  const [videoCtrl, setVideoCtrl] = useState(false);
-  const [mute, setMute] = useState(false);
 
   //camera, audio device select
   const [cameraDevice, setCameraDevice] = useState([]);
@@ -161,22 +349,22 @@ const VideoPage = () => {
   //   user_video.srcObject
   //     .getVideoTracks()
   //     .forEach((track) => (track.enabled = !track.enabled));
-  //   if (!videoCtrl) {
-  //     setVideoCtrl(true);
+  //   if (!videoState) {
+  //     setVideoState(true);
   //   } else {
-  //     setVideoCtrl(false);
+  //     setVideoState(false);
   //   }
   // };
 
-  // //mute on/off btn click
+  // //audioState on/off btn click
   // const muteClick = () => {
   //   user_video.srcObject
   //     .getAudioTracks()
   //     .forEach((track) => (track.enabled = !track.enabled));
-  //   if (!mute) {
-  //     setMute(true);
+  //   if (!audioState) {
+  //     setAudioState(true);
   //   } else {
-  //     setMute(false);
+  //     setAudioState(false);
   //   }
   // };
 
@@ -290,8 +478,8 @@ const VideoPage = () => {
   //   };
   //   getMedia();
 
-  //   setMute(false);
-  //   setVideoCtrl(false);
+  //   setAudioState(false);
+  //   setVideoState(false);
   // }, [roomId, nick, audioId, cameraId]);
 
   // const cameraSelect = (e) => {
@@ -301,7 +489,6 @@ const VideoPage = () => {
   // const audioSelect = (e) => {
   //   setAudioId(e.target.value);
   // };
-console.log(peers)
   return (
     <>
       <ScreenWrapper>
@@ -316,7 +503,7 @@ console.log(peers)
             alignItems: "center",
           }}
         >
-          <VideoHeader openBar={openBar} />
+          <VideoHeader exitRoomHandler={exitRoomHandler} openBar={openBar} />
 
           <div
             className="video-area"
@@ -324,65 +511,30 @@ console.log(peers)
           >
             {/* video 화면 grid */}
             <Screen BarState={!openBar}>
-
               {/* 내 화면 */}
-              <div style={{display:"flex", flexDirection:"column",}}>
-              <StyledVideo muted ref={userVideo} autoPlay playsInline />
-              <UnderPlusBar
-                  style={{
-                    width: "100%",
-                    height: "17%",
-                    backgroundColor: "#333333",
-                  }}
-                >
-                  <div>
-                    <div className="user_img"></div>
-                    <span className="user_name">{nick}</span>
-                  </div>
-                  <span>00:00:00</span>
-                  <DeviceSelctor className="video_control_btn">
-                    <div className="audio">
-                      {!mute ? <BsFillMicMuteFill /> : <AiFillAudio />}
-                    </div>
-                    <div className="camera">
-                      {!videoCtrl ? <TbVideoOff /> : <TbVideo />}
-                    </div>
-                  </DeviceSelctor>
-                </UnderPlusBar>
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <StyledVideo muted ref={userVideo} autoPlay playsInline />
+                <VideoInfo
+                  nickname={nickname}
+                  audioState={audioState}
+                  videoState={videoState}
+                />
               </div>
-              
+
               {peers.map((peer, index) => {
-                console.log(peer);
                 return (
-                  <>
-                
-                {/* 다른 유저 입장시 화면 */}
-                <div key={index} style={{display:"flex", flexDirection:"column",}}>
-                <Video  peer={peer} />
-              <UnderPlusBar
-                  style={{
-                    width: "100%",
-                    height: "17%",
-                    backgroundColor: "#333333",
-                  }}
-                >
-                  <div>
-                    <div className="user_img"></div>
-                    <span className="user_name">{peer.nick}</span>
+                  // 다른 유저 입장시 화면
+                  <div
+                    key={index}
+                    style={{ display: "flex", flexDirection: "column" }}
+                  >
+                    <Video peer={peer.peer} />
+                    <VideoInfo
+                      nickname={peer.peerNickname}
+                      audioState={audioState}
+                      videoState={videoState}
+                    />
                   </div>
-                  <span>00:00:00</span>
-                  <DeviceSelctor className="video_control_btn">
-                    <div className="audio">
-                      {!mute ? <BsFillMicMuteFill /> : <AiFillAudio />}
-                    </div>
-                    <div className="camera">
-                      {!videoCtrl ? <TbVideoOff /> : <TbVideo />}
-                    </div>
-                  </DeviceSelctor>
-                </UnderPlusBar>
-              </div>
-                
-                </>
                 );
               })}
             </Screen>
@@ -424,10 +576,10 @@ console.log(peers)
                   <span>00:00:00</span>
                   <DeviceSelctor className="video_control_btn">
                     <div className="audio" onClick={muteClick}>
-                      {!mute ? <BsFillMicMuteFill /> : <AiFillAudio />}
+                      {!audioState ? <BsFillMicMuteFill /> : <AiFillAudio />}
                     </div>
                     <div className="camera" onClick={cameraClick}>
-                      {!videoCtrl ? <TbVideoOff /> : <TbVideo />}
+                      {!videoState ? <TbVideoOff /> : <TbVideo />}
                     </div>
                   </DeviceSelctor>
                 </UnderPlusBar> */}
@@ -447,7 +599,14 @@ console.log(peers)
 
           {/* Main Screen 하단 기능 아이콘 */}
 
-          <UnderBar openBar={openBar} sideBarHandler={sideBarHandler} />
+          <UnderBar
+            openBar={openBar}
+            sideBarHandler={sideBarHandler}
+            cameraHandler={cameraClick}
+            audioHandler={muteClick}
+            videoState={videoState}
+            audioState={audioState}
+          />
         </div>
 
         {/* sideBar */}
@@ -455,7 +614,7 @@ console.log(peers)
         <SideView
           openBar={openBar}
           socket={socket}
-          nick={nick}
+          nick={nickname}
           roomId={roomId}
         />
 
@@ -465,11 +624,46 @@ console.log(peers)
   );
 };
 
+const Video = (props) => {
+  const ref = useRef();
+
+  props.peer.on("stream", (stream) => {
+    ref.current.srcObject = stream;
+  });
+
+  return <StyledVideo playsInline autoPlay ref={ref} />;
+};
+const VideoInfo = (props) => {
+  return(
+
+  <UnderPlusBar
+    style={{
+      width: "100%",
+      height: "17%",
+      backgroundColor: "#333333",
+    }}
+  >
+    <div>
+      <div className="user_img"></div>
+      <span className="user_name">{props.nickname}</span>
+    </div>
+    <span>00:00:00</span>
+    <DeviceSelctor className="video_control_btn">
+      <div className="audio">
+        {props.audioState ? <BsFillMicMuteFill /> : <AiFillAudio />}
+      </div>
+      <div className="camera">
+        {props.videoState ? <TbVideoOff /> : <TbVideo />}
+      </div>
+    </DeviceSelctor>
+  </UnderPlusBar>
+  );
+};
+
 const StyledVideo = styled.video`
   height: 83%;
   width: 100%;
   object-fit: cover;
-  background-color: white;
 `;
 
 const ScreenWrapper = styled.div`

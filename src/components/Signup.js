@@ -59,7 +59,7 @@ const SignUp = ({ onClose, LoginOpen }) => {
       data: {
         nickname: nickname,
       },
-      baseURL: "http://3.35.26.55",
+      baseURL: "http://3.37.87.171",
     })
       .then((response) => {
         console.log(response);
@@ -103,7 +103,7 @@ const SignUp = ({ onClose, LoginOpen }) => {
         nickname: nickname,
         iconUrl: profile,
       },
-      baseURL: "http://3.35.26.55",
+      baseURL: "http://3.37.87.171",
     })
       .then((response) => {
         console.log(response);
