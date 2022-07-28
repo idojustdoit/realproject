@@ -128,7 +128,7 @@ const Creatroom = ({ onClose }) => {
       method: "POST",
       url: `/api/room/create/${userId}`,
       data: formData,
-      baseURL: "http://15.164.164.17:3000",
+      baseURL: API_URL,
       headers: {
         "content-type": "multipart/form-data",
         Authorization: `Bearer ${token}`,
