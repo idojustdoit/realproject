@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
@@ -61,7 +61,7 @@ function Modify() {
         "content-type": "multipart/form-data",
         Authorization: `Bearer ${token}`,
       },
-      baseURL: "http://15.164.164.17:3000",
+      baseURL: API_URL,
     })
       .then((response) => {
         console.log(response);
