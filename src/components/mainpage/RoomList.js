@@ -4,13 +4,18 @@ import {
   getMainList,
   getRoomListByCategory,
   setCategoryState,
+  setRoomList,
 } from "../../redux/modules/roomSlice";
-import { useLocation, useParams } from "react-router-dom";
-import styled from "styled-components";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+
+//컴포넌트
+import Spinner from "../Spinner";
 import Room from "./Room";
 
-import { Navigation, Pagination } from "swiper";
+//CSS, 이미지 관련
+import styled from "styled-components";
+import { Navigation, Pagination, Scrollbar } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -86,19 +91,71 @@ const CATEGORY_LIST = [
 
 const RoomList = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   //받아온 메인 룸 리스트
-
   console.log("😎룸리스트 렌더링..!");
-  const list = useSelector((state) => state.room.roomList);
+  const roomList = useSelector((state) => state.room.roomList);
   const isLoading = useSelector((state) => state.room.isLoading);
 
-  let [visible, setVisible] = useState(6);
-  const [limit, setLimit] = useState(0);
-  const [category, setCategory] = useState("전체");
+  // const [rooms, setRooms] = useState([]);
+  const category = useSelector((state) => state.room.category);
   const [isActive, setIsActive] = useState(null);
   //초기에는 모든 이미지가 컬러인 상태로 보여야해서 추가한 state
   const [isClicked, setIsClicked] = useState(false);
+
+  const API_URL = "서버주소";
+
+  // const [rooms, setRooms] = useState([])
+  const [offset, setOffset] = useState(0);
+  const LIMIT = 6;
+  const [roomsLength, setRoomsLength] = useState(0);
+
+  useEffect(() => {
+    let body = {
+      offset: offset,
+      limit: LIMIT,
+      category: category,
+      loadMore: false,
+    };
+
+    getRoomList(body);
+  }, []);
+  const getRoomList = (body) => {
+    axios.post(`${API_URL}/api/main`, body).then((res) => {
+      if (res.data.success) {
+        console.log(res.data.roomList);
+        if (body.loadMore) {
+          //더보기 버튼 클릭시
+          setRoomList([...roomList, ...res.data.roomList]);
+        } else {
+          setRoomList([...res.data.roomList]);
+        }
+        setRoomsLength(res.data.tagLength);
+      } else {
+        alert("게시물을 가져오는데 실패했음");
+      }
+    });
+  };
+
+  const loadMoreHandler = () => {
+    let newOffset = offset + LIMIT;
+
+    let body = {
+      offset: offset,
+      limit: LIMIT,
+      category: category,
+      loadMore: true,
+    };
+    getRoomList(body);
+    setOffset(newOffset);
+  };
+
+  //😎페이지네이션
+  //limit : 한 페이지에 보여줄 데이터 수
+  //offset: 데이터가 시작하는 위치(index)
+  //category: 카테고리 명
+  //loadMore: 프론트에서 쓰려고 넣은 데이터 true, false
 
   useEffect(() => {
     dispatch(getMainList());
@@ -109,12 +166,10 @@ const RoomList = () => {
   }, [category]);
 
   function categoryClickHandler(e, clickedCategory) {
-    //카테고리를 클릭하면 map을 돌리는 visible의 값을 기본값인 6으로 초기화시킨다.
-    //이후, 카테고리를 클릭한 카테고리값으로 변경해준다.
     e.preventDefault();
-    // setIsActive((prevState) => e.target.value);
-    setVisible(6);
-    setCategory(clickedCategory);
+    // setCategory(clickedCategory);
+    setCategoryState(clickedCategory);
+    setOffset(0);
   }
 
   return (
@@ -122,10 +177,11 @@ const RoomList = () => {
       <Container>
         <TitleH2>카테고리</TitleH2>
         <Swiper
-          modules={[Navigation]}
+          modules={[Navigation, Scrollbar]}
           spaceBetween={10}
           slidesPerView={8}
           navigation
+          scrollbar={{ draggable: false }}
           onClick={(swiper) => {
             setIsActive((prev) => swiper.clickedIndex);
             setIsClicked(true);
@@ -163,10 +219,10 @@ const RoomList = () => {
       </Container>
       <div>
         {!isLoading ? (
-          list.length > 0 ? (
+          roomList.length > 0 ? (
             <>
               <RoomListCont>
-                {list.slice(0, visible).map((room) => {
+                {roomList.map((room) => {
                   return (
                     <Room
                       key={room._id}
@@ -185,22 +241,18 @@ const RoomList = () => {
               </RoomListCont>
             </>
           ) : (
-            <div>게시물이 없습니다.</div>
+            <Div>해당 카테고리의 첫번째 주인공이 되어주세요!🥳</Div>
           )
         ) : (
-          <div> 로딩 스피너 자리 </div>
+          <Spinner />
         )}
         {/* 만약 현재보고있는 room의 수가 게시물의 길이보다 같거나 크다면 showmore
         버튼을 숨긴다. */}
-        {/* {visible >= list.length ? (
-          <div></div>
-        ) : ( */}
-        <ButtonBox>
-          <Btn onClick={() => dispatch(getRoomListByCategory(category))}>
-            Load more
-          </Btn>
-        </ButtonBox>
-        {/* )} */}
+        {roomsLength > roomList.length && (
+          <ButtonBox>
+            <LoadMoreBtn onClick={() => loadMoreHandler()}>더보기</LoadMoreBtn>
+          </ButtonBox>
+        )}
       </div>
     </>
   );
@@ -271,13 +323,37 @@ const ButtonBox = styled.div`
   align-items: center;
   justify-content: center;
 `;
-const Btn = styled.button`
-  width: 200px;
-  height: 60px;
-  border-radius: 4px;
-  font-size: 20px;
-  font-weight: 700;
-  background-color: #fff;
+const LoadMoreBtn = styled.button`
+  /* display: flex;
+  flex-basis: 90%;
+  align-items: center; */
+  /* color: rgba(0, 0, 0, 0.35); */
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 20px;
+  background-color: inherit;
+  display: inline-block;
+  padding: 0.5em 3em;
+  border: 2px solid rgba(0, 0, 0, 0.35);
+  border-radius: 5px;
+  transition: 0.2s;
+
+  &:hover {
+    color: white;
+    background-color: #2e70e0;
+    border: 2px solid #2e70e0;
+  }
+
+  /* &::before,
+  &::after {
+    content: "";
+    flex-grow: 1;
+    background: rgba(0, 0, 0, 0.35);
+    height: 1px;
+    font-size: 0px;
+    line-height: 0px;
+    margin: 0px 16px;
+  } */
 `;
 const Div = styled.div`
   font-size: 20px;
