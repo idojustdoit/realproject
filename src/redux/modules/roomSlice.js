@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { USER_ID } from "../../shared/apis";
+// import { USER_ID } from "../../shared/apis";
 
+const USER_ID = localStorage.getItem("userId");
 const API_URL = process.env.REACT_APP_API_URL;
-
 const TOKEN = localStorage.getItem("accessToken");
 
 //방(room) 생성
@@ -70,17 +70,6 @@ export const setlikedRoom = createAsyncThunk(
   }
 );
 
-// 검색된 키워드의 리스트 가져오기
-export const getSearchRooms = createAsyncThunk(
-  "GET/getSearchList",
-  async (word) => {
-    console.log(word);
-    return await axios
-      .get(`${API_URL}/api/room/search/${word}`)
-      .then((res) => res.data);
-  }
-);
-
 //마이페이지 정보 가져오기
 export const getMypageInfos = createAsyncThunk(
   "GET/getMypageInfos",
@@ -92,7 +81,8 @@ export const getMypageInfos = createAsyncThunk(
           Authorization: `Bearer ${TOKEN}`,
         },
       })
-      .then((res) => res.data);
+      .then((res) => res.data)
+      .catch((e) => console.log(e));
   }
 );
 
@@ -109,19 +99,15 @@ const roomSlice = createSlice({
     modalState: false,
     isLoading: false,
     searchWord: "",
+    word: "",
+    myPageList: [],
   },
   reducers: {
     setCategoryState(state, action) {
-      //roomList 의존성 배열에 넣어주는 category값 설정
       state.category = action.payload;
     },
-    //메인페이지에서 서치페이지 전에 검색하는 기본 검색값
-    setInitialWord(state, action) {
-      state.initialWord = action.payload;
-    },
-    //서치페이지에서 검색하는 검색값
-    setSearchWord(state, action) {
-      state.searchWord = action.payload;
+    setRoomList(state, action) {
+      state.roomList = action.payload;
     },
   },
   extraReducers: {
@@ -147,31 +133,26 @@ const roomSlice = createSlice({
     },
     [getRoomListByCategory.rejected]: (state, action) => {
       console.log(action.payload); //e.g. Net work error
-      state.roomList = [...action.payload?.roomList];
       state.isLoading = false;
     },
     [getListEx.rejected]: (state, action) => {
       state.isLoading = true;
     },
-    [getSearchRooms.pending]: (state, action) => {
-      state.isLoading = true;
-    },
-    [getSearchRooms.fulfilled]: (state, action) => {
-      state.searchRooms = [...action.payload?.roomList];
-      state.isLoading = false;
-    },
     [getMypageInfos.pending]: (state, action) => {
       state.isLoading = true;
     },
     [getMypageInfos.fulfilled]: (state, action) => {
-      state.state.roomList = [...action.payload.roomList];
+      state.myPageList = [...action.payload.myPage];
+      state.isLoading = false;
+    },
+    [getMypageInfos.rejected]: (state, action) => {
+      window.alert("마이페이지 리스트 불러오기 실패");
       state.isLoading = false;
     },
   },
 });
 
 //actions는 컴포넌트에서 불러올때 쓰인다.
-export const { setCategoryState, setSearchWord, setInitialWord } =
-  roomSlice.actions;
+export const { setCategoryState, setWord, setRoomList } = roomSlice.actions;
 //리듀서는 store로 불러와서 리듀서들끼리 뭉쳐놓을 때 쓰인다. => configureStore()에 꼭 들어가야하는게 (각 슬라이스의)리듀서라서 얘를 내보내준다.
 export default roomSlice.reducer;
