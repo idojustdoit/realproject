@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import axios from "axios";
 import kakao from "../shared/login-assets/kakao.png";
-import GoogleButton from "../pages/GoogleButton";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { useDispatch } from "react-redux";
@@ -149,8 +148,6 @@ const Login = ({ onClose, SignOpen }) => {
               />
             </a>
             <br />
-
-            <GoogleButton />
           </LoginBtn>
         </ModalBlock>
       </Background>

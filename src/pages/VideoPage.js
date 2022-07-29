@@ -26,7 +26,7 @@ import { setSelectionRange } from "@testing-library/user-event/dist/utils";
 // const socket = io.connect("https://www.e-gloo.link");
 // const peer = new Peer();
 
-const socket = io.connect("https://www.e-gloo.link");
+const socket = io.connect("http://egloo.shop");
 
 const VideoPage = () => {
   const navigate = useNavigate();
@@ -79,16 +79,16 @@ const VideoPage = () => {
   };
 
   const exitRoomHandler = () => {
-    console.log(userVideo.current.srcObject)
-    alert("진짜 나감?")
+    console.log(userVideo.current.srcObject);
+    alert("진짜 나감?");
     userVideo.current.srcObject.getVideoTracks().forEach((track) => {
       track.stop();
     });
     userVideo.current.srcObject.getAudioTracks().forEach((track) => {
       track.stop();
     });
-  navigate("/");
-  window.location.reload();
+    navigate("/");
+    window.location.reload();
   };
 
   useEffect(() => {
@@ -116,7 +116,7 @@ const VideoPage = () => {
               peer,
             };
             peersRef.current.push(peerObj);
-            setPeers((users) =>[...users, peerObj]);
+            setPeers((users) => [...users, peerObj]);
           });
         });
 
@@ -138,30 +138,28 @@ const VideoPage = () => {
         });
       });
 
-      socketRef.current.on("user left",  payload => {
-        alert(payload.userInfo.nickname + "님이 나갔습니다.")
-        console.log("user left")
-        const peerObj = peersRef.current.find(
-          (p) => p.peerNickname === payload.userInfo.nickname
-        );
-        if (peerObj) {
-          peerObj.peer.on("close", () => {
-            //peer연결 끊기
-            peerObj.peer.destroy();
-          });
-        }
-        const newPeers = peersRef.current.filter(
-          (p) => p.peerId !== payload.socketId
-        );
-        peersRef.current = newPeers;
-  
-        setPeers((oldPeers) =>
-          oldPeers.filter((p) => p.peerNickname !== payload.userInfo.nickname)
-        );
-      })
+    socketRef.current.on("user left", (payload) => {
+      alert(payload.userInfo.nickname + "님이 나갔습니다.");
+      console.log("user left");
+      const peerObj = peersRef.current.find(
+        (p) => p.peerNickname === payload.userInfo.nickname
+      );
+      if (peerObj) {
+        peerObj.peer.on("close", () => {
+          //peer연결 끊기
+          peerObj.peer.destroy();
+        });
+      }
+      const newPeers = peersRef.current.filter(
+        (p) => p.peerId !== payload.socketId
+      );
+      peersRef.current = newPeers;
+
+      setPeers((oldPeers) =>
+        oldPeers.filter((p) => p.peerNickname !== payload.userInfo.nickname)
+      );
+    });
   }, [roomId, nickname]);
-
-
 
   function createPeer(userToSignal, callerID, stream) {
     const peer = new Peer({
@@ -506,7 +504,11 @@ const VideoPage = () => {
             alignItems: "center",
           }}
         >
-          <VideoHeader exitRoomHandler={exitRoomHandler} openBar={openBar} roomId={roomId} />
+          <VideoHeader
+            exitRoomHandler={exitRoomHandler}
+            openBar={openBar}
+            roomId={roomId}
+          />
           <Timer roomId={roomId} />
 
           <div
@@ -638,29 +640,28 @@ const Video = (props) => {
   return <StyledVideo playsInline autoPlay ref={ref} />;
 };
 const VideoInfo = (props) => {
-  return(
-
-  <UnderPlusBar
-    style={{
-      width: "100%",
-      height: "17%",
-      backgroundColor: "#333333",
-    }}
-  >
-    <div>
-      <div className="user_img"></div>
-      <span className="user_name">{props.nickname}</span>
-    </div>
-    <span>00:00:00</span>
-    <DeviceSelctor className="video_control_btn">
-      <div className="audio">
-        {props.audioState ? <BsFillMicMuteFill /> : <AiFillAudio />}
+  return (
+    <UnderPlusBar
+      style={{
+        width: "100%",
+        height: "17%",
+        backgroundColor: "#333333",
+      }}
+    >
+      <div>
+        <div className="user_img"></div>
+        <span className="user_name">{props.nickname}</span>
       </div>
-      <div className="camera">
-        {props.videoState ? <TbVideoOff /> : <TbVideo />}
-      </div>
-    </DeviceSelctor>
-  </UnderPlusBar>
+      <span>00:00:00</span>
+      <DeviceSelctor className="video_control_btn">
+        <div className="audio">
+          {props.audioState ? <BsFillMicMuteFill /> : <AiFillAudio />}
+        </div>
+        <div className="camera">
+          {props.videoState ? <TbVideoOff /> : <TbVideo />}
+        </div>
+      </DeviceSelctor>
+    </UnderPlusBar>
   );
 };
 

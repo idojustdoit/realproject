@@ -189,7 +189,7 @@ const Creatroom = ({ onClose }) => {
               marginRight: "85px",
             }}
           >
-            <RadioBox
+            <RadioBox1
               input
               checked={loading}
               id="text"
@@ -199,7 +199,7 @@ const Creatroom = ({ onClose }) => {
               onChange={(e) => checkOnlyOne(e.target)}
             />
             공개
-            <RadioBox
+            <RadioBox2
               type="radio"
               name="test"
               value="2"
@@ -451,8 +451,7 @@ const Label = styled.label`
   align-content: center;
   text-align: center;
 `;
-
-const RadioBox = styled.input`
+const RadioBox1 = styled.input`
   margin-top: 10px;
   appearance: none;
   border: 1.5px solid black;
@@ -465,7 +464,34 @@ const RadioBox = styled.input`
     width: 16px;
     height: 16px;
     background-color: white;
-    padding: 1.5px;
+    padding: 2.2px 0px 0px 1.2px;
+    &::after {
+      position: fixed;
+      content: "";
+      display: block;
+      border-radius: 50%;
+      width: 9.5px;
+      height: 9.4px;
+      margin-left: 0.2px;
+      background: black;
+    }
+  }
+`;
+
+const RadioBox2 = styled.input`
+  margin-top: 10px;
+  appearance: none;
+  border: 1.5px solid black;
+  border-radius: 20px;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+
+  &:checked {
+    width: 16px;
+    height: 16px;
+    background-color: white;
+    padding: 2.2px 0px 0px 1.5px;
     &::after {
       position: fixed;
       content: "";

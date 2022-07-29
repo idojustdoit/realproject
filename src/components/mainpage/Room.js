@@ -20,37 +20,33 @@ const Room = ({
 }) => {
   const API_URL = process.env.REACT_APP_API_URL;
   const dispatch = useDispatch();
-
   const [likeState, setLikeState] = useState(isLiked);
   const token = localStorage.getItem("accessToken");
   const isLogin = useSelector((state) => state.user.isLogin);
 
+  console.log(likeState);
+
   //좋아요 버튼
-  // const likeAxios = () => {
-  //   axios({
-  //     method: "POST",
-  //     url: `/api/room/create/${userId}`,
-  //     data: {
-  //       isLike: likeState,
-  //     },
-
-  //     baseURL: API_URL,
-  //     headers: {
-  //       "content-type": "application/json",
-  //       Authorization: `Bearer ${token}`,
-  //     },
-  //   })
-  //     .then((response) => {
-  //       console.log(response);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
-
-  // useEffect(() => {
-  //   likeAxios();
-  // }, [likeState]);
+  const likeAxios = () => {
+    axios({
+      method: "PUT",
+      url: `api/main/like/${roomId}`,
+      data: {
+        isLiked: likeState,
+      },
+      baseURL: API_URL,
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   //입장하기버튼: 클릭한 방(roomId)에 해당하는 화상채팅방으로 입장하는 모달
   const [EnterOpen, setEnterOpen] = React.useState(false);
@@ -69,6 +65,7 @@ const Room = ({
     //부모 엘리먼트에게 이벤트 전달을 중단 할때 event.stopProgation() 사용
     // event.stopPropagation();
     setLikeState((prevlikeState) => !prevlikeState);
+    likeAxios();
   }
 
   return (
