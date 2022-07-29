@@ -170,7 +170,12 @@ const SignUp = ({ onClose, LoginOpen }) => {
     })
       .then((response) => {
         console.log(response);
-        alert("회원가입을 축하드립니다!!");
+        MySwal.fire({
+          title: "success!",
+          text: "회원가입에 성공하였습니다!",
+          icon: "success",
+          confirmButtonText: "확인",
+        });
         onClose();
         LoginOpen();
       })

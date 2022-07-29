@@ -31,7 +31,7 @@ export const getRoomListByCategory = createAsyncThunk(
   async (clickedCategory, { rejectWithValue }) => {
     console.log(clickedCategory);
     return await axios
-      .post(`${API_URL}/api/main/tag/${clickedCategory}`)
+      .post(`${API_URL}/api/main`)
       .then((res) => res.data)
       .catch((e) => rejectWithValue(e.message));
   }

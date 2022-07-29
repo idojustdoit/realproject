@@ -171,7 +171,7 @@ const RoomList = () => {
                     <Room
                       key={room._id}
                       roomId={room.roomId}
-                      imageUrl={room.imageUrl ? room.imageUrl : roomLogo}
+                      imageUrl={room.imgUrl ? room.imgUrl : roomLogo}
                       title={room.title}
                       content={room.content}
                       date={room?.date}
