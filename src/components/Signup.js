@@ -247,7 +247,7 @@ const SignUp = ({ onClose, LoginOpen }) => {
             </span>
           </Label>
           <Label>
-            <div style={{ display: "flex" }}>
+            <div>
               <Chat1>이메일</Chat1>
 
               <Input
