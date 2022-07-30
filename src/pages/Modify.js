@@ -17,6 +17,8 @@ function Modify() {
   const [password, setpassword] = React.useState(""); // 비밀번호 인풋
   const [passwordCheck, setpasswordCheck] = React.useState(""); //비밀번호 확인 인풋
   const [nickname, setNickname] = React.useState(""); //닉네임 인풋
+  const originick = localStorage.getItem("nickname");
+  const imgUrl = localStorage.getItem("imgUrl");
 
   // 프로필이미지 관련 코드
   const FILE_SIZE_MAX_LIMIT = 5 * 1024 * 1024;
@@ -135,6 +137,7 @@ function Modify() {
                 id="file"
                 ref={profile_ref}
                 onChange={UpImageUrl}
+                defaultValue={imgUrl}
               />
               <br />
             </span>
@@ -144,7 +147,11 @@ function Modify() {
             <div>
               <Chat1>닉네임</Chat1>
 
-              <Input type="text" onChange={handlernickname} value={nickname} />
+              <Input
+                type="text"
+                defaultValue={originick}
+                onChange={handlernickname}
+              />
             </div>
           </Label>
           <Label>

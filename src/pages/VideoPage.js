@@ -26,7 +26,7 @@ import { setSelectionRange } from "@testing-library/user-event/dist/utils";
 // const socket = io.connect("https://www.e-gloo.link");
 // const peer = new Peer();
 
-const socket = io.connect("http://egloo.shop");
+const socket = io.connect("https://egloo.shop");
 
 const VideoPage = () => {
   const navigate = useNavigate();
