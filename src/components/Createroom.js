@@ -28,7 +28,7 @@ const names = [
   { id: 9, name: "자유주제" },
 ];
 
-const Creatroom = ({ onClose }) => {
+const Createroom = ({ onClose }) => {
   const API_URL = process.env.REACT_APP_API_URL;
 
   //사용하는 변수명 정리
@@ -616,4 +616,4 @@ const Input = styled.input`
   line-height: 1.33333333;
   border-radius: 4px;
 `;
-export default Creatroom;
+export default Createroom;

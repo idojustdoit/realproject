@@ -201,9 +201,11 @@ const RoomList = () => {
       <Container>
         <TitleH2>카테고리</TitleH2>
         <Swiper
+          style={{ cursor: "pointer" }}
           modules={[Navigation, Scrollbar]}
           spaceBetween={10}
           slidesPerView={8}
+          touchRatio={0}
           navigation
           scrollbar={{ draggable: false }}
           onClick={(swiper) => {
