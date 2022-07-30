@@ -1,41 +1,70 @@
 import "../styles/reset.css";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import axios from "axios";
 import { Navigate, useNavigate } from "react-router-dom";
 
-import { getMypageInfos } from "../redux/modules/roomSlice";
+// import { getMypageInfos } from "../redux/modules/roomSlice";
 
 import { ReactComponent as EditUserInfoIcon } from "../shared/mypage-assets/icon-update-userInfo.svg";
 import userAvatar from "../shared/mypage-assets/user-basic-img.png";
 
 import Header from "../components/Header";
-import SmallRoomSlider from "../components/mypage/SmallRoomSlider";
 import Graph from "../components/Graph";
 import Tab from "../components/mypage/Tab";
 import Footer from "../components/Footer";
+import Spinner from "../components/Spinner";
 
 const Mypage = () => {
+  const USER_ID = localStorage.getItem("userId");
+  const API_URL = process.env.REACT_APP_API_URL;
+  const TOKEN = localStorage.getItem("accessToken");
   const navigate = useNavigate();
-  const BASE_URL = process.env.REACT_APP_API_URL;
-  const [listValue, setListValue] = React.useState("1");
 
   const modify = () => {
     navigate("/modify");
   };
-  const handleChange = (event, newValue) => {
-    setListValue(newValue);
-    //newValue 값으로 axios 요청보내서 해당하는 자료 가져오기
-  };
 
-  const [items, setItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [attendRooms, setAttendRooms] = useState([]);
+  const [hostRooms, setHostRooms] = useState([]);
+  const [likeRooms, setLikeRooms] = useState([]);
+  const [email, setEmail] = useState("");
+  const [nickname, setNickName] = useState("");
+
   const dispatch = useDispatch();
 
+  const getMypageInfos = useCallback(async () => {
+    axios
+      .get(`${API_URL}/api/mypage/${USER_ID}`, {
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${TOKEN}`,
+        },
+      })
+      .then((res) => {
+        setIsLoading(true);
+        console.log(res.data);
+        if (res.data.result) {
+          setIsLoading(false);
+          setAttendRooms(res.data.myPage?.attendRoom);
+          setHostRooms(res.data.myPage?.hostRoom);
+          setLikeRooms(res.data.myPage?.userLike);
+          setEmail(res.data.myPage?.email);
+          setNickName(res.data.myPage?.nickname);
+        }
+      })
+      .catch((e) => console.log(e));
+  });
+
   useEffect(() => {
-    dispatch(getMypageInfos());
+    getMypageInfos();
   }, []);
 
+  if (isLoading) {
+    return <Spinner />;
+  }
   return (
     <MypageCont>
       <Header />
@@ -49,24 +78,24 @@ const Mypage = () => {
                 <FlexCont>
                   <UserInfo>
                     <div>
-                      스게더님
+                      {nickname}님
                       <EditButton onClick={modify}>
                         <EditUserInfoIcon />
                       </EditButton>
                     </div>
-                    <span>sgether@gmail.com</span>
+                    <span>{email}</span>
                   </UserInfo>
                 </FlexCont>
               </UserCardTop>
               <UserCardBottom>
                 <li>
-                  참여중<span>3</span>
+                  참여중<span>{attendRooms.length}</span>
                 </li>
                 <li>
-                  호스팅중<span>0</span>
+                  호스팅중<span>{hostRooms.length}</span>
                 </li>
                 <li>
-                  찜<span>2</span>
+                  찜<span>{likeRooms.length}</span>
                 </li>
               </UserCardBottom>
             </UserCardCont>
@@ -76,7 +105,12 @@ const Mypage = () => {
           </Cont>
         </UpperCont>
         <RoomsCont className="menu-nav__cont">
-          <Tab />
+          <Tab
+            attendRooms={attendRooms}
+            hostRooms={hostRooms}
+            likeRooms={likeRooms}
+            isLoading={isLoading}
+          />
         </RoomsCont>
       </ContentBox>
       <Footer />
@@ -84,13 +118,14 @@ const Mypage = () => {
   );
 };
 const MypageCont = styled.div`
+  color: var(--blue-black);
   width: 1920px;
   margin: 0 auto;
   height: auto;
+  padding-top: 80px;
 `;
 const ContentBox = styled.div`
   //헤더fixed라서 헤더만큼 공간 띄워주기
-  padding-top: 80px;
 `;
 const UpperCont = styled.section`
   display: flex;

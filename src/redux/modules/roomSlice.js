@@ -6,25 +6,14 @@ const USER_ID = localStorage.getItem("userId");
 const API_URL = process.env.REACT_APP_API_URL;
 const TOKEN = localStorage.getItem("accessToken");
 
-//방(room) 생성
-export const addRoom = createAsyncThunk("ADD/addRoom", async (formData) => {
-  const res = await axios.post(`${API_URL}/api/room/create`, formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-      Authorization: `Bearer ${TOKEN}`,
-    },
-  });
-  return res.data;
-});
-
-//메인 room list 불러오기
+//메인 room list 불러오기(안 씀)
 export const getMainList = createAsyncThunk("POST/getRoom", async () => {
   return await axios.get(`${API_URL}/api/main`).then((res) => res.data);
 
   // .catch((e) => rejectWithValue(e.message));
 });
 
-//카테고리별 리스트 가져오기
+//카테고리별 리스트 가져오기(안 씀)
 //😎에러핸들링 2번째 인자로 thunkAPI를 받을 수 있다.
 export const getRoomListByCategory = createAsyncThunk(
   "POST/getRoomListByCategory",
@@ -37,21 +26,7 @@ export const getRoomListByCategory = createAsyncThunk(
   }
 );
 
-//쿼리 예제
-export const getListEx = createAsyncThunk(
-  "POST/getListEx",
-
-  async (data) => {
-    console.log(data);
-    return await axios
-      .get(
-        `${API_URL}/api/?roomCategory=${data.category}&page=${data.page}&limit=${data.limit}`
-      )
-      .then((res) => res.data);
-  }
-);
-
-// room 찜하기(좋아요) 기능
+// room 찜하기(좋아요) 기능(안 씀)
 // 버튼 클릭 시 서버로 roomId 보내주기(클릭한 유저가 어떤 유저인지 토큰으로 확인가능?)
 export const setlikedRoom = createAsyncThunk(
   "POST/likedRoom",
@@ -69,7 +44,7 @@ export const setlikedRoom = createAsyncThunk(
   }
 );
 
-//마이페이지 정보 가져오기
+//마이페이지 정보 가져오기(안 씀)
 export const getMypageInfos = createAsyncThunk(
   "GET/getMypageInfos",
   async () => {
@@ -89,12 +64,8 @@ export const getMypageInfos = createAsyncThunk(
 const roomSlice = createSlice({
   name: "room",
   initialState: {
-    category: "전체",
-    roomList: [],
-    // enteredRooms: [],
-    // hostingRooms: [],
-    // likedRooms: [],
-    searchRooms: [],
+    roomist: [],
+    searLchRooms: [],
     modalState: false,
     isLoading: false,
     searchWord: "",
@@ -102,9 +73,6 @@ const roomSlice = createSlice({
     myPageList: [],
   },
   reducers: {
-    setCategoryState(state, action) {
-      state.category = action.payload;
-    },
     setRoomList(state, action) {
       state.roomList = action.payload;
     },
@@ -133,9 +101,6 @@ const roomSlice = createSlice({
     [getRoomListByCategory.rejected]: (state, action) => {
       console.log(action.payload); //e.g. Net work error
       state.isLoading = false;
-    },
-    [getListEx.rejected]: (state, action) => {
-      state.isLoading = true;
     },
     [getMypageInfos.pending]: (state, action) => {
       state.isLoading = true;
