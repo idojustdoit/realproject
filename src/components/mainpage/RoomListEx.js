@@ -112,15 +112,22 @@ const RoomList = () => {
   const [category, setCategory] = useState("전체");
 
   useEffect(() => {
-    setIsLoading(true);
+    let initialPage = 1;
+
     let body = {
-      page: page,
+      page: initialPage,
       perPage: LIMIT,
       category: category,
       loadMore: false,
     };
     getRoomListByCategory(body);
     setIsLoading(false);
+    setPage(initialPage);
+
+    console.log(page);
+    return () => {
+      setRoomList([]);
+    };
   }, [category]);
 
   //메인에서 로드되는 메인 리스트 axios -> 어차피 카테고리에 "전체"로 로드하면 되니까 안써도 됨
@@ -154,7 +161,7 @@ const RoomList = () => {
       .then((res) => {
         if (res.data.result) {
           console.log(res.data.roomList);
-          if (body.loadMore && res.data.roomList !== []) {
+          if (body.loadMore) {
             //더보기 버튼 클릭시
             setRoomList([...roomList, ...res.data?.roomList]);
           } else {
@@ -243,7 +250,7 @@ const RoomList = () => {
                 {roomList.map((room) => {
                   return (
                     <Room
-                      key={room.roomId}
+                      key={room._id}
                       roomId={room.roomId}
                       imgUrl={room.imgUrl ? room.imgUrl : roomImg}
                       title={room.title}

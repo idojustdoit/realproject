@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 
 import Room from "../mainpage/Room";
 import SearchNotFound from "./SearchNotFound";
-import roomLogo from "../../shared/mainpage-assets/icon-room-logo.svg";
+import roomImg from "../../shared/mainpage-assets/basic-room-img.png";
 
 function SearchRoomList() {
   const location = useLocation();
@@ -32,7 +32,7 @@ function SearchRoomList() {
               <Room
                 key={room._id}
                 roomId={room.roomId}
-                imageUrl={room.imageUrl ? room.imageUrl : roomLogo}
+                imgUrl={room.imgUrl ? room.imgUrl : roomImg}
                 title={room.title}
                 content={room.content}
                 date={room?.date}

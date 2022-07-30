@@ -32,6 +32,7 @@ const Mypage = () => {
   const [likeRooms, setLikeRooms] = useState([]);
   const [email, setEmail] = useState("");
   const [nickname, setNickName] = useState("");
+  const [userImg, setuserImg] = useState("");
 
   const dispatch = useDispatch();
 
@@ -53,6 +54,7 @@ const Mypage = () => {
           setLikeRooms(res.data.myPage?.userLike);
           setEmail(res.data.myPage?.email);
           setNickName(res.data.myPage?.nickname);
+          setuserImg(res.data.myPage?.imgUrl);
         }
       })
       .catch((e) => console.log(e));
@@ -74,7 +76,7 @@ const Mypage = () => {
           <Cont>
             <UserCardCont>
               <UserCardTop>
-                <img alt="user" src={userAvatar} />
+                <img alt="user" src={userImg ? userImg : userAvatar} />
                 <FlexCont>
                   <UserInfo>
                     <div>
