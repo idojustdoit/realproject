@@ -35,7 +35,7 @@ function App() {
 
 const StyledApp = styled.div`
   width: 100%;
-  margin: 0 auto;
+  /* min-width: 1920px; 혹은 1440*/
   height: auto;
   display: flex;
   flex-direction: column;

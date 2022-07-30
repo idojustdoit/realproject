@@ -5,7 +5,7 @@ import { FaUser } from "react-icons/fa";
 import Portal from "../Portal";
 import Roomenter from "../Roomenter";
 
-function SmallRoom({ roomId, imageUrl, title, date, groupNum }) {
+function SmallRoom({ roomId, imgUrl, title, date, groupNum }) {
   function studyOutHandler() {}
 
   function joinRoomHandler() {}
@@ -16,7 +16,8 @@ function SmallRoom({ roomId, imageUrl, title, date, groupNum }) {
   };
   return (
     <RoomCont key={roomId}>
-      <RoomImgDiv imageUrl={imageUrl}>
+      {/* img태그는 자식요소를 가질 수 없어서 div에 prop값으로 넘겼음 */}
+      <RoomImgDiv imgUrl={imgUrl}>
         <TitleBox className="roomTitle-box">
           <RoomTitle>{title}</RoomTitle>
           <UserCountBox className="userCount-box">
@@ -61,9 +62,11 @@ const RoomImgDiv = styled.div`
   width: 100%;
   height: 224px;
   padding: 20px;
-  background: no-repeat center/30% url(${(props) => props.imageUrl});
-  background-color: #f6f6f6;
+  background: no-repeat center url(${(props) => props.imgUrl});
+  background-color: var(--egloo-gary);
+  background-size: cover; //img태그에서는 object-fit과 같은 역할
 `;
+
 const RoomButtonCont = styled.div`
   height: 92px;
   padding: 18px;
@@ -104,7 +107,6 @@ const UserCountBox = styled.div`
 
 const DueDate = styled.span`
   font-weight: 400;
-  color: #000;
   opacity: 0.5;
   font-size: 14px;
   line-height: 14px;
@@ -124,10 +126,10 @@ const WhiteBtn = styled.button`
   font-size: 20px;
   font-weight: 700;
   background-color: #fff;
-  border: 1px solid black;
+  border: 1px solid var(--blue-black);
 `;
 
 const BlackBtn = styled(WhiteBtn)`
-  background-color: black;
+  background-color: var(--blue-black);
   color: white;
 `;

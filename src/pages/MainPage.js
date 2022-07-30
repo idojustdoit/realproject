@@ -7,6 +7,7 @@ import "../styles/reset.css";
 import Header from "../components/Header";
 import SearchBanner from "../components/mainpage/SearchBanner";
 import RoomList from "../components/mainpage/RoomList";
+import RoomListEx from "../components/mainpage/RoomListEx";
 import Footer from "../components/Footer";
 
 function MainPage() {
@@ -16,7 +17,7 @@ function MainPage() {
         <Header />
         <SearchBanner />
         <RoomListSection>
-          <RoomList />
+          <RoomListEx />
         </RoomListSection>
         <Footer />
       </MainCont>
@@ -27,14 +28,15 @@ function MainPage() {
 export default MainPage;
 
 const MainCont = styled.div`
-  margin: 0 auto;
   width: 1920px;
   padding-top: 80px;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  color: var(--blue-black);
 `;
+
 const BasicSection = styled.section`
   width: 100%;
 `;

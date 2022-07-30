@@ -9,8 +9,9 @@ import fullHeart from "../../shared/mainpage-assets/icon-full-heart.svg";
 import emptyHeart from "../../shared/mainpage-assets/icon-empty-heart.svg";
 
 const Room = ({
+  key,
   roomId,
-  imageUrl,
+  imgUrl,
   title,
   content,
   date,
@@ -70,7 +71,7 @@ const Room = ({
 
   return (
     <RoomCont key={roomId}>
-      <RoomImg imageUrl={imageUrl} alt=""></RoomImg>
+      <RoomImg src={imgUrl} alt=""></RoomImg>
       <RoomCotentBox>
         <TopContent>
           <TitleBox className="roomTitle-box">
@@ -140,12 +141,12 @@ const RoomCont = styled.div`
   -webkit-box-shadow: var(--card-box-shadow);
   box-shadow: var(--card-box-shadow);
 `;
-const RoomImg = styled.div`
+const RoomImg = styled.img`
   width: 100%;
   height: 50%;
-  background: url(${(props) => props.imageUrl}) no-repeat center;
+  /* background: url(${(props) => props.imgUrl}) no-repeat center;*/
   object-fit: cover;
-  background-color: pink;
+  background-color: var(--egloo-gray);
 `;
 const RoomCotentBox = styled.div`
   height: 50%;
