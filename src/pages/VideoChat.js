@@ -17,7 +17,7 @@ import { TbVideo, TbVideoOff } from "react-icons/tb";
 import io from "socket.io-client";
 
 // const socket = io.connect("");
-// const socket = io.connect("https://www.e-gloo.link");
+const socket = io.connect("http://egloo.shop");
 // const socket = io.connect("http://localhost:3001");
 
 const socket = "롱 폴링 막기용"; // (2022 07 19에 임시로 만듦)

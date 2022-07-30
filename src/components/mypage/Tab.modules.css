@@ -10,26 +10,27 @@
 
 .bloc-tabs {
   display: flex;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.274);
+  border-bottom: 1px solid var(--blue-black);
 }
 .tabs {
   font-size: 20px;
   padding: 15px;
-  width: 11%;
+  width: 13%;
   cursor: pointer;
   box-sizing: content-box;
   position: relative;
   outline: none;
   background-color: white;
+  color: var(--blue-black);
 }
 .tabs:not(:last-child) {
-  /* border-right: 1px solid rgba(0, 0, 0, 0.274); */
+  /* border-right: 1px solid var(--blue-black); */
 }
 
 .active-tabs {
   font-size: 20px;
   background: white;
-  /* border-bottom: 3px solid black; */
+  /* border-bottom: 3px solid var(--blue-black); */
   font-weight: 700;
 }
 
@@ -42,7 +43,7 @@
   transform: translateX(-50%);
   width: calc(100% + 1px);
   height: 3px;
-  background: rgb(0, 0, 0);
+  background: var(--blue-black);
 }
 
 button {

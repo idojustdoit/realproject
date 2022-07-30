@@ -5,89 +5,91 @@ import {
   getRoomListByCategory,
   setCategoryState,
 } from "../../redux/modules/roomSlice";
-import { useLocation, useParams } from "react-router-dom";
-import styled from "styled-components";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+
+//컴포넌트
+import Spinner from "../Spinner";
 import Room from "./Room";
 
-import { Navigation, Pagination } from "swiper";
+//CSS, 이미지 관련
+import styled from "styled-components";
+import { Navigation, Pagination, Scrollbar } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "../../styles/swiper.css";
 import "./RoomList.modules.css";
 
-import roomLogo from "../../shared/mainpage-assets/icon-room-logo.svg";
+import roomImg from "../../shared/mainpage-assets/basic-room-img.png";
 
-import cate0 from "../../shared/category-assets/icon-cate-0.svg";
-import cate1 from "../../shared/category-assets/icon-cate-1.svg";
-import cate2 from "../../shared/category-assets/icon-cate-2.svg";
-import cate3 from "../../shared/category-assets/icon-cate-3.svg";
-import cate4 from "../../shared/category-assets/icon-cate-4.svg";
-import cate5 from "../../shared/category-assets/icon-cate-5.svg";
-import cate6 from "../../shared/category-assets/icon-cate-6.svg";
-import cate7 from "../../shared/category-assets/icon-cate-7.svg";
-import cate8 from "../../shared/category-assets/icon-cate-8.svg";
-import cate9 from "../../shared/category-assets/icon-cate-9.svg";
+import all from "../../shared/category-assets/icon-cate-all.svg";
+import certi from "../../shared/category-assets/icon-cate-certi.svg";
+import univ from "../../shared/category-assets/icon-cate-univ.svg";
+import book from "../../shared/category-assets/icon-cate-book.svg";
+import myself from "../../shared/category-assets/icon-cate-myself.svg";
+import hobby from "../../shared/category-assets/icon-cate-hobby.svg";
+import lang from "../../shared/category-assets/icon-cate-lang.svg";
+import coding from "../../shared/category-assets/icon-cate-coding.svg";
+import offi from "../../shared/category-assets/icon-cate-offi.svg";
+import free from "../../shared/category-assets/icon-cate-free.svg";
 
 const CATEGORY_LIST = [
   {
     num: 0,
     name: "전체",
-    imageUrl: cate0,
+    imageUrl: all,
   },
   {
     num: 1,
     name: "자격증",
-    imageUrl: cate1,
+    imageUrl: certi,
   },
   {
     num: 2,
     name: "대입",
-    imageUrl: cate2,
+    imageUrl: univ,
   },
   {
     num: 3,
     name: "독서",
-    imageUrl: cate3,
+    imageUrl: book,
   },
   {
     num: 4,
     name: "자기계발",
-    imageUrl: cate4,
+    imageUrl: myself,
   },
 
   {
     num: 5,
     name: "취미",
-    imageUrl: cate5,
+    imageUrl: hobby,
   },
   {
     num: 6,
     name: "어학",
-    imageUrl: cate6,
+    imageUrl: lang,
   },
   {
     num: 7,
     name: "코딩",
-    imageUrl: cate7,
+    imageUrl: coding,
   },
   {
     num: 8,
     name: "공무원",
-    imageUrl: cate8,
+    imageUrl: offi,
   },
   {
     num: 9,
     name: "자유주제",
-    imageUrl: cate9,
+    imageUrl: free,
   },
 ];
 
 const RoomList = () => {
   const dispatch = useDispatch();
-
-  //받아온 메인 룸 리스트
 
   console.log("😎룸리스트 렌더링..!");
   const list = useSelector((state) => state.room.roomList);
@@ -99,6 +101,7 @@ const RoomList = () => {
   const [isActive, setIsActive] = useState(null);
   //초기에는 모든 이미지가 컬러인 상태로 보여야해서 추가한 state
   const [isClicked, setIsClicked] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(getMainList());
@@ -109,11 +112,8 @@ const RoomList = () => {
   }, [category]);
 
   function categoryClickHandler(e, clickedCategory) {
-    //카테고리를 클릭하면 map을 돌리는 visible의 값을 기본값인 6으로 초기화시킨다.
-    //이후, 카테고리를 클릭한 카테고리값으로 변경해준다.
     e.preventDefault();
-    // setIsActive((prevState) => e.target.value);
-    setVisible(6);
+    // setIsActive((prevState) => e.target.value)
     setCategory(clickedCategory);
   }
 
@@ -122,10 +122,11 @@ const RoomList = () => {
       <Container>
         <TitleH2>카테고리</TitleH2>
         <Swiper
-          modules={[Navigation]}
+          modules={[Navigation, Scrollbar]}
           spaceBetween={10}
           slidesPerView={8}
           navigation
+          scrollbar={{ draggable: false }}
           onClick={(swiper) => {
             setIsActive((prev) => swiper.clickedIndex);
             setIsClicked(true);
@@ -171,7 +172,7 @@ const RoomList = () => {
                     <Room
                       key={room._id}
                       roomId={room.roomId}
-                      imageUrl={room.imageUrl ? room.imageUrl : roomLogo}
+                      imageUrl={room.imgUrl ? room.imgUrl : roomImg}
                       title={room.title}
                       content={room.content}
                       date={room?.date}
@@ -185,10 +186,10 @@ const RoomList = () => {
               </RoomListCont>
             </>
           ) : (
-            <div>게시물이 없습니다.</div>
+            <Div>해당 카테고리의 첫번째 주인공이 되어주세요!🥳</Div>
           )
         ) : (
-          <div> 로딩 스피너 자리 </div>
+          <Spinner />
         )}
         {/* 만약 현재보고있는 room의 수가 게시물의 길이보다 같거나 크다면 showmore
         버튼을 숨긴다. */}
@@ -196,9 +197,11 @@ const RoomList = () => {
           <div></div>
         ) : ( */}
         <ButtonBox>
-          <Btn onClick={() => dispatch(getRoomListByCategory(category))}>
-            Load more
-          </Btn>
+          <LoadMoreBtn
+            onClick={() => dispatch(getRoomListByCategory(category))}
+          >
+            더보기
+          </LoadMoreBtn>
         </ButtonBox>
         {/* )} */}
       </div>
@@ -209,9 +212,9 @@ const RoomList = () => {
 export default RoomList;
 
 const Container = styled.section`
-  min-width: 1920px;
+  min-width: 1440px;
   min-height: 390px;
-  padding: 60px 300px 60px;
+  margin: 60px 250px 60px;
   background-color: #eff3f6;
   //margin-bottom은 mainpage의 section에서 적용했던 것
 `;
@@ -271,13 +274,37 @@ const ButtonBox = styled.div`
   align-items: center;
   justify-content: center;
 `;
-const Btn = styled.button`
-  width: 200px;
-  height: 60px;
-  border-radius: 4px;
-  font-size: 20px;
-  font-weight: 700;
-  background-color: #fff;
+const LoadMoreBtn = styled.button`
+  /* display: flex;
+  flex-basis: 90%;
+  align-items: center; */
+  /* color: rgba(0, 0, 0, 0.35); */
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 20px;
+  background-color: inherit;
+  display: inline-block;
+  padding: 0.5em 3em;
+  border: 2px solid rgba(0, 0, 0, 0.35);
+  border-radius: 5px;
+  transition: 0.2s;
+
+  &:hover {
+    color: white;
+    background-color: #2e70e0;
+    border: 2px solid #2e70e0;
+  }
+
+  /* &::before,
+  &::after {
+    content: "";
+    flex-grow: 1;
+    background: rgba(0, 0, 0, 0.35);
+    height: 1px;
+    font-size: 0px;
+    line-height: 0px;
+    margin: 0px 16px;
+  } */
 `;
 const Div = styled.div`
   font-size: 20px;

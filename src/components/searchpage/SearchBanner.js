@@ -2,40 +2,55 @@ import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
-import { setSearchWord, getSearchRooms } from "../../redux/modules/roomSlice";
-import { validateWord } from "../../shared/reg";
+import { setWord, getSearchRooms } from "../../redux/modules/searchSlice";
 
 import { ReactComponent as SearchIcon } from "../../shared/mainpage-assets/search_icon.svg";
 
 function SearchBanner() {
-  useEffect(() => {
-    getSearchRooms(initialWord);
-  }, []);
-  //맨 처음 메인에서 전달해준 keyword
-  let initialWord = useSelector((state) => state.room.initialWord);
-  console.log(initialWord);
+  const [searchParams, setSearchParams] = useSearchParams();
+  let query = searchParams.get("q");
   const dispatch = useDispatch();
-  const word = useRef();
-  //검색된 결과인 방들을 searchResults로 가져온다.
-  const list = useSelector((state) => state.room?.searchRooms);
-  console.log(list);
-  // const [list, setList] = useState(InitialSearchList ? InitialSearchList : []);
-  const isLoading = useSelector((state) => state.room.isLoading);
+  // const navigate = useNavigate();
 
-  const [searchParams] = useSearchParams();
-  // console.log(searchParams);
-  // const detail = searchParams.get("detail") === "true";
+  console.log("렌더링?");
+  function searchQuery(q) {
+    dispatch(getSearchRooms(q));
+    dispatch(setWord(q));
+  }
+  useEffect(() => {
+    searchQuery(query);
+  }, [query]);
+
+  //맨 처음 메인에서 전달해준 keyword
+  let word = useSelector((state) => state.search.word);
+
+  const inputWord = useRef();
+  const isLoading = useSelector((state) => state.search.isLoading);
 
   function search(e) {
     e.preventDefault();
     //단어를 테스트해서 clearWord에 결과값을 넣어줌
-    let clearWord = validateWord(word.current.value);
-    //리덕스있는 word state를 변경하고 해당 검색어로 리스트를 불러오는 함수 실행
-    dispatch(setSearchWord(clearWord));
-    dispatch(getSearchRooms(clearWord));
-    //빈 값으로 재세팅
-    word.current.value = "";
+
+    if (inputWord.current.value !== "") {
+      let clearWord = inputWord.current.value.trim();
+      if (clearWord !== undefined && typeof clearWord == "string") {
+        // dispatch(setWord(clearWord));
+        // dispatch(getSearchRooms(clearWord));
+        setSearchParams({ q: `${clearWord}` });
+      } else {
+        alert("키워드를 정확히 입력해주세요.");
+        return;
+      }
+      inputWord.current.value = "";
+    } else {
+      alert("검색어를 입력해주세요.");
+      return;
+    }
   }
+
+  // let clearWord = validateWord(inputWord.current.value.trim());
+
+  //리덕스있는 word state를 변경하고 해당 검색어로 리스트를 불러오는 함수 실행
 
   return (
     <SearchCont>
@@ -44,8 +59,8 @@ function SearchBanner() {
         <SearchInput
           type="text"
           placeholder="찾을 스터디명을 입력하세요."
-          ref={word}
-          defaultValue={initialWord ? initialWord : ""}
+          ref={inputWord}
+          defaultValue={word ? word : ""}
         ></SearchInput>
         <SearchBtn type="submit">
           <SearchIcon />
@@ -59,12 +74,12 @@ export default SearchBanner;
 
 const SearchCont = styled.div`
   width: 100%;
-  height: 500px;
+  height: 270px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: gray;
+  background: #eff3f6;
   background-position: center;
   /* background-size: cover; */
   background-size: 100% auto;
@@ -74,14 +89,13 @@ const SearchBox = styled.form`
   width: 25%;
   display: flex;
   overflow: hidden;
-  margin-bottom: 120px;
 `;
 const SearchTitle = styled.h1`
   font-size: 30px;
   font-weight: 700;
   margin: 0px 20px 20px 20px;
   line-height: 42px;
-  color: white;
+  color: black;
 `;
 
 const SearchBtn = styled.button`
@@ -91,7 +105,7 @@ const SearchBtn = styled.button`
   border-left: none;
   background: #fff;
   color: black;
-  /* border-radius: 0 4px 4px 0; */
+  border-radius: 0 4px 4px 0;
   cursor: pointer;
   font-size: 28px;
   display: flex;
@@ -105,7 +119,7 @@ const SearchInput = styled.input`
   border-right: none;
   padding: 5px 10px;
   height: 40px;
-  /* border-radius: 4px 0 0 4px; */
+  border-radius: 4px 0 0 4px;
   /* outline: none; */
   color: #40407a;
 `;

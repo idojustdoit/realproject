@@ -1,18 +1,17 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
 import "./Tab.modules.css";
-import SmallRoomSlider from "./SmallRoomSlider";
+import AttendRooms from "./AttendRooms";
+import HostRooms from "./HostRooms";
+import LikeRooms from "./LikeRooms";
+import Spinner from "../Spinner";
 
-function Tab() {
+function Tab({ attendRooms, hostRooms, likeRooms, isLoading }) {
   const [toggleState, setToggleState] = useState(1);
 
   const toggleTab = (index) => {
     setToggleState(index);
   };
 
-  const enteredRooms = useSelector((state) => state.room?.enteredRooms);
-  const hostingRooms = useSelector((state) => state.room?.hostingRooms);
-  const likedRooms = useSelector((state) => state.room?.likedRooms);
   return (
     <div className="container">
       <div className="bloc-tabs">
@@ -37,23 +36,35 @@ function Tab() {
       </div>
 
       <div className="content-tabs">
-        <div
-          className={toggleState === 1 ? "content  active-content" : "content"}
-        >
-          <SmallRoomSlider enterdRooms={enteredRooms} />
-        </div>
+        {!isLoading ? (
+          <>
+            <div
+              className={
+                toggleState === 1 ? "content  active-content" : "content"
+              }
+            >
+              <AttendRooms attendRooms={attendRooms} />
+            </div>
 
-        <div
-          className={toggleState === 2 ? "content  active-content" : "content"}
-        >
-          <SmallRoomSlider hostingRooms={hostingRooms} />
-        </div>
+            <div
+              className={
+                toggleState === 2 ? "content  active-content" : "content"
+              }
+            >
+              <HostRooms hostRooms={hostRooms} />
+            </div>
 
-        <div
-          className={toggleState === 3 ? "content  active-content" : "content"}
-        >
-          <SmallRoomSlider likedRooms={likedRooms} />
-        </div>
+            <div
+              className={
+                toggleState === 3 ? "content  active-content" : "content"
+              }
+            >
+              <LikeRooms likeRooms={likeRooms} />
+            </div>
+          </>
+        ) : (
+          <Spinner />
+        )}
       </div>
     </div>
   );
