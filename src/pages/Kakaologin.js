@@ -6,13 +6,14 @@ function Kakaologin() {
   const API_URL = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
   useEffect(() => {
-    let params = new URL(document.location.toString()).searchParams;
+    const href = window.location.href;
+    let params = new URL(href).searchParams;
     let code = params.get("code"); // 인가코드 받는 부분
     let grant_type = "authorization_code";
     let client_id = process.env.REACT_APP_KAKAO_CLIENT_ID;
     axios
       .post(
-        `https://kauth.kakao.com/oauth/token?grant_type=${grant_type}&client_id=${client_id}&redirect_uri=http://localhost:3000/Kakaologin&code=${code}`,
+        `https://kauth.kakao.com/oauth/token?grant_type=${grant_type}&client_id=${client_id}&redirect_uri=http://localhost:3000/kakaotalk&code=${code}`,
         {
           headers: {
             "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
@@ -24,7 +25,7 @@ function Kakaologin() {
         const access_token = res.data.access_token;
         const refresh_token = res.data.refresh_token;
         axios
-          .post(`${API_URL}/api/kakao/login`, {
+          .post("http://3.37.87.171/api/kakao/login", {
             access_token,
             refresh_token,
           })
@@ -36,7 +37,7 @@ function Kakaologin() {
             const user_url = res.data.kakao_account.profile.profile_image_url;
             axios
               .post(
-                `${API_URL}/api/kakao/newuser`,
+                "http://3.37.87.171/api/kakao/newuser",
                 {
                   user_id: user_id,
                   user_email: user_email,
@@ -45,7 +46,6 @@ function Kakaologin() {
                 },
                 {
                   "content-type": "application/json",
-                  withCredentials: true,
                 }
               )
               .then((res) => {
@@ -61,7 +61,7 @@ function Kakaologin() {
           });
       });
   }, []);
-  return <div> Kakaologin</div>;
+  return null;
 }
 
 export default Kakaologin;

@@ -20,7 +20,7 @@ import { TbVideo, TbVideoOff } from "react-icons/tb";
 //socket
 import io from "socket.io-client";
 
-const socket = io.connect("http://localhost:3001");
+const socket = io.connect("https://egloo.shop");
 
 const VideoPage = () => {
   const navigate = useNavigate();
@@ -31,7 +31,7 @@ const VideoPage = () => {
   const userVideo = useRef();
   const peersRef = useRef([]);
 
-    // //camera, audio device select
+  // //camera, audio device select
   // const [cameraDevice, setCameraDevice] = useState([]);
   // const [audioDevice, setAudioDevice] = useState([]);
 
@@ -138,27 +138,27 @@ const VideoPage = () => {
         });
       });
 
-      socketRef.current.on("user left",  payload => {
-        alert(payload.userInfo.nickname + "님이 나갔대요(수근수근)")
-        console.log("user left")
-        const peerObj = peersRef.current.find(
-          (p) => p.peerID === payload.socketId
-        );
-        if (peerObj) {
-          peerObj.peer.on("close", () => {
-            //peer연결 끊기
-            peerObj.peer.destroy();
-          });
-        }
-        const newPeers = peersRef.current.filter(
-          (p) => p.peerID !== payload.socketId
-        );
-        peersRef.current = newPeers;
-  
-        setPeers((oldPeers) =>
-          oldPeers.filter((p) => p.peerID !== payload.socketId)
-        );
-      })
+    socketRef.current.on("user left", (payload) => {
+      alert(payload.userInfo.nickname + "님이 나갔대요(수근수근)");
+      console.log("user left");
+      const peerObj = peersRef.current.find(
+        (p) => p.peerID === payload.socketId
+      );
+      if (peerObj) {
+        peerObj.peer.on("close", () => {
+          //peer연결 끊기
+          peerObj.peer.destroy();
+        });
+      }
+      const newPeers = peersRef.current.filter(
+        (p) => p.peerID !== payload.socketId
+      );
+      peersRef.current = newPeers;
+
+      setPeers((oldPeers) =>
+        oldPeers.filter((p) => p.peerID !== payload.socketId)
+      );
+    });
   }, [roomId, nickname]);
 
   function createPeer(userToSignal, callerID, stream) {
@@ -274,7 +274,6 @@ const VideoPage = () => {
             })}
           </select>
         </div> */}
-            
 
             <Btn onClick={sideBarHandler}>
               {openBar ? (
