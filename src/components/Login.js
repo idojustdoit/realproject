@@ -134,7 +134,7 @@ const Login = ({ onClose, SignOpen }) => {
                 marginBottom: "10px",
                 marginTop: "24px",
               }}
-              href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=dd3a0928c5ad15f5f25744ddd78e1b87&redirect_uri=http://localhost:3000/kakaotalk"
+              href={process.env.REACT_APP_KAKAOURL}
             >
               <img
                 alt=""
