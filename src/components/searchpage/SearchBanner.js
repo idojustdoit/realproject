@@ -93,7 +93,7 @@ const SearchBox = styled.form`
 const SearchTitle = styled.h1`
   font-size: 30px;
   font-weight: 700;
-  margin: 0px 20px 26px 20px;
+  margin: 0px 20px 20px 20px;
   line-height: 42px;
   color: black;
 `;

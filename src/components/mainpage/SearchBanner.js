@@ -53,6 +53,7 @@ export default SearchBanner;
 
 const SearchCont = styled.div`
   width: 100%;
+  /* min-width: 1920px; */
   height: 500px;
   display: flex;
   flex-direction: column;
@@ -60,8 +61,7 @@ const SearchCont = styled.div`
   align-items: center;
   background: url(${bgImage}) no-repeat;
   background-position: center;
-  /* background-size: cover; */
-  background-size: 100% auto;
+  background-size: 100% 100%;
 `;
 const SearchBox = styled.form`
   border-radius: 4px;

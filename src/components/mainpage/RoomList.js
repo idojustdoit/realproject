@@ -21,77 +21,75 @@ import "swiper/css/navigation";
 import "../../styles/swiper.css";
 import "./RoomList.modules.css";
 
-import roomLogo from "../../shared/mainpage-assets/icon-room-logo.svg";
+import roomImg from "../../shared/mainpage-assets/basic-room-img.png";
 
-import cate0 from "../../shared/category-assets/icon-cate-0.svg";
-import cate1 from "../../shared/category-assets/icon-cate-1.svg";
-import cate2 from "../../shared/category-assets/icon-cate-2.svg";
-import cate3 from "../../shared/category-assets/icon-cate-3.svg";
-import cate4 from "../../shared/category-assets/icon-cate-4.svg";
-import cate5 from "../../shared/category-assets/icon-cate-5.svg";
-import cate6 from "../../shared/category-assets/icon-cate-6.svg";
-import cate7 from "../../shared/category-assets/icon-cate-7.svg";
-import cate8 from "../../shared/category-assets/icon-cate-8.svg";
-import cate9 from "../../shared/category-assets/icon-cate-9.svg";
+import all from "../../shared/category-assets/icon-cate-all.svg";
+import certi from "../../shared/category-assets/icon-cate-certi.svg";
+import univ from "../../shared/category-assets/icon-cate-univ.svg";
+import book from "../../shared/category-assets/icon-cate-book.svg";
+import myself from "../../shared/category-assets/icon-cate-myself.svg";
+import hobby from "../../shared/category-assets/icon-cate-hobby.svg";
+import lang from "../../shared/category-assets/icon-cate-lang.svg";
+import coding from "../../shared/category-assets/icon-cate-coding.svg";
+import offi from "../../shared/category-assets/icon-cate-offi.svg";
+import free from "../../shared/category-assets/icon-cate-free.svg";
 
 const CATEGORY_LIST = [
   {
     num: 0,
     name: "전체",
-    imageUrl: cate0,
+    imageUrl: all,
   },
   {
     num: 1,
     name: "자격증",
-    imageUrl: cate1,
+    imageUrl: certi,
   },
   {
     num: 2,
     name: "대입",
-    imageUrl: cate2,
+    imageUrl: univ,
   },
   {
     num: 3,
     name: "독서",
-    imageUrl: cate3,
+    imageUrl: book,
   },
   {
     num: 4,
     name: "자기계발",
-    imageUrl: cate4,
+    imageUrl: myself,
   },
 
   {
     num: 5,
     name: "취미",
-    imageUrl: cate5,
+    imageUrl: hobby,
   },
   {
     num: 6,
     name: "어학",
-    imageUrl: cate6,
+    imageUrl: lang,
   },
   {
     num: 7,
     name: "코딩",
-    imageUrl: cate7,
+    imageUrl: coding,
   },
   {
     num: 8,
     name: "공무원",
-    imageUrl: cate8,
+    imageUrl: offi,
   },
   {
     num: 9,
     name: "자유주제",
-    imageUrl: cate9,
+    imageUrl: free,
   },
 ];
 
 const RoomList = () => {
   const dispatch = useDispatch();
-  const param = useParams();
-  //받아온 메인 룸 리스트
 
   console.log("😎룸리스트 렌더링..!");
   const list = useSelector((state) => state.room.roomList);
@@ -117,7 +115,6 @@ const RoomList = () => {
     e.preventDefault();
     // setIsActive((prevState) => e.target.value)
     setCategory(clickedCategory);
-    navigate(`/main/${clickedCategory}`);
   }
 
   return (
@@ -148,7 +145,11 @@ const RoomList = () => {
                 height: "200px",
               }}
               className={
-                isClicked ? (idx == isActive ? " -active" : " -not-active") : ""
+                isClicked
+                  ? idx === isActive
+                    ? " -active"
+                    : " -not-active"
+                  : ""
               }
               onClick={(e) => {
                 categoryClickHandler(e, cate.name);
@@ -171,7 +172,7 @@ const RoomList = () => {
                     <Room
                       key={room._id}
                       roomId={room.roomId}
-                      imageUrl={room.imageUrl ? room.imageUrl : roomLogo}
+                      imageUrl={room.imageUrl ? room.imageUrl : roomImg}
                       title={room.title}
                       content={room.content}
                       date={room?.date}
@@ -211,9 +212,9 @@ const RoomList = () => {
 export default RoomList;
 
 const Container = styled.section`
-  min-width: 1920px;
+  min-width: 1440px;
   min-height: 390px;
-  padding: 60px 300px 60px;
+  margin: 60px 250px 60px;
   background-color: #eff3f6;
   //margin-bottom은 mainpage의 section에서 적용했던 것
 `;

@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   getMainList,
   getRoomListByCategory,
-  setCategoryState,
   setRoomList,
 } from "../../redux/modules/roomSlice";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -22,70 +21,70 @@ import "swiper/css/navigation";
 import "../../styles/swiper.css";
 import "./RoomList.modules.css";
 
-import roomLogo from "../../shared/mainpage-assets/icon-room-logo.svg";
+import roomImg from "../../shared/mainpage-assets/basic-room-img.png";
 
-import cate0 from "../../shared/category-assets/icon-cate-0.svg";
-import cate1 from "../../shared/category-assets/icon-cate-1.svg";
-import cate2 from "../../shared/category-assets/icon-cate-2.svg";
-import cate3 from "../../shared/category-assets/icon-cate-3.svg";
-import cate4 from "../../shared/category-assets/icon-cate-4.svg";
-import cate5 from "../../shared/category-assets/icon-cate-5.svg";
-import cate6 from "../../shared/category-assets/icon-cate-6.svg";
-import cate7 from "../../shared/category-assets/icon-cate-7.svg";
-import cate8 from "../../shared/category-assets/icon-cate-8.svg";
-import cate9 from "../../shared/category-assets/icon-cate-9.svg";
+import all from "../../shared/category-assets/icon-cate-all.svg";
+import certi from "../../shared/category-assets/icon-cate-certi.svg";
+import univ from "../../shared/category-assets/icon-cate-univ.svg";
+import book from "../../shared/category-assets/icon-cate-book.svg";
+import myself from "../../shared/category-assets/icon-cate-myself.svg";
+import hobby from "../../shared/category-assets/icon-cate-hobby.svg";
+import lang from "../../shared/category-assets/icon-cate-lang.svg";
+import coding from "../../shared/category-assets/icon-cate-coding.svg";
+import offi from "../../shared/category-assets/icon-cate-offi.svg";
+import free from "../../shared/category-assets/icon-cate-free.svg";
 
 const CATEGORY_LIST = [
   {
     num: 0,
     name: "전체",
-    imageUrl: cate0,
+    imageUrl: all,
   },
   {
     num: 1,
     name: "자격증",
-    imageUrl: cate1,
+    imageUrl: certi,
   },
   {
     num: 2,
     name: "대입",
-    imageUrl: cate2,
+    imageUrl: univ,
   },
   {
     num: 3,
     name: "독서",
-    imageUrl: cate3,
+    imageUrl: book,
   },
   {
     num: 4,
     name: "자기계발",
-    imageUrl: cate4,
+    imageUrl: myself,
   },
 
   {
     num: 5,
     name: "취미",
-    imageUrl: cate5,
+    imageUrl: hobby,
   },
   {
     num: 6,
     name: "어학",
-    imageUrl: cate6,
+    imageUrl: lang,
   },
   {
     num: 7,
     name: "코딩",
-    imageUrl: cate7,
+    imageUrl: coding,
   },
   {
     num: 8,
     name: "공무원",
-    imageUrl: cate8,
+    imageUrl: offi,
   },
   {
     num: 9,
     name: "자유주제",
-    imageUrl: cate9,
+    imageUrl: free,
   },
 ];
 
@@ -95,81 +94,100 @@ const RoomList = () => {
 
   //받아온 메인 룸 리스트
   console.log("😎룸리스트 렌더링..!");
-  const roomList = useSelector((state) => state.room.roomList);
-  const isLoading = useSelector((state) => state.room.isLoading);
-
+  // const roomList = useSelector((state) => state.room.roomList);
+  const [isLoading, setIsLoading] = useState(false);
+  const [roomList, setRoomList] = useState([]);
   // const [rooms, setRooms] = useState([]);
-  const category = useSelector((state) => state.room.category);
   const [isActive, setIsActive] = useState(null);
   //초기에는 모든 이미지가 컬러인 상태로 보여야해서 추가한 state
   const [isClicked, setIsClicked] = useState(false);
 
-  const API_URL = "서버주소";
+  const API_URL = "http://3.37.87.171";
 
-  // const [rooms, setRooms] = useState([])
-  const [offset, setOffset] = useState(0);
-  const LIMIT = 6;
+  // const [ro`oms, setRooms] = useState([])
+  const LIMIT = 6; //axios요청시 6개씩
+  const [page, setPage] = useState(1);
   const [roomsLength, setRoomsLength] = useState(0);
+  const [loadMore, setLoadMore] = useState(false);
+  const [category, setCategory] = useState("전체");
 
   useEffect(() => {
+    setIsLoading(true);
     let body = {
-      offset: offset,
-      limit: LIMIT,
+      page: page,
+      perPage: LIMIT,
       category: category,
       loadMore: false,
     };
+    getRoomListByCategory(body);
+    setIsLoading(false);
+  }, [category]);
 
-    getRoomList(body);
-  }, []);
-  const getRoomList = (body) => {
-    axios.post(`${API_URL}/api/main`, body).then((res) => {
-      if (res.data.success) {
-        console.log(res.data.roomList);
-        if (body.loadMore) {
-          //더보기 버튼 클릭시
-          setRoomList([...roomList, ...res.data.roomList]);
+  //메인에서 로드되는 메인 리스트 axios -> 어차피 카테고리에 "전체"로 로드하면 되니까 안써도 됨
+  // const getRoomList = (body) => {
+  //   console.log(body.category);
+  //   axios
+  //     .get(`${API_URL}/api/main?page=${body.page}&perPage=${body.perPage}`)
+  //     .then((res) => {
+  //       if (res.data.result) {
+  //         console.log(res.data.roomList);
+  //         if (body.loadMore) {
+  //           //더보기 버튼 클릭시
+  //           setRoomList([...roomList, ...res.data?.roomList]);
+  //         } else {
+  //           setRoomList([...res.data?.roomList]);
+  //         }
+  //         setRoomsLength(res.data?.tagLength);
+  //       } else {
+  //         alert("메인 게시물을 가져오는데 실패했습니다.");
+  //       }
+  //     });
+  // };
+
+  //메인에서 로드되는 카테고리별 리스트 axios
+  const getRoomListByCategory = (body) => {
+    console.log(body.category);
+    axios
+      .get(
+        `${API_URL}/api/main/tag/${body.category}?page=${body.page}&perPage=${body.perPage}`
+      )
+      .then((res) => {
+        if (res.data.result) {
+          console.log(res.data.roomList);
+          if (body.loadMore && res.data.roomList !== []) {
+            //더보기 버튼 클릭시
+            setRoomList([...roomList, ...res.data?.roomList]);
+          } else {
+            setRoomList([...res.data?.roomList]);
+          }
+          setRoomsLength(res.data?.tagLength);
+          setIsLoading(false);
         } else {
-          setRoomList([...res.data.roomList]);
+          alert(`${category}게시물 로드 실패`);
         }
-        setRoomsLength(res.data.tagLength);
-      } else {
-        alert("게시물을 가져오는데 실패했음");
-      }
-    });
+      });
   };
 
   const loadMoreHandler = () => {
-    let newOffset = offset + LIMIT;
+    let addedPage = page + 1;
 
     let body = {
-      offset: offset,
-      limit: LIMIT,
+      page: addedPage,
+      perPage: LIMIT,
       category: category,
       loadMore: true,
     };
-    getRoomList(body);
-    setOffset(newOffset);
+    getRoomListByCategory(body);
+    setPage(addedPage);
+    setLoadMore(true);
   };
-
-  //😎페이지네이션
-  //limit : 한 페이지에 보여줄 데이터 수
-  //offset: 데이터가 시작하는 위치(index)
-  //category: 카테고리 명
-  //loadMore: 프론트에서 쓰려고 넣은 데이터 true, false
-
-  useEffect(() => {
-    dispatch(getMainList());
-  }, []);
-
-  useEffect(() => {
-    dispatch(getRoomListByCategory(category));
-  }, [category]);
 
   function categoryClickHandler(e, clickedCategory) {
     e.preventDefault();
     // setCategory(clickedCategory);
-    setCategoryState(clickedCategory);
-    setOffset(0);
+    setCategory(clickedCategory);
+    setLoadMore(false);
+    setPage(1);
   }
 
   return (
@@ -183,6 +201,7 @@ const RoomList = () => {
           navigation
           scrollbar={{ draggable: false }}
           onClick={(swiper) => {
+            console.log(swiper.clickedIndex);
             setIsActive((prev) => swiper.clickedIndex);
             setIsClicked(true);
           }}
@@ -225,15 +244,15 @@ const RoomList = () => {
                 {roomList.map((room) => {
                   return (
                     <Room
-                      key={room._id}
+                      key={room.roomId}
                       roomId={room.roomId}
-                      imageUrl={room.imageUrl ? room.imageUrl : roomLogo}
+                      imgUrl={room.imgUrl ? room.imgUrl : roomImg}
                       title={room.title}
                       content={room.content}
                       date={room?.date}
                       tagName={room?.tagName}
                       groupNum={room?.groupNum}
-                      //만약에 isLiked 가 없으면 false값을 내려준다.
+                      //만약에 서버의 isLiked 값이 없으면 false(기본)값을 내려준다.
                       isLiked={room.isLiked ? room.isLiked : false}
                     ></Room>
                   );
@@ -250,7 +269,13 @@ const RoomList = () => {
         버튼을 숨긴다. */}
         {roomsLength > roomList.length && (
           <ButtonBox>
-            <LoadMoreBtn onClick={() => loadMoreHandler()}>더보기</LoadMoreBtn>
+            <LoadMoreBtn
+              onClick={() => {
+                loadMoreHandler();
+              }}
+            >
+              더보기
+            </LoadMoreBtn>
           </ButtonBox>
         )}
       </div>
@@ -261,24 +286,11 @@ const RoomList = () => {
 export default RoomList;
 
 const Container = styled.section`
-  min-width: 1920px;
+  width: 100%;
   min-height: 390px;
-  padding: 60px 300px 60px;
+  padding: 60px 250px 60px;
   background-color: #eff3f6;
   //margin-bottom은 mainpage의 section에서 적용했던 것
-`;
-
-const OneCategoryBox = styled.div`
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  justify-content: center;
-  border: none;
-  height: 200px;
-
-  &:hover {
-    cursor: pointer;
-  }
 `;
 
 const Img = styled.img`
@@ -316,12 +328,12 @@ const RoomListCont = styled.div`
   grid-template-columns: repeat(auto-fill, minmax(424px, 1fr));
   grid-column-gap: 24px;
   grid-row-gap: 30px;
-  margin-bottom: 100px;
 `;
 const ButtonBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 60px;
 `;
 const LoadMoreBtn = styled.button`
   /* display: flex;
@@ -330,7 +342,6 @@ const LoadMoreBtn = styled.button`
   /* color: rgba(0, 0, 0, 0.35); */
   font-size: 1.2rem;
   font-weight: 600;
-  margin: 20px;
   background-color: inherit;
   display: inline-block;
   padding: 0.5em 3em;
