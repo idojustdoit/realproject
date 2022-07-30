@@ -155,10 +155,6 @@ const Createroom = ({ onClose }) => {
         });
       });
   };
-
-  console.log(dateRange, endDate);
-  const a = moment(dateRange[1]).format("YYYY-MM-DD");
-  console.log(a);
   return (
     <Container>
       <Background
