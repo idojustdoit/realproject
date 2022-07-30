@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import axios from "axios";
 import kakao from "../shared/login-assets/kakao.png";
-import GoogleButton from "../pages/GoogleButton";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { useDispatch } from "react-redux";
@@ -12,7 +11,7 @@ const Login = ({ onClose, SignOpen }) => {
   const API_URL = process.env.REACT_APP_API_URL;
 
   const dispatch = useDispatch();
-  const outZone_ref = React.useRef(null); // 모달창이외에부분 지정
+  const outZone_ref = React.useRef(null); // 모달창이 외에 부분 지정
   const [email, setemail] = React.useState(null); //email 아이디
   const [password, setPwd] = React.useState(null); // 비밀번호
   const MySwal = withReactContent(Swal); //통신 확인패키지
@@ -149,8 +148,6 @@ const Login = ({ onClose, SignOpen }) => {
               />
             </a>
             <br />
-
-            <GoogleButton />
           </LoginBtn>
         </ModalBlock>
       </Background>

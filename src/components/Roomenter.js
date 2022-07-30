@@ -6,8 +6,7 @@ import { useEffect } from "react";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
-const Login = ({ onClose, roomId, lock }) => {
-  console.log(roomId);
+const Login = ({ onClose, roomId }) => {
   const API_URL = process.env.REACT_APP_API_URL;
   const MySwal = withReactContent(Swal);
   const navigate = useNavigate();
@@ -17,28 +16,28 @@ const Login = ({ onClose, roomId, lock }) => {
   const [content, setContent] = React.useState("");
   const [profile, setProfile] = React.useState([]);
   const [nickname, setNickname] = React.useState([]);
-  const [Password, setPassword] = React.useState(0);
+  const [password, setPassword] = React.useState(0);
   const [personinfo, setPersoninfo] = React.useState([]);
+  const [lock, setLock] = React.useState("");
 
   //유저가 선택한 방에대한 정보
   const roomData = () => {
     const token = localStorage.getItem("accessToken");
-    const nickname = localStorage.getItem("nickname");
-
     axios({
-      method: "POST",
-      url: "url",
-      baseURL: API_URL,
+      method: "GET",
+      url: `/api/room/info/${roomId}`,
+      baseURL: "http://15.164.164.17:3000",
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
       .then((response) => {
         console.log(response);
-        setTitle(response.data.title);
-        setContent(response.data.content);
+        setTitle(response.data.checkRoom.title);
+        setContent(response.data.checkRoom.content);
         // setProfile(response.data.profile);
-        // setNickname(response.data.nickname);
+        setNickname(response.data.checkRoom.attendName);
+        setLock(response.data.checkRoom.lock);
         // setPersoninfo(response.data.personinfo);
       })
       .catch((error) => {
@@ -47,41 +46,45 @@ const Login = ({ onClose, roomId, lock }) => {
   };
   useEffect(() => {
     roomData();
-  });
+  }, []);
 
   // 비밀방 입장 할때
-  // const secretRoom = () => {
-  //   const token = localStorage.getItem("accessToken");
-  //   axios({
-  //     method: "POST",
-  //     url: "url",
-  //     baseURL: API_URL,
-  //     data: {
-  //       password: password,
-  //     },
-  //     headers: {
-  //       Authorization: `Bearer ${token}`,
-  //     },
-  //   })
-  //     .then((response) => {
-  //       console.log(response);
-  //       navigate(`/privacy-room/${roomId}`);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //       MySwal.fire({
-  //         title: "Error!",
-  //         text: "방 입장에 실패하였습니다.",
-  //         icon: "error",
-  //         confirmButtonText: "확인",
-  //       });
-  //     });
-  // };
+  const secretRoom = () => {
+    const token = localStorage.getItem("accessToken");
+    const userId = localStorage.getItem("userId");
+    axios({
+      method: "POST",
+      url: `api/room/private-room/${roomId}/${userId}`,
+      baseURL: API_URL,
+      data: {
+        password: password,
+      },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        console.log(response);
+        navigate(`/public-room/${roomId}`);
+      })
+      .catch((error) => {
+        console.log(error);
+        MySwal.fire({
+          title: "Error!",
+          text: "방 입장에 실패하였습니다.",
+          icon: "error",
+          confirmButtonText: "확인",
+        });
+      });
+  };
 
-  // const pwhandler = (e) => {
-  //   setPassword(e.target.value);
-  // };
-
+  const pwhandler = (e) => {
+    setPassword(e.target.value);
+  };
+  const RoomenterHandler = () => {
+    navigate(`/public-room/${roomId}`);
+  };
+  console.log(nickname);
   return (
     <Container>
       <Background
@@ -93,7 +96,7 @@ const Login = ({ onClose, roomId, lock }) => {
         }}
       >
         <ModalBlock>
-          {/* <Title>{title}</Title>
+          <Title>{title}</Title>
           <Line />
           <Label>
             <div style={{ display: "flex", justifyContent: "center" }}>
@@ -102,14 +105,14 @@ const Login = ({ onClose, roomId, lock }) => {
             </div>
           </Label>
           <Label>
-            {}
             <div
               style={{
                 display: "flex",
                 justifyContent: "center",
               }}
-            ></div>
-            <img
+            >
+              <Chat1 style={{ marginRight: "40px" }}> 참여인원</Chat1>
+              {/* <img
               alt=""
               src={list.iconUrl}
               style={{
@@ -117,15 +120,34 @@ const Login = ({ onClose, roomId, lock }) => {
                 height: "50px",
                 borderRadius: "10px",
               }}
-            />
-            <div style={{ textAlign: "left", margin: "0 10px" }}>
-              <div>{list.nickname}</div>
+            /> */}
+              {nickname.length == 0 ? (
+                <Todo>
+                  <div className="person">현재 참여 인원이 없습니다.</div>
+                </Todo>
+              ) : (
+                <Todo>
+                  {nickname.map(function (nickname) {
+                    return (
+                      <div className="list">
+                        {" "}
+                        <div>{nickname}</div>
+                      </div>
+                    );
+                  })}
+                </Todo>
+              )}
             </div>
           </Label>
+
           {lock ? (
-            <div>
-              <span>비밀번호</span>
-              <Input type="password" onChange={pwhandler} />
+            <>
+              <Label>
+                <div>
+                  <Chat3>비밀번호</Chat3>
+                  <Input type="password" onChange={pwhandler} />
+                </div>
+              </Label>
               <EnterBtn>
                 <Btn1
                   onClick={() => {
@@ -135,9 +157,9 @@ const Login = ({ onClose, roomId, lock }) => {
                   취소
                 </Btn1>
 
-                <Btn2 >비밀방 입장하기</Btn2>
+                <Btn2 onClick={secretRoom}>비밀방 입장하기</Btn2>
               </EnterBtn>
-            </div>
+            </>
           ) : (
             <EnterBtn>
               <Btn1
@@ -150,9 +172,9 @@ const Login = ({ onClose, roomId, lock }) => {
 
               <Btn2 onClick={RoomenterHandler}>공개방 입장하기</Btn2>
             </EnterBtn>
-          )} */}
+          )}
 
-          <Title> title</Title>
+          {/* <Title> title</Title>
           <Line />
           <Label>
             <div style={{ display: "flex", justifyContent: "center" }}>
@@ -240,14 +262,9 @@ const Login = ({ onClose, roomId, lock }) => {
             >
               취소
             </Btn1>
-            <Link
-              to={{
-                pathname: `/public-room/${roomId}`,
-              }}
-            >
-              <Btn2>입장하기</Btn2>
-            </Link>
-          </EnterBtn>
+
+            <Btn2 onClick={RoomenterHandler}>입장하기</Btn2> */}
+          {/* </EnterBtn> */}
         </ModalBlock>
       </Background>
     </Container>
@@ -336,7 +353,7 @@ const Input = styled.input`
   border: 1px solid var(--saf-0);
   transition: border 80ms ease-out, box-shadow 80ms ease-out;
   box-sizing: border-box;
-  width: 280px;
+  width: 309px;
   height: 36px;
   color: rgba(var(--sk_primary_foreground, 29, 28, 29), 1);
   background-color: rgba(var(--sk_primary_background, 255, 255, 255), 1);
@@ -347,37 +364,28 @@ const Input = styled.input`
 `;
 const Chat1 = styled.div`
   margin-right: 25px;
-  width: 84px;
   height: 19px;
   font-size: 18px;
+  padding: 5px;
+`;
+const Chat3 = styled.span`
+  margin-right: 40px;
+  height: 19px;
+  font-size: 18px;
+  padding: 5px;
 `;
 
 const Todo = styled.div`
-  background-color: gray;
+  background-color: white;
+  color: black;
+  border: 1px solid #dddddd;
+  border-radius: 4px;
   width: 309px;
+  padding: 5px;
   height: 36px;
-  font-size: 20px;
+  font-size: 18px;
 `;
 
-const People = styled.div`
-  padding-top: 5px;
-  padding-left: 10px;
-  display: flex;
-  align-content: center;
-  text-align: center;
-  background-color: gray;
-  width: 300px;
-  height: 36px;
-  font-size: 20px;
-`;
-
-const Chat2 = styled.div`
-  display: flex;
-  width: 80px;
-  height: 22px;
-  margin-right: 27px;
-  font-weight: bold;
-`;
 const EnterBtn = styled.div`
   margin-top: 20px;
 `;

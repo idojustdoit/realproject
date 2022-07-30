@@ -80,16 +80,16 @@ const VideoPage = () => {
   };
 
   const exitRoomHandler = () => {
-    console.log(userVideo.current.srcObject)
-    alert("진짜 나감?")
+    console.log(userVideo.current.srcObject);
+    alert("진짜 나감?");
     userVideo.current.srcObject.getVideoTracks().forEach((track) => {
       track.stop();
     });
     userVideo.current.srcObject.getAudioTracks().forEach((track) => {
       track.stop();
     });
-  navigate("/");
-  window.location.reload();
+    navigate("/");
+    window.location.reload();
   };
 
   useEffect(() => {
@@ -116,7 +116,7 @@ const VideoPage = () => {
               peer,
             };
             peersRef.current.push(peerObj);
-            setPeers((users) =>[...users, peerObj]);
+            setPeers((users) => [...users, peerObj]);
           });
         });
 
@@ -160,8 +160,6 @@ const VideoPage = () => {
         );
       })
   }, [roomId, nickname]);
-
-
 
   function createPeer(userToSignal, callerID, stream) {
     const peer = new Peer({
@@ -211,7 +209,11 @@ const VideoPage = () => {
             alignItems: "center",
           }}
         >
-          <VideoHeader exitRoomHandler={exitRoomHandler} openBar={openBar} roomId={roomId} />
+          <VideoHeader
+            exitRoomHandler={exitRoomHandler}
+            openBar={openBar}
+            roomId={roomId}
+          />
           <Timer roomId={roomId} />
 
           <div
@@ -324,29 +326,28 @@ const Video = (props) => {
   return <StyledVideo playsInline autoPlay ref={ref} />;
 };
 const VideoInfo = (props) => {
-  return(
-    
-  <UnderPlusBar
-    style={{
-      width: "100%",
-      height: "17%",
-      backgroundColor: "#333333",
-    }}
-  >
-    <div>
-      <div className="user_img"></div>
-      <span className="user_name">{props.nickname}</span>
-    </div>
-    <span>00:00:00</span>
-    <DeviceSelctor className="video_control_btn">
-      <div className="audio">
-        {props.audioState ? <BsFillMicMuteFill /> : <AiFillAudio />}
+  return (
+    <UnderPlusBar
+      style={{
+        width: "100%",
+        height: "17%",
+        backgroundColor: "#333333",
+      }}
+    >
+      <div>
+        <div className="user_img"></div>
+        <span className="user_name">{props.nickname}</span>
       </div>
-      <div className="camera">
-        {props.videoState ? <TbVideoOff /> : <TbVideo />}
-      </div>
-    </DeviceSelctor>
-  </UnderPlusBar>
+      <span>00:00:00</span>
+      <DeviceSelctor className="video_control_btn">
+        <div className="audio">
+          {props.audioState ? <BsFillMicMuteFill /> : <AiFillAudio />}
+        </div>
+        <div className="camera">
+          {props.videoState ? <TbVideoOff /> : <TbVideo />}
+        </div>
+      </DeviceSelctor>
+    </UnderPlusBar>
   );
 };
 

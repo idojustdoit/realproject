@@ -132,15 +132,16 @@ function Header() {
 }
 
 const HeaderCont = styled.header`
+  color: var(--blue-black);
   z-index: 10;
-  position: fixed;
+  position: absolute;
   top: 0;
-  min-width: 1920px;
+  width: 1920px;
+  min-width: 1440px;
   min-height: 80px;
   display: flex;
   align-items: center;
   background-color: #fff;
-  color: black;
   font-size: 15px;
   padding: 0 250px;
   box-shadow: 0 4px 4px -4px #737373;

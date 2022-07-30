@@ -2,23 +2,33 @@ import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { setInitialWord, getSearchRooms } from "../../redux/modules/roomSlice";
-import { validateWord } from "../../shared/reg";
+import { setWord, getSearchRooms } from "../../redux/modules/searchSlice";
 
 import bgImage from "../../shared/mainpage-assets/search_background_img.png";
 import { ReactComponent as SearchIcon } from "../../shared/mainpage-assets/search_icon.svg";
 
 function SearchBanner() {
   const dispatch = useDispatch();
-  const word = useRef();
   const navigate = useNavigate();
+  const word = useRef();
 
   function search(e) {
     e.preventDefault();
-    let clearWord = validateWord(word.current.value);
-    dispatch(setInitialWord(clearWord));
-    dispatch(getSearchRooms(clearWord));
-    navigate("/search");
+    if (word.current.value !== "") {
+      let clearWord = word.current.value.trim();
+      if (clearWord !== undefined && typeof clearWord == "string") {
+        dispatch(setWord(clearWord));
+        dispatch(getSearchRooms(clearWord));
+        navigate(`/search?q=${clearWord}`);
+      } else {
+        alert("키워드를 정확히 입력해주세요.");
+        return;
+      }
+      word.current.value = "";
+    } else {
+      alert("검색어를 입력해주세요.");
+      return;
+    }
   }
 
   return (
@@ -29,6 +39,7 @@ function SearchBanner() {
           type="text"
           placeholder="찾을 스터디명을 검색하세요."
           ref={word}
+          required
         ></SearchInput>
         <SearchBtn>
           <SearchIcon />
@@ -42,6 +53,7 @@ export default SearchBanner;
 
 const SearchCont = styled.div`
   width: 100%;
+  /* min-width: 1920px; */
   height: 500px;
   display: flex;
   flex-direction: column;
@@ -49,8 +61,7 @@ const SearchCont = styled.div`
   align-items: center;
   background: url(${bgImage}) no-repeat;
   background-position: center;
-  /* background-size: cover; */
-  background-size: 100% auto;
+  background-size: 100% 100%;
 `;
 const SearchBox = styled.form`
   border-radius: 4px;

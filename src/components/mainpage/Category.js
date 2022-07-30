@@ -127,7 +127,7 @@ const Category = () => {
 const Container = styled.section`
   min-width: 1920px;
   min-height: 390px;
-  padding: 40px 300px 60px;
+  padding: 40px 250px 60px;
   background-color: #eff3f6;
 `;
 
