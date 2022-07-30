@@ -70,8 +70,8 @@ const Room = ({
   }
 
   return (
-    <RoomCont key={roomId}>
-      <RoomImg src={imgUrl} alt=""></RoomImg>
+    <RoomCont key={key}>
+      <RoomImg imgUrl={imgUrl} alt=""></RoomImg>
       <RoomCotentBox>
         <TopContent>
           <TitleBox className="roomTitle-box">
@@ -141,10 +141,10 @@ const RoomCont = styled.div`
   -webkit-box-shadow: var(--card-box-shadow);
   box-shadow: var(--card-box-shadow);
 `;
-const RoomImg = styled.img`
+const RoomImg = styled.div`
   width: 100%;
   height: 50%;
-  /* background: url(${(props) => props.imgUrl}) no-repeat center;*/
+  background: url(${(props) => props.imgUrl}) no-repeat center;
   object-fit: cover;
   background-color: var(--egloo-gray);
 `;
