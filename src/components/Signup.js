@@ -461,9 +461,9 @@ const Input = styled.input`
   height: 36px;
   color: rgba(var(--sk_primary_foreground, 29, 28, 29), 1);
   background-color: rgba(var(--sk_primary_background, 255, 255, 255), 1);
-  padding: 12px;
+  padding: 2px 12px;
   border-radius: 4px;
-  font-size: 18px;
+  font-size: 15px;
   line-height: 1.33333333;
 `;
 const LoginBtn = styled.div``;
@@ -474,7 +474,7 @@ const Button1 = styled.button`
   background-color: ${(props) => (props.disabled ? "gray" : "#1d9ffd;")};
   border: none;
   font-size: 18px;
-  font-weight: 900;
+  font-weight: 600;
   width: 360px;
   height: 50px;
   padding: 0 16px 3px;
@@ -507,7 +507,7 @@ const Button2 = styled.button`
   background-color: white;
   border: none;
   font-size: 18px;
-  font-weight: 900;
+  font-weight: 600;
   width: 360px;
   height: 50px;
   border: 1px solid black;
@@ -521,6 +521,7 @@ const Button2 = styled.button`
   &:hover {
     background-color: rgba(74, 21, 75, 0.9);
     border: none;
+    color: white;
   }
   &:focus {
     --saf-0: rgba(var(--sk_highlight, 18, 100, 163), 1);
@@ -531,11 +532,11 @@ const Button2 = styled.button`
 const Button3 = styled.button`
   align-content: center;
   text-align: center;
-  color: black;
-  background-color: white;
+  color: white;
+  background-color: black;
   border: none;
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 400;
   width: 70px;
   height: 36px;
   border: 1px solid black;
