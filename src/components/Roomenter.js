@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 import { useEffect } from "react";
@@ -23,6 +23,7 @@ const Login = ({ onClose, roomId, lock }) => {
   //유저가 선택한 방에대한 정보
   const roomData = () => {
     const token = localStorage.getItem("accessToken");
+    const nickname = localStorage.getItem("nickname");
 
     axios({
       method: "POST",
@@ -80,9 +81,6 @@ const Login = ({ onClose, roomId, lock }) => {
   // const pwhandler = (e) => {
   //   setPassword(e.target.value);
   // };
-  const RoomenterHandler = () => {
-    navigate(`/public-room/${roomId}`);
-  };
 
   return (
     <Container>
@@ -242,8 +240,13 @@ const Login = ({ onClose, roomId, lock }) => {
             >
               취소
             </Btn1>
-
-            <Btn2 onClick={RoomenterHandler}>입장하기</Btn2>
+            <Link
+              to={{
+                pathname: `/public-room/${roomId}`,
+              }}
+            >
+              <Btn2>입장하기</Btn2>
+            </Link>
           </EnterBtn>
         </ModalBlock>
       </Background>
