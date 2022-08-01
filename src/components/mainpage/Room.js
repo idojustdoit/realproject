@@ -55,16 +55,12 @@ const Room = ({
     setEnterOpen(!EnterOpen);
   };
 
-  console.log("😎Room 컴포넌트 렌더링!");
-
   //로그인 안했을시에 보여지는 경고창
   const AlertHandler = () => {
     alert("로그인 이후 사용해주세요!");
   };
 
   function clickLike(event) {
-    //부모 엘리먼트에게 이벤트 전달을 중단 할때 event.stopProgation() 사용
-    // event.stopPropagation();
     setLikeState((prevlikeState) => !prevlikeState);
     likeAxios();
   }
@@ -139,8 +135,8 @@ export default memo(Room);
 
 const RoomCont = styled.div`
   background-color: #fff;
-  max-width: 424px;
-  height: 500px;
+  max-width: 400px;
+  height: 450px;
   display: flex;
   flex-direction: column;
   -webkit-margin-collapse: collapse;
@@ -228,7 +224,7 @@ const TagBox = styled.div`
   align-items: center;
   gap: 5px;
   font-size: 16px;
-  margin-bottom: 20px;
+  padding: 10px 0 20px 0;
 `;
 const Tag = styled.span`
   font-size: 16px;
@@ -238,7 +234,7 @@ const Tag = styled.span`
   border-radius: 20px;
   border: 1px solid var(--blue-black);
   opacity: 0.5;
-  padding: 10px 16px;
+  padding: 6px 10px;
   font-weight: 400;
 `;
 

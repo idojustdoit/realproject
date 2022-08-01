@@ -79,10 +79,10 @@ const BlackCont = styled.div`
 `;
 const RoomButtonCont = styled.div`
   height: 92px;
-  padding: 18px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
 `;
 
 const IconBox = styled.div`

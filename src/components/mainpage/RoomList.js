@@ -282,8 +282,7 @@ export default RoomList;
 
 const Container = styled.section`
   width: 100%;
-  min-height: 390px;
-  /* padding: 60px 250px 60px; */
+  min-height: 350px;
   background-color: #eff3f6;
   display: flex;
   align-items: center;
@@ -291,12 +290,12 @@ const Container = styled.section`
   //margin-bottom은 mainpage의 section에서 적용했던 것
 `;
 const CateBox = styled.div`
-  max-width: 1440px;
+  max-width: 1200px;
   background-color: #eff3f6;
 `;
 
 const Img = styled.img`
-  height: 140px;
+  height: 120px;
   /* width: 12vw; */
   border-radius: 50%;
   margin: 20px 0 12px 0;
@@ -306,30 +305,27 @@ const Img = styled.img`
 `;
 
 const Title = styled.div`
-  /* margin: 0 10px 10px; */
   font-size: 20px;
   font-weight: bold;
   text-align: center;
 `;
 
 const TitleH2 = styled.h2`
-  /* margin-bottom: 25px; */
   padding-left: 5px;
-  /*원래 폰트사이즈 30px*/
   font-size: 1.7rem;
   font-weight: 700;
   line-height: 42px;
 `;
 //여기서부터가 룸 리스트 CSS
 const RoomListCont = styled.div`
-  padding: 60px;
-  width: 1440px;
+  padding: 60px 20px;
+  width: 1200px;
   display: grid;
   align-items: center;
   justify-content: center;
-  grid-template-columns: repeat(auto-fill, minmax(424px, 1fr));
-  grid-column-gap: 24px;
-  grid-row-gap: 30px;
+  grid-template-columns: repeat(auto-fill, minmax(30%, 1fr));
+  grid-column-gap: 25px;
+  grid-row-gap: 25px;
 `;
 const ButtonBox = styled.div`
   display: flex;
@@ -338,9 +334,6 @@ const ButtonBox = styled.div`
   /* margin-bottom: 60px; */
 `;
 const LoadMoreBtn = styled.button`
-  /* display: flex;
-  flex-basis: 90%;
-  align-items: center; */
   /* color: rgba(0, 0, 0, 0.35); */
   font-size: 1.2rem;
   font-weight: 600;
@@ -356,17 +349,6 @@ const LoadMoreBtn = styled.button`
     background-color: #2e70e0;
     border: 2px solid #2e70e0;
   }
-
-  /* &::before,
-  &::after {
-    content: "";
-    flex-grow: 1;
-    background: rgba(0, 0, 0, 0.35);
-    height: 1px;
-    font-size: 0px;
-    line-height: 0px;
-    margin: 0px 16px;
-  } */
 `;
 const Div = styled.div`
   font-size: 20px;

@@ -132,7 +132,7 @@ const HeaderCont = styled.header`
   position: absolute;
   top: 0;
   /* width: 1920px; */
-  min-width: 1440px;
+  min-width: 1200px;
   min-height: 80px;
   display: flex;
   align-items: center;
