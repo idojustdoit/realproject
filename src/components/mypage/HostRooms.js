@@ -24,21 +24,27 @@ const HostRooms = ({ hostRooms }) => {
         navigation
         //반응형 적용x
       >
-        {hostRooms.map((room) => {
-          return (
-            <SwiperSlide>
-              <SmallRoom
-                key={room.roomId}
-                roomId={room.roomId}
-                imgUrl={room.imgUrl ? room.imgUrl : basicRoomImg}
-                title={room.title}
-                date={room.date}
-                groupNum={room.groupNum}
-                lock={room.lock}
-              ></SmallRoom>
-            </SwiperSlide>
-          );
-        })}
+        {hostRooms.length > 0 ? (
+          <>
+            {hostRooms.map((room) => {
+              return (
+                <SwiperSlide>
+                  <SmallRoom
+                    key={room.roomId}
+                    roomId={room.roomId}
+                    imgUrl={room.imgUrl ? room.imgUrl : basicRoomImg}
+                    title={room.title}
+                    date={room.date}
+                    groupNum={room.groupNum}
+                    lock={room.lock}
+                  ></SmallRoom>
+                </SwiperSlide>
+              );
+            })}
+          </>
+        ) : (
+          <NoContent>리스트가 없습니다.😪</NoContent>
+        )}
       </Swiper>
     </RoomListCont>
   );
@@ -50,4 +56,11 @@ const RoomListCont = styled.div`
   width: 100%;
   margin-bottom: 100px;
   /* padding: 10px; */
+`;
+const NoContent = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 150px;
+  font-weight: 700;
 `;
