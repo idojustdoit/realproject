@@ -3,10 +3,11 @@ import styled from "styled-components";
 import "../styles/reset.css";
 
 import { ReactComponent as FooterLogo } from "../shared/footer-assets/icon-logo.svg";
-import { ReactComponent as FacebookLogo } from "../shared/footer-assets/icon-facebook.svg";
-import { ReactComponent as InstaLogo } from "../shared/footer-assets/icon-insta.svg";
-import { ReactComponent as TweeterLogo } from "../shared/footer-assets/icon-tweeter.svg";
-import { ReactComponent as YoutubeLogo } from "../shared/footer-assets/icon-youtube.svg";
+import { ReactComponent as ReactLogo } from "../shared/footer-assets/icon-react.svg";
+import { ReactComponent as NodeLogo } from "../shared/footer-assets/logo-nodejs.svg";
+import { ReactComponent as GithubLogo } from "../shared/footer-assets/icon-github.svg";
+import { ReactComponent as FigmaLogo } from "../shared/footer-assets/icon-figma.svg";
+
 import { Link } from "react-router-dom";
 
 const Footer = () => {
@@ -38,10 +39,18 @@ const Footer = () => {
           </LeftContentBottom>
         </LeftContBox>
         <RightCont>
-          <FacebookLogo />
-          <InstaLogo />
-          <TweeterLogo />
-          <YoutubeLogo />
+          <LogoDiv>
+            <ReactLogo style={{ color: "white" }} />
+          </LogoDiv>
+          <LogoDiv>
+            <NodeLogo />
+          </LogoDiv>
+          <LogoDiv>
+            <GithubLogo />
+          </LogoDiv>
+          <FigmaLogo
+            style={{ width: "40px", height: "40px", borderRadius: "50%" }}
+          />
         </RightCont>
       </FooterContent>
     </FooterCont>
@@ -99,4 +108,15 @@ const RightCont = styled.ul`
   display: flex;
   /* flex-direction: column; */
   gap: 12px;
+`;
+
+const LogoDiv = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  border-radius: 50%;
+  background-color: #5d5d5d;
 `;
