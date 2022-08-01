@@ -39,7 +39,7 @@ const Mypage = () => {
   const getMypageInfos = async () => {
     setIsLoading(true);
     await axios
-      .get(`${API_URL}/api/mypage/`, {
+      .get(`${API_URL}/api/mypage/${USER_ID}`, {
         headers: {
           "content-type": "application/json",
           Authorization: `Bearer ${TOKEN}`,
