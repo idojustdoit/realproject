@@ -110,5 +110,6 @@ const Timer = ({ roomId }) => {
 
 const StopWatch = styled.div`
   background-color: white;
+  color:black;
 `;
 export default Timer;
