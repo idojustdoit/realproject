@@ -143,7 +143,7 @@ const RoomCont = styled.div`
 const RoomImg = styled.div`
   width: 100%;
   height: 50%;
-  background: url(${(props) => props.imgUrl}) no-repeat;
+  background: url(${(props) => props.imgUrl}) center no-repeat;
   background-size: cover;
   background-color: var(--egloo-gray);
 `;
