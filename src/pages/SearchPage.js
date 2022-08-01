@@ -21,8 +21,7 @@ const SearchPage = () => {
 export default SearchPage;
 
 const MypageCont = styled.div`
-  margin: 0 auto;
-  width: 1920px;
+  width: 100%;
   padding-top: 80px;
   display: flex;
   justify-content: center;
@@ -32,4 +31,7 @@ const MypageCont = styled.div`
 
 const ContentCont = styled.section`
   width: 100%;
+  min-width: 1440px;
+  display: flex;
+  justify-content: center;
 `;

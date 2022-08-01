@@ -53,7 +53,7 @@ export default SearchBanner;
 
 const SearchCont = styled.div`
   width: 100%;
-  /* min-width: 1920px; */
+  min-width: 1440px;
   height: 500px;
   display: flex;
   flex-direction: column;
@@ -68,6 +68,7 @@ const SearchBox = styled.form`
   width: 25%;
   display: flex;
   overflow: hidden;
+  justify-content: center;
   margin-bottom: 120px;
 `;
 const SearchTitle = styled.h1`
@@ -86,7 +87,7 @@ const SearchBtn = styled.button`
   border-left: none;
   background: #fff;
   color: black;
-  /* border-radius: 0 4px 4px 0; */
+  border-radius: 0 4px 4px 0;
   cursor: pointer;
   font-size: 28px;
   display: flex;
@@ -100,7 +101,7 @@ const SearchInput = styled.input`
   border-right: none;
   padding: 5px 10px;
   height: 40px;
-  /* border-radius: 4px 0 0 4px; */
+  border-radius: 4px 0 0 4px;
   outline: none;
   color: #40407a;
 

@@ -124,36 +124,13 @@ const RoomList = () => {
     setIsLoading(false);
     setPage(initialPage);
 
-    console.log(page);
     return () => {
       setRoomList([]);
     };
   }, [category]);
 
-  //메인에서 로드되는 메인 리스트 axios -> 어차피 카테고리에 "전체"로 로드하면 되니까 안써도 됨
-  // const getRoomList = (body) => {
-  //   console.log(body.category);
-  //   axios
-  //     .get(`${API_URL}/api/main?page=${body.page}&perPage=${body.perPage}`)
-  //     .then((res) => {
-  //       if (res.data.result) {
-  //         console.log(res.data.roomList);
-  //         if (body.loadMore) {
-  //           //더보기 버튼 클릭시
-  //           setRoomList([...roomList, ...res.data?.roomList]);
-  //         } else {
-  //           setRoomList([...res.data?.roomList]);
-  //         }
-  //         setRoomsLength(res.data?.tagLength);
-  //       } else {
-  //         alert("메인 게시물을 가져오는데 실패했습니다.");
-  //       }
-  //     });
-  // };
-
   //메인에서 로드되는 카테고리별 리스트 axios
   const getRoomListByCategory = (body) => {
-    console.log(body.category);
     axios
       .get(
         `${API_URL}/api/main/tag/${body.category}?page=${body.page}&perPage=${body.perPage}`
@@ -190,7 +167,6 @@ const RoomList = () => {
 
   function categoryClickHandler(e, clickedCategory) {
     e.preventDefault();
-    // setCategory(clickedCategory);
     setCategory(clickedCategory);
     setLoadMore(false);
     setPage(1);
@@ -199,52 +175,62 @@ const RoomList = () => {
   return (
     <>
       <Container>
-        <TitleH2>카테고리</TitleH2>
-        <Swiper
-          style={{ cursor: "pointer" }}
-          modules={[Navigation, Scrollbar]}
-          spaceBetween={10}
-          slidesPerView={8}
-          touchRatio={0}
-          navigation
-          scrollbar={{ draggable: false }}
-          onClick={(swiper) => {
-            console.log(swiper.clickedIndex);
-            setIsActive((prev) => swiper.clickedIndex);
-            setIsClicked(true);
-          }}
-          //반응형 적용x
-        >
-          {CATEGORY_LIST.map((cate, idx) => (
-            <SwiperSlide
-              key={cate.num}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                flexDirection: "column",
-                justifyContent: "center",
-                border: "none",
-                height: "200px",
-              }}
-              className={
-                isClicked
-                  ? idx === isActive
-                    ? " -active"
-                    : " -not-active"
-                  : ""
-              }
-              onClick={(e) => {
-                categoryClickHandler(e, cate.name);
-              }}
-              value={idx}
-            >
-              <Img src={cate.imageUrl} style={{ filter: "none" }} />
-              <Title>{cate.name}</Title>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+        <CateBox>
+          <TitleH2>카테고리</TitleH2>
+          <Swiper
+            style={{ cursor: "pointer" }}
+            modules={[Navigation, Scrollbar]}
+            spaceBetween={10}
+            slidesPerView={8}
+            touchRatio={0}
+            navigation
+            scrollbar={{ draggable: false }}
+            onClick={(swiper) => {
+              console.log(swiper);
+              setIsActive((prev) => swiper.clickedIndex);
+              setIsClicked(true);
+            }}
+            //반응형 적용x
+          >
+            {CATEGORY_LIST.map((cate, idx) => (
+              <SwiperSlide
+                key={cate.num}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  border: "none",
+                  height: "200px",
+                }}
+                className={
+                  isClicked
+                    ? idx === isActive
+                      ? " -active"
+                      : " -not-active"
+                    : ""
+                }
+                onClick={(e) => {
+                  categoryClickHandler(e, cate.name);
+                }}
+                value={idx}
+              >
+                <Img src={cate.imageUrl} style={{ filter: "none" }} />
+                <Title>{cate.name}</Title>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </CateBox>
       </Container>
-      <div>
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+        }}
+      >
         {!isLoading ? (
           roomList.length > 0 ? (
             <>
@@ -262,13 +248,14 @@ const RoomList = () => {
                       groupNum={room?.groupNum}
                       //만약에 서버의 isLiked 값이 없으면 false(기본)값을 내려준다.
                       isLiked={room.isLiked ? room.isLiked : false}
+                      lock={room.lock ? room.lock : false}
                     ></Room>
                   );
                 })}
               </RoomListCont>
             </>
           ) : (
-            <Div>해당 카테고리의 첫번째 주인공이 되어주세요!🥳</Div>
+            <Div>게시물이 없습니다.😓</Div>
           )
         ) : (
           <Spinner />
@@ -296,9 +283,16 @@ export default RoomList;
 const Container = styled.section`
   width: 100%;
   min-height: 390px;
-  padding: 60px 250px 60px;
+  /* padding: 60px 250px 60px; */
   background-color: #eff3f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   //margin-bottom은 mainpage의 section에서 적용했던 것
+`;
+const CateBox = styled.div`
+  max-width: 1440px;
+  background-color: #eff3f6;
 `;
 
 const Img = styled.img`
@@ -328,8 +322,8 @@ const TitleH2 = styled.h2`
 `;
 //여기서부터가 룸 리스트 CSS
 const RoomListCont = styled.div`
-  padding: 60px 300px;
-  /* width: 100%; */
+  padding: 60px;
+  width: 1440px;
   display: grid;
   align-items: center;
   justify-content: center;
@@ -341,7 +335,7 @@ const ButtonBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 60px;
+  /* margin-bottom: 60px; */
 `;
 const LoadMoreBtn = styled.button`
   /* display: flex;
@@ -380,5 +374,5 @@ const Div = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 300px;
+  height: 400px;
 `;

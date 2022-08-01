@@ -120,7 +120,6 @@ const Createroom = ({ onClose }) => {
     formData.append("lock", lock);
     formData.append("content", content);
     formData.append("date", moment(dateRange[1]).format("YYYY년MM월DD일"));
-    formData.append("tagName", ["전체", ...categoryName]);
     formData.append("isLike", false);
     const token = localStorage.getItem("accessToken");
     const userId = localStorage.getItem("userId");

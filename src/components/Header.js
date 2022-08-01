@@ -136,14 +136,14 @@ const HeaderCont = styled.header`
   z-index: 10;
   position: absolute;
   top: 0;
-  width: 1920px;
+  /* width: 1920px; */
   min-width: 1440px;
   min-height: 80px;
   display: flex;
   align-items: center;
   background-color: #fff;
   font-size: 15px;
-  padding: 0 250px;
+  /* padding: 0 250px; */
   box-shadow: 0 4px 4px -4px #737373;
 `;
 const FlexBox = styled.div`

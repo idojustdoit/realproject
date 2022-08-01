@@ -28,7 +28,7 @@ function MainPage() {
 export default MainPage;
 
 const MainCont = styled.div`
-  width: 1920px;
+  width: 100%;
   padding-top: 80px;
   display: flex;
   justify-content: center;
@@ -37,12 +37,13 @@ const MainCont = styled.div`
   color: var(--blue-black);
 `;
 
-const BasicSection = styled.section`
+const RoomListSection = styled.section`
   width: 100%;
-`;
-
-const RoomListSection = styled(BasicSection)`
-  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  //지금은 카테고리랑 리스트가 RoomListEx에 같이있어서 column으로 설정
+  flex-direction: column;
 
   /* padding: 0 300px; */
 `;
