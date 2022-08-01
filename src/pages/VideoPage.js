@@ -23,8 +23,7 @@ import { TbVideo, TbVideoOff } from "react-icons/tb";
 //socket
 import io from "socket.io-client";
 
-// const socket = io.connect("https://egloo.shop");
-const socket = "";
+const socket = io.connect("https://egloo.shop");
 
 const VideoPage = () => {
   const navigate = useNavigate();
@@ -60,7 +59,7 @@ const VideoPage = () => {
   const API_URL = process.env.REACT_APP_API_URL;
   const userId = localStorage.getItem("userId");
   const token = localStorage.getItem("accessToken");
-
+  //들어갈때
   const poststartData = () => {
     axios({
       method: "POST",
