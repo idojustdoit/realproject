@@ -141,7 +141,7 @@ const ContentBox = styled.div`
 `;
 
 const UpperTitle = styled.h2`
-  min-width: 1440px;
+  min-width: 1200px;
   margin: 60px 0 40px 0;
   font-weight: 700;
   font-size: 30px;
@@ -158,7 +158,7 @@ const Cont = styled.div`
   display: flex;
   gap: 24px;
   margin-bottom: 100px;
-  width: 1440px;
+  width: 1200px;
   justify-content: space-between;
 `;
 
@@ -209,7 +209,6 @@ const UserInfo = styled.div`
 
 const FlexCont = styled.div`
   display: flex;
-  /* gap: 140px; */
 `;
 const EditButton = styled.button`
   height: 20px;

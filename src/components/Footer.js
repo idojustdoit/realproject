@@ -51,15 +51,9 @@ const Footer = () => {
 export default Footer;
 
 const FooterCont = styled.footer`
-  /* position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0; */
   color: var(--blue-black);
   width: 100%;
-  /* min-width: 1920px; */
   height: 250px;
-  /* padding: 40px 250px 45px; */
   background-color: var(--blue-black);
   display: flex;
   justify-content: center;
@@ -68,7 +62,7 @@ const FooterCont = styled.footer`
 `;
 
 const FooterContent = styled.div`
-  width: 1440px;
+  width: 1200px;
   display: flex;
   /* align-items: center; */
   justify-content: space-between;
