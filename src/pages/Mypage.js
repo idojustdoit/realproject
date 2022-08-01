@@ -49,12 +49,12 @@ const Mypage = () => {
         console.log(res.data);
         if (res.data.result) {
           setIsLoading(false);
-          setAttendRooms(res.data.myPage?.attendRoom);
-          setHostRooms(res.data.myPage?.hostRoom);
-          setLikeRooms(res.data.myPage?.userLike);
+          setAttendRooms(res.data.attendInfo);
+          setHostRooms(res.data.hostInfo);
+          setLikeRooms(res.data.likeInfo);
           setEmail(res.data.myPage?.email);
           setNickName(res.data.myPage?.nickname);
-          setuserImg(res.data.myPage?.imgUrl);
+          setuserImg(res.data.myPage?.profile_url);
         }
       })
       .catch((e) => console.log(e));

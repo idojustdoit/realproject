@@ -32,6 +32,7 @@ function Header() {
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("userId");
     localStorage.removeItem("nickname");
+    localStorage.removeItem("imgUrl");
     window.location.reload();
   };
 

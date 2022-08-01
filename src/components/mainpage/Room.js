@@ -17,24 +17,22 @@ const Room = ({
   date,
   tagName,
   groupNum,
-  isLiked,
+
+  likeUser,
 }) => {
   const API_URL = process.env.REACT_APP_API_URL;
   const dispatch = useDispatch();
-  const [likeState, setLikeState] = useState(isLiked);
-  const token = localStorage.getItem("accessToken");
-  const isLogin = useSelector((state) => state.user.isLogin);
 
-  console.log(likeState);
+  const token = localStorage.getItem("accessToken");
+  const userId = localStorage.getItem("userId");
+  const [likeState, setLikeState] = useState(likeUser.includes(Number(userId)));
 
   //좋아요 버튼
   const likeAxios = () => {
     axios({
-      method: "PUT",
-      url: `api/main/like/${roomId}`,
-      data: {
-        isLiked: likeState,
-      },
+      method: "post",
+      url: `api/main/like/${roomId}/${userId}`,
+
       baseURL: API_URL,
       headers: {
         "content-type": "application/json",
@@ -68,7 +66,10 @@ const Room = ({
     setLikeState((prevlikeState) => !prevlikeState);
     likeAxios();
   }
+  const catename = tagName.join();
+  const catearr = catename.split(",");
 
+  console.log(catearr);
   return (
     <RoomCont key={key}>
       <RoomImg imgUrl={imgUrl} alt=""></RoomImg>
@@ -83,7 +84,7 @@ const Room = ({
                 <span>{groupNum}/4</span>
               </UserCountBox>
             </TitleAndGroupNum>
-            {likeState === true ? (
+            {likeState ? (
               <img
                 alt="fiiled-heart"
                 src={fullHeart}
@@ -105,7 +106,7 @@ const Room = ({
 
         {/* 태그 돌릴때도 고유값 전달 */}
         <TagBox>
-          {tagName.map((tag, index) => {
+          {catearr.map((tag, index) => {
             return <Tag key={index}>#{tag}</Tag>;
           })}
         </TagBox>

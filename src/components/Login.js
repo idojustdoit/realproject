@@ -14,7 +14,7 @@ const Login = ({ onClose, SignOpen }) => {
   const outZone_ref = React.useRef(null); // 모달창이 외에 부분 지정
   const [email, setemail] = React.useState(null); //email 아이디
   const [password, setPwd] = React.useState(null); // 비밀번호
-  const MySwal = withReactContent(Swal); //통신 확인패키지
+  const MySwal = withReactContent(Swal);
 
   //각 input 창 onChange로 이벤트 감지
   const handlerId = (e) => {
@@ -44,10 +44,12 @@ const Login = ({ onClose, SignOpen }) => {
     })
       .then(function (response) {
         dispatch(logIn());
+        console.log(response);
         localStorage.setItem("accessToken", response.data.accessToken);
         localStorage.setItem("nickname", response.data.nickname);
         localStorage.setItem("refreshToken", response.data.refreshToken);
         localStorage.setItem("userId", response.data.userId);
+        localStorage.setItem("profile", response.data.imgurl);
         onClose();
         MySwal.fire({
           title: "Success!",

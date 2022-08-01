@@ -261,7 +261,7 @@ const RoomList = () => {
                       tagName={room?.tagName}
                       groupNum={room?.groupNum}
                       //만약에 서버의 isLiked 값이 없으면 false(기본)값을 내려준다.
-                      isLiked={room.isLiked ? room.isLiked : false}
+                      likeUser={room.likeUser}
                     ></Room>
                   );
                 })}

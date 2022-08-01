@@ -26,7 +26,7 @@ const Login = ({ onClose, roomId }) => {
     axios({
       method: "GET",
       url: `/api/room/info/${roomId}`,
-      baseURL: "http://15.164.164.17:3000",
+      baseURL: API_URL,
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -35,8 +35,8 @@ const Login = ({ onClose, roomId }) => {
         console.log(response);
         setTitle(response.data.checkRoom.title);
         setContent(response.data.checkRoom.content);
-        // setProfile(response.data.profile);
-        setNickname(response.data.checkRoom.attendName);
+
+        setNickname(response.data.output);
         setLock(response.data.checkRoom.lock);
         // setPersoninfo(response.data.personinfo);
       })
@@ -112,26 +112,27 @@ const Login = ({ onClose, roomId }) => {
               }}
             >
               <Chat1 style={{ marginRight: "40px" }}> 참여인원</Chat1>
-              {/* <img
-              alt=""
-              src={list.iconUrl}
-              style={{
-                width: "50px",
-                height: "50px",
-                borderRadius: "10px",
-              }}
-            /> */}
+
               {nickname.length == 0 ? (
                 <Todo>
                   <div className="person">현재 참여 인원이 없습니다.</div>
                 </Todo>
               ) : (
                 <Todo>
-                  {nickname.map(function (nickname) {
+                  {nickname.map(function (index) {
                     return (
                       <div className="list">
                         {" "}
-                        <div>{nickname}</div>
+                        <img
+                          alt=""
+                          src={index.imgUrl}
+                          style={{
+                            width: "50px",
+                            height: "50px",
+                            borderRadius: "10px",
+                          }}
+                        />
+                        <div>{index.nickname}</div>
                       </div>
                     );
                   })}

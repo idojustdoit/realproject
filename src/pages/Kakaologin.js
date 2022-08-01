@@ -53,6 +53,8 @@ function Kakaologin() {
                 localStorage.setItem("accessToken", res.data.accessToken);
                 localStorage.setItem("refreshToken", res.data.refreshToken);
                 localStorage.setItem("userId", res.data.snsId);
+                localStorage.setItem("imgUrl", res.data.imgUrl);
+
                 navigate("/");
               })
               .catch((error) => {

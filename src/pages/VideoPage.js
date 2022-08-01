@@ -5,8 +5,11 @@ import VideoHeader from "../components/videoPage/mainScreen/VideoHeader";
 import SideView from "../components/videoPage/sideBar/SideView";
 
 import Timer from "../components/Timer";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 import Peer from "simple-peer";
+import axios from "axios";
 
 import "../App.css";
 
@@ -26,6 +29,7 @@ const VideoPage = () => {
   const navigate = useNavigate();
   const { roomId } = useParams();
 
+  const MySwal = withReactContent(Swal);
   const [peers, setPeers] = useState([]);
   const socketRef = useRef();
   const userVideo = useRef();
@@ -47,6 +51,60 @@ const VideoPage = () => {
 
   const nickname = localStorage.getItem("nickname");
 
+  // 타이머
+  const [seconds, setSeconds] = useState(0);
+  const [minutes, setMinutes] = useState(0);
+  const [hours, setHours] = useState(0);
+  const time_ref = useRef(null);
+  const API_URL = process.env.REACT_APP_API_URL;
+  const userId = localStorage.getItem("userId");
+  const token = localStorage.getItem("accessToken");
+
+  const poststartData = () => {
+    axios({
+      method: "POST",
+      url: `/api/room/public-room/${roomId}/${userId}`,
+
+      baseURL: API_URL,
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        console.log(response);
+        alert("타이머 성공");
+        setHours(response.data.hour);
+        setMinutes(response.data.minute);
+        setSeconds(response.data.second);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("타이머 실패");
+      });
+  };
+  useEffect(() => {
+    poststartData();
+  }, []);
+
+  useEffect(() => {
+    time_ref.current = setInterval(() => {
+      setSeconds(seconds + 1);
+      if (seconds === 59) {
+        setMinutes(minutes + 1);
+        setSeconds(0);
+        if (seconds === 59 && minutes === 59) {
+          setHours(hours + 1);
+          setMinutes(0);
+          setSeconds(0);
+        }
+      }
+    }, 1000);
+    return () => clearInterval(time_ref.current);
+  });
+  //들어갈때
+
+  // sidebar
   const sideBarHandler = () => {
     if (openBar) {
       setOpenBar(false);
@@ -79,18 +137,30 @@ const VideoPage = () => {
     }
   };
 
-  const exitRoomHandler = () => {
-    console.log(userVideo.current.srcObject);
-    alert("진짜 나감?");
-    userVideo.current.srcObject.getVideoTracks().forEach((track) => {
-      track.stop();
-    });
-    userVideo.current.srcObject.getAudioTracks().forEach((track) => {
-      track.stop();
-    });
-    navigate("/");
-    window.location.reload();
-  };
+  // const exitRoomHandler = async () => {
+  //   console.log(userVideo.current.srcObject);
+  //   MySwal.fire({
+  //     title: "EXIT",
+  //     text: "정말 나가시겠습니까?",
+  //     icon: "warning",
+  //     showCancelButton: true,
+  //     confirmButtonColor: "#3085d6",
+  //     cancelButtonColor: "#d33",
+  //     confirmButtonText: "승인",
+  //     cancelButtonText: "취소",
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       userVideo.current.srcObject.getVideoTracks().forEach((track) => {
+  //         track.stop();
+  //       });
+  //       userVideo.current.srcObject.getAudioTracks().forEach((track) => {
+  //         track.stop();
+  //       });
+  //       navigate("/");
+  //       window.location.reload();
+  //     }
+  //   });
+  // };
 
   useEffect(() => {
     socketRef.current = socket;
@@ -101,6 +171,9 @@ const VideoPage = () => {
         const data = {
           roomId,
           nickname,
+          hours,
+          minutes,
+          seconds,
         };
         socketRef.current.emit("join room", data);
         socketRef.current.on("all users", (users) => {
@@ -114,6 +187,9 @@ const VideoPage = () => {
               peerID: user.socketId,
               peerNickname: user.nickname,
               peer,
+              peerHours: user.hours,
+              peerMinutes: user.seconds,
+              peerSeconds: user.seconds,
             };
             peersRef.current.push(peerObj);
             setPeers((users) => [...users, peerObj]);
@@ -210,11 +286,11 @@ const VideoPage = () => {
           }}
         >
           <VideoHeader
-            exitRoomHandler={exitRoomHandler}
             openBar={openBar}
             roomId={roomId}
+            userVideo={userVideo}
           />
-          <Timer roomId={roomId} />
+          {/* <Timer roomId={roomId} /> */}
 
           <div
             className="video-area"
@@ -229,6 +305,9 @@ const VideoPage = () => {
                   nickname={nickname}
                   audioState={audioState}
                   videoState={videoState}
+                  hours={hours}
+                  minutes={minutes}
+                  seconds={seconds}
                 />
               </div>
 
@@ -337,7 +416,12 @@ const VideoInfo = (props) => {
         <div className="user_img"></div>
         <span className="user_name">{props.nickname}</span>
       </div>
-      <span>00:00:00</span>
+      <span>
+        {" "}
+        {props.hours < 10 ? "0" + props.hours : props.hours}:
+        {props.minutes < 10 ? "0" + props.minutes : props.minutes}:
+        {props.seconds < 10 ? "0" + props.seconds : props.seconds}
+      </span>
       <DeviceSelctor className="video_control_btn">
         <div className="audio">
           {props.audioState ? <BsFillMicMuteFill /> : <AiFillAudio />}

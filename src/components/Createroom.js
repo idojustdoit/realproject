@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import styled from "styled-components";
 import axios from "axios";
@@ -108,8 +108,6 @@ const Createroom = ({ onClose }) => {
     }
   };
 
-  console.log(categoryName);
-
   // 서버에 방 정보 보내는 통신
   const CreateAxios = (e) => {
     e.preventDefault();
@@ -132,6 +130,7 @@ const Createroom = ({ onClose }) => {
       headers: {
         "content-type": "multipart/form-data",
         Authorization: `Bearer ${token}`,
+        withcredentials: true,
       },
     })
       .then((response) => {
@@ -155,6 +154,10 @@ const Createroom = ({ onClose }) => {
         });
       });
   };
+  const a = categoryName.join();
+  const b = a.split(",");
+  console.log(b);
+
   return (
     <Container>
       <Background
