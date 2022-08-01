@@ -34,7 +34,7 @@
 </div>
 
 ## E-GLOO 트러블슈팅 ❌
-1. 데이터 형태 통신 문제
+1. 데이터 형태 통신 문제 https://github.com/idojustdoit/realproject.wiki.git
 
 
 
