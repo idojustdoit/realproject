@@ -93,7 +93,6 @@ const RoomList = () => {
   const navigate = useNavigate();
 
   //받아온 메인 룸 리스트
-  console.log("😎룸리스트 렌더링..!");
   // const roomList = useSelector((state) => state.room.roomList);
   const [isLoading, setIsLoading] = useState(false);
   const [roomList, setRoomList] = useState([]);
@@ -137,7 +136,6 @@ const RoomList = () => {
       )
       .then((res) => {
         if (res.data.result) {
-          console.log(res.data.roomList);
           if (body.loadMore) {
             //더보기 버튼 클릭시
             setRoomList([...roomList, ...res.data?.roomList]);
@@ -186,7 +184,6 @@ const RoomList = () => {
             navigation
             scrollbar={{ draggable: false }}
             onClick={(swiper) => {
-              console.log(swiper);
               setIsActive((prev) => swiper.clickedIndex);
               setIsClicked(true);
             }}
