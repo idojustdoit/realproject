@@ -8,6 +8,8 @@ import axios from "axios";
 import fullHeart from "../../shared/mainpage-assets/icon-full-heart.svg";
 import emptyHeart from "../../shared/mainpage-assets/icon-empty-heart.svg";
 
+import { FaLock } from "react-icons/fa";
+
 const Room = ({
   key,
   roomId,
@@ -17,15 +19,15 @@ const Room = ({
   date,
   tagName,
   groupNum,
-
-  likeUser,
+  isLiked,
+  lock,
 }) => {
   const API_URL = process.env.REACT_APP_API_URL;
   const dispatch = useDispatch();
 
   const token = localStorage.getItem("accessToken");
   const userId = localStorage.getItem("userId");
-  const [likeState, setLikeState] = useState(likeUser.includes(Number(userId)));
+  const [likeState, setLikeState] = useState(isLiked.includes(Number(userId)));
 
   //좋아요 버튼
   const likeAxios = () => {
@@ -84,21 +86,26 @@ const Room = ({
                 <span>{groupNum}/4</span>
               </UserCountBox>
             </TitleAndGroupNum>
-            {likeState ? (
-              <img
-                alt="fiiled-heart"
-                src={fullHeart}
-                onClick={clickLike}
-                style={{ cursor: "pointer" }}
-              ></img>
-            ) : (
-              <img
-                alt="empty-heart"
-                src={emptyHeart}
-                onClick={clickLike}
-                style={{ cursor: "pointer" }}
-              ></img>
-            )}
+            <IconBox>
+              {lock && (
+                <FaLock style={{ fontSize: "20px", color: "#2f3542" }} />
+              )}
+              {likeState === true ? (
+                <img
+                  alt="fiiled-heart"
+                  src={fullHeart}
+                  onClick={clickLike}
+                  style={{ cursor: "pointer" }}
+                ></img>
+              ) : (
+                <img
+                  alt="empty-heart"
+                  src={emptyHeart}
+                  onClick={clickLike}
+                  style={{ cursor: "pointer" }}
+                ></img>
+              )}
+            </IconBox>
           </TitleBox>
           <ContentBox>{content}</ContentBox>
           <DueDate>{date}까지</DueDate>
@@ -145,8 +152,8 @@ const RoomCont = styled.div`
 const RoomImg = styled.div`
   width: 100%;
   height: 50%;
-  background: url(${(props) => props.imgUrl}) no-repeat center;
-  object-fit: cover;
+  background: url(${(props) => props.imgUrl}) no-repeat;
+  background-size: cover;
   background-color: var(--egloo-gray);
 `;
 const RoomCotentBox = styled.div`
@@ -191,6 +198,13 @@ const TitleAndGroupNum = styled.div`
   flex-direction: row;
 `;
 
+const IconBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+`;
+
 const ContentBox = styled.p`
   overflow: hidden;
   text-overflow: ellipsis;
@@ -204,7 +218,6 @@ const ContentBox = styled.p`
 
 const DueDate = styled.span`
   font-weight: 400;
-  color: #000;
   opacity: 0.5;
   font-size: 12px;
   line-height: 14px;
@@ -223,8 +236,7 @@ const Tag = styled.span`
   justify-content: center;
   align-items: center;
   border-radius: 20px;
-  border: 1px solid #000;
-  color: #000;
+  border: 1px solid var(--blue-black);
   opacity: 0.5;
   padding: 10px 16px;
   font-weight: 400;
@@ -245,6 +257,6 @@ const WhiteBtn = styled.button`
 `;
 
 const BlackBtn = styled(WhiteBtn)`
-  background-color: black;
+  background-color: var(--blue-black);
   color: white;
 `;

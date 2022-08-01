@@ -32,6 +32,7 @@ const AttendRooms = ({ attendRooms }) => {
                 title={room.title}
                 date={room.date}
                 groupNum={room.groupNum}
+                lock={room.lock}
               ></SmallRoom>
             </SwiperSlide>
           );

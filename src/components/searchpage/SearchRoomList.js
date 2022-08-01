@@ -39,7 +39,8 @@ function SearchRoomList() {
                 tagName={room?.tagName}
                 groupNum={room?.groupNum}
                 //만약에 isLiked 가 없으면 false값을 내려준다.
-                isLiked={room.isLiked ? room.isLiked : false}
+                isLiked={room.likeUser ? room.likeUser : false}
+                lock={room.lock}
               ></Room>
             );
           })}
@@ -53,13 +54,13 @@ function SearchRoomList() {
 
 export default SearchRoomList;
 const SearchCont = styled.div`
-  padding: 60px 300px;
   display: flex;
+  width: 1440px;
   flex-direction: column;
-  min-height: 380px;
+  min-height: 500px;
 `;
 const RoomListCont = styled.div`
-  /* padding: 60px 300px; */
+  padding: 60px;
   /* width: 100%; */
   display: grid;
   align-items: center;
@@ -73,7 +74,7 @@ const RoomListCont = styled.div`
 const SearchTitle = styled.h1`
   font-size: 30px;
   font-weight: 700;
-  margin: 0px 20px;
+  margin: 20px;
   line-height: 42px;
   color: black;
 

@@ -73,13 +73,7 @@ function Header() {
               <Link to="/">이글루 소개</Link>
             </Li>
             <Li>
-              <Link to="/">이용 가이드</Link>
-            </Li>
-            <Li>
               <Link to="/">커뮤니티</Link>
-            </Li>
-            <Li>
-              <Link to="/">스터디 목록</Link>
             </Li>
           </Ul>
         </LeftCont>
@@ -137,14 +131,14 @@ const HeaderCont = styled.header`
   z-index: 10;
   position: absolute;
   top: 0;
-  width: 1920px;
+  /* width: 1920px; */
   min-width: 1440px;
   min-height: 80px;
   display: flex;
   align-items: center;
   background-color: #fff;
   font-size: 15px;
-  padding: 0 250px;
+  /* padding: 0 250px; */
   box-shadow: 0 4px 4px -4px #737373;
 `;
 const FlexBox = styled.div`

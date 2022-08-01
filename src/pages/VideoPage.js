@@ -23,7 +23,8 @@ import { TbVideo, TbVideoOff } from "react-icons/tb";
 //socket
 import io from "socket.io-client";
 
-const socket = io.connect("https://egloo.shop");
+// const socket = io.connect("https://egloo.shop");
+const socket = "";
 
 const VideoPage = () => {
   const navigate = useNavigate();
