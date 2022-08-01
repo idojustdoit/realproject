@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { storage } from "../shared/firebase";
@@ -13,7 +13,7 @@ const SignUp = ({ onClose, LoginOpen }) => {
   const MySwal = withReactContent(Swal);
   const outZone_ref = React.useRef(null);
   const profile_ref = React.useRef(null); //유저 이미지 URL
-  const [profile, setprofile] = React.useState(userprofile);
+  const [profile, setprofile] = React.useState("");
   const [email, setemail] = React.useState(""); //email 인풋
   const [password, setPwd] = React.useState(""); //비밀번호 인풋
   const [passwordCheck, setpasswordCheck] = React.useState(""); //비밀번호 확인 인풋
@@ -149,6 +149,11 @@ const SignUp = ({ onClose, LoginOpen }) => {
       });
     setVerEmail(true);
   };
+  useEffect(() => {
+    setprofile(
+      "https://velog.velcdn.com/images/idojustdo_it/post/ff5bd820-b3d0-423c-b29d-e3192a74803a/image.png"
+    );
+  }, []);
 
   // 회원가입 통신
   const signupdata = (e) => {
@@ -166,6 +171,7 @@ const SignUp = ({ onClose, LoginOpen }) => {
       baseURL: API_URL,
       headers: {
         "content-type": "multipart/form-data",
+        withcredentials: true,
       },
     })
       .then((response) => {
@@ -247,7 +253,7 @@ const SignUp = ({ onClose, LoginOpen }) => {
             </span>
           </Label>
           <Label>
-            <div style={{ display: "flex" }}>
+            <div>
               <Chat1>이메일</Chat1>
 
               <Input

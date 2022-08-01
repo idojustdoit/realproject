@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   getMainList,
   getRoomListByCategory,
-  setCategoryState,
+  setRoomList,
 } from "../../redux/modules/roomSlice";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
@@ -90,120 +90,189 @@ const CATEGORY_LIST = [
 
 const RoomList = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
+  //받아온 메인 룸 리스트
   console.log("😎룸리스트 렌더링..!");
-  const list = useSelector((state) => state.room.roomList);
-  const isLoading = useSelector((state) => state.room.isLoading);
-
-  let [visible, setVisible] = useState(6);
-  const [limit, setLimit] = useState(0);
-  const [category, setCategory] = useState("전체");
+  // const roomList = useSelector((state) => state.room.roomList);
+  const [isLoading, setIsLoading] = useState(false);
+  const [roomList, setRoomList] = useState([]);
+  // const [rooms, setRooms] = useState([]);
   const [isActive, setIsActive] = useState(null);
   //초기에는 모든 이미지가 컬러인 상태로 보여야해서 추가한 state
   const [isClicked, setIsClicked] = useState(false);
-  const navigate = useNavigate();
+
+  const API_URL = "http://3.37.87.171";
+
+  // const [ro`oms, setRooms] = useState([])
+  const LIMIT = 6; //axios요청시 6개씩
+  const [page, setPage] = useState(1);
+  const [roomsLength, setRoomsLength] = useState(0);
+  const [loadMore, setLoadMore] = useState(false);
+  const [category, setCategory] = useState("전체");
 
   useEffect(() => {
-    dispatch(getMainList());
-  }, []);
+    let initialPage = 1;
 
-  useEffect(() => {
-    dispatch(getRoomListByCategory(category));
+    let body = {
+      page: initialPage,
+      perPage: LIMIT,
+      category: category,
+      loadMore: false,
+    };
+    getRoomListByCategory(body);
+    setIsLoading(false);
+    setPage(initialPage);
+
+    return () => {
+      setRoomList([]);
+    };
   }, [category]);
+
+  //메인에서 로드되는 카테고리별 리스트 axios
+  const getRoomListByCategory = (body) => {
+    axios
+      .get(
+        `${API_URL}/api/main/tag/${body.category}?page=${body.page}&perPage=${body.perPage}`
+      )
+      .then((res) => {
+        if (res.data.result) {
+          console.log(res.data.roomList);
+          if (body.loadMore) {
+            //더보기 버튼 클릭시
+            setRoomList([...roomList, ...res.data?.roomList]);
+          } else {
+            setRoomList([...res.data?.roomList]);
+          }
+          setRoomsLength(res.data?.tagLength);
+          setIsLoading(false);
+        } else {
+          alert(`${category}게시물 로드 실패`);
+        }
+      });
+  };
+
+  const loadMoreHandler = () => {
+    let addedPage = page + 1;
+    let body = {
+      page: addedPage,
+      perPage: LIMIT,
+      category: category,
+      loadMore: true,
+    };
+    getRoomListByCategory(body);
+    setPage(addedPage);
+    setLoadMore(true);
+  };
 
   function categoryClickHandler(e, clickedCategory) {
     e.preventDefault();
-    // setIsActive((prevState) => e.target.value)
     setCategory(clickedCategory);
+    setLoadMore(false);
+    setPage(1);
   }
 
   return (
     <>
       <Container>
-        <TitleH2>카테고리</TitleH2>
-        <Swiper
-          modules={[Navigation, Scrollbar]}
-          spaceBetween={10}
-          slidesPerView={8}
-          navigation
-          scrollbar={{ draggable: false }}
-          onClick={(swiper) => {
-            setIsActive((prev) => swiper.clickedIndex);
-            setIsClicked(true);
-          }}
-          //반응형 적용x
-        >
-          {CATEGORY_LIST.map((cate, idx) => (
-            <SwiperSlide
-              key={cate.num}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                flexDirection: "column",
-                justifyContent: "center",
-                border: "none",
-                height: "200px",
-              }}
-              className={
-                isClicked
-                  ? idx === isActive
-                    ? " -active"
-                    : " -not-active"
-                  : ""
-              }
-              onClick={(e) => {
-                categoryClickHandler(e, cate.name);
-              }}
-              value={idx}
-            >
-              <Img src={cate.imageUrl} style={{ filter: "none" }} />
-              <Title>{cate.name}</Title>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+        <CateBox>
+          <TitleH2>카테고리</TitleH2>
+          <Swiper
+            style={{ cursor: "pointer" }}
+            modules={[Navigation, Scrollbar]}
+            spaceBetween={10}
+            slidesPerView={8}
+            touchRatio={0}
+            navigation
+            scrollbar={{ draggable: false }}
+            onClick={(swiper) => {
+              console.log(swiper);
+              setIsActive((prev) => swiper.clickedIndex);
+              setIsClicked(true);
+            }}
+            //반응형 적용x
+          >
+            {CATEGORY_LIST.map((cate, idx) => (
+              <SwiperSlide
+                key={cate.num}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  border: "none",
+                  height: "200px",
+                }}
+                className={
+                  isClicked
+                    ? idx === isActive
+                      ? " -active"
+                      : " -not-active"
+                    : ""
+                }
+                onClick={(e) => {
+                  categoryClickHandler(e, cate.name);
+                }}
+                value={idx}
+              >
+                <Img src={cate.imageUrl} style={{ filter: "none" }} />
+                <Title>{cate.name}</Title>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </CateBox>
       </Container>
-      <div>
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+        }}
+      >
         {!isLoading ? (
-          list.length > 0 ? (
+          roomList.length > 0 ? (
             <>
               <RoomListCont>
-                {list.slice(0, visible).map((room) => {
+                {roomList.map((room) => {
                   return (
                     <Room
                       key={room._id}
                       roomId={room.roomId}
-                      imageUrl={room.imgUrl ? room.imgUrl : roomImg}
+                      imgUrl={room.imgUrl ? room.imgUrl : roomImg}
                       title={room.title}
                       content={room.content}
                       date={room?.date}
                       tagName={room?.tagName}
                       groupNum={room?.groupNum}
-                      //만약에 isLiked 가 없으면 false값을 내려준다.
-                      isLiked={room.isLiked ? room.isLiked : false}
+                      //만약에 서버의 isLiked 값이 없으면 false(기본)값을 내려준다.
+                      isLiked={room.likeUser}
+                      lock={room.lock ? room.lock : false}
                     ></Room>
                   );
                 })}
               </RoomListCont>
             </>
           ) : (
-            <Div>해당 카테고리의 첫번째 주인공이 되어주세요!🥳</Div>
+            <Div>게시물이 없습니다.😓</Div>
           )
         ) : (
           <Spinner />
         )}
         {/* 만약 현재보고있는 room의 수가 게시물의 길이보다 같거나 크다면 showmore
         버튼을 숨긴다. */}
-        {/* {visible >= list.length ? (
-          <div></div>
-        ) : ( */}
-        <ButtonBox>
-          <LoadMoreBtn
-            onClick={() => dispatch(getRoomListByCategory(category))}
-          >
-            더보기
-          </LoadMoreBtn>
-        </ButtonBox>
-        {/* )} */}
+        {roomsLength > roomList.length && (
+          <ButtonBox>
+            <LoadMoreBtn
+              onClick={() => {
+                loadMoreHandler();
+              }}
+            >
+              더보기
+            </LoadMoreBtn>
+          </ButtonBox>
+        )}
       </div>
     </>
   );
@@ -212,24 +281,18 @@ const RoomList = () => {
 export default RoomList;
 
 const Container = styled.section`
-  min-width: 1440px;
+  width: 100%;
   min-height: 390px;
-  margin: 60px 250px 60px;
+  /* padding: 60px 250px 60px; */
   background-color: #eff3f6;
-  //margin-bottom은 mainpage의 section에서 적용했던 것
-`;
-
-const OneCategoryBox = styled.div`
   display: flex;
   align-items: center;
-  flex-direction: column;
   justify-content: center;
-  border: none;
-  height: 200px;
-
-  &:hover {
-    cursor: pointer;
-  }
+  //margin-bottom은 mainpage의 section에서 적용했던 것
+`;
+const CateBox = styled.div`
+  max-width: 1440px;
+  background-color: #eff3f6;
 `;
 
 const Img = styled.img`
@@ -259,20 +322,20 @@ const TitleH2 = styled.h2`
 `;
 //여기서부터가 룸 리스트 CSS
 const RoomListCont = styled.div`
-  padding: 60px 300px;
-  /* width: 100%; */
+  padding: 60px;
+  width: 1440px;
   display: grid;
   align-items: center;
   justify-content: center;
   grid-template-columns: repeat(auto-fill, minmax(424px, 1fr));
   grid-column-gap: 24px;
   grid-row-gap: 30px;
-  margin-bottom: 100px;
 `;
 const ButtonBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  /* margin-bottom: 60px; */
 `;
 const LoadMoreBtn = styled.button`
   /* display: flex;
@@ -281,7 +344,6 @@ const LoadMoreBtn = styled.button`
   /* color: rgba(0, 0, 0, 0.35); */
   font-size: 1.2rem;
   font-weight: 600;
-  margin: 20px;
   background-color: inherit;
   display: inline-block;
   padding: 0.5em 3em;
@@ -312,5 +374,5 @@ const Div = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 300px;
+  height: 400px;
 `;

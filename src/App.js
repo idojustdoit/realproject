@@ -24,8 +24,9 @@ function App() {
             <Route path="/mypage" element={<MyPage />}></Route>
             <Route path="/search" element={<SearchPage />}></Route>
             <Route path="Modify" element={<Modify />}></Route>
-            <Route path="/Kakaologin" element={<Kakaologin />}></Route>
+            <Route path="/kakaotalk" element={<Kakaologin />}></Route>
             <Route path="/public-room/:roomId" element={<VideoPage />}></Route>
+            <Route path="*" element={<MainPage />} />
           </Routes>
         </Router>
       </StyledApp>

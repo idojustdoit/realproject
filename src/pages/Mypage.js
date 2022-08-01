@@ -36,8 +36,9 @@ const Mypage = () => {
 
   const dispatch = useDispatch();
 
-  const getMypageInfos = useCallback(async () => {
-    axios
+  const getMypageInfos = async () => {
+    setIsLoading(true);
+    await axios
       .get(`${API_URL}/api/mypage/${USER_ID}`, {
         headers: {
           "content-type": "application/json",
@@ -45,61 +46,64 @@ const Mypage = () => {
         },
       })
       .then((res) => {
-        setIsLoading(true);
+        setIsLoading(false);
         console.log(res.data);
         if (res.data.result) {
           setIsLoading(false);
-          setAttendRooms(res.data.myPage?.attendRoom);
-          setHostRooms(res.data.myPage?.hostRoom);
-          setLikeRooms(res.data.myPage?.userLike);
+          setAttendRooms(res.data.attendInfo);
+          setHostRooms(res.data.hostInfo);
+          setLikeRooms(res.data.likeInfo);
           setEmail(res.data.myPage?.email);
           setNickName(res.data.myPage?.nickname);
-          setuserImg(res.data.myPage?.imgUrl);
+          setuserImg(res.data.myPage?.profile_url);
         }
       })
       .catch((e) => console.log(e));
-  });
+  };
 
   useEffect(() => {
     getMypageInfos();
   }, []);
 
-  if (isLoading) {
-    return <Spinner />;
-  }
   return (
     <MypageCont>
       <Header />
       <ContentBox>
         <UpperCont>
-          <h2>마이페이지</h2>
+          <UpperTitle>마이페이지</UpperTitle>
           <Cont>
             <UserCardCont>
-              <UserCardTop>
-                <img alt="user" src={userImg ? userImg : userAvatar} />
-                <FlexCont>
-                  <UserInfo>
-                    <div>
-                      {nickname}님
-                      <EditButton onClick={modify}>
-                        <EditUserInfoIcon />
-                      </EditButton>
-                    </div>
-                    <span>{email}</span>
-                  </UserInfo>
-                </FlexCont>
-              </UserCardTop>
-              <UserCardBottom>
-                <li>
-                  참여중<span>{attendRooms.length}</span>
-                </li>
-                <li>
-                  호스팅중<span>{hostRooms.length}</span>
-                </li>
-                <li>
-                  찜<span>{likeRooms.length}</span>
-                </li>
-              </UserCardBottom>
+              {isLoading ? (
+                <Spinner />
+              ) : (
+                <>
+                  <UserCardTop>
+                    <img alt="user" src={userImg ? userImg : userAvatar} />
+                    <FlexCont>
+                      <UserInfo>
+                        <div>
+                          {nickname}님
+                          <EditButton onClick={modify}>
+                            <EditUserInfoIcon />
+                          </EditButton>
+                        </div>
+                        <span>{email}</span>
+                      </UserInfo>
+                    </FlexCont>
+                  </UserCardTop>
+                  <UserCardBottom>
+                    <li>
+                      참여중<span>{attendRooms.length}</span>
+                    </li>
+                    <li>
+                      호스팅중<span>{hostRooms.length}</span>
+                    </li>
+                    <li>
+                      찜<span>{likeRooms.length}</span>
+                    </li>
+                  </UserCardBottom>
+                </>
+              )}
             </UserCardCont>
             <GraphCard>
               <Graph />
@@ -121,34 +125,45 @@ const Mypage = () => {
 };
 const MypageCont = styled.div`
   color: var(--blue-black);
-  width: 1920px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
   margin: 0 auto;
-  height: auto;
+  align-items: center;
+  justify-content: center;
   padding-top: 80px;
 `;
 const ContentBox = styled.div`
-  //헤더fixed라서 헤더만큼 공간 띄워주기
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+`;
+
+const UpperTitle = styled.h2`
+  min-width: 1440px;
+  margin: 60px 0 40px 0;
+  font-weight: 700;
+  font-size: 30px;
 `;
 const UpperCont = styled.section`
+  width: 100%;
   display: flex;
   flex-direction: column;
-  padding: 0 300px;
+  align-items: center;
+  /* padding: 0 300px; */
   background-color: #f6f6f6;
-
-  & > h2 {
-    margin: 60px 0 40px 0;
-    font-weight: 700;
-    font-size: 30px;
-  }
 `;
 const Cont = styled.div`
   display: flex;
   gap: 24px;
   margin-bottom: 100px;
+  width: 1440px;
+  justify-content: space-between;
 `;
 
 const UserCardCont = styled.div`
-  width: 648px;
+  width: 50%;
   height: 370px;
   background-color: #fff;
   border-radius: 10px;
@@ -233,7 +248,7 @@ const GraphCard = styled(UserCardCont)`
 // const GraphCard = styled(UserCardCont)``;
 
 const RoomsCont = styled.div`
-  padding: 60px 276px;
+  /* padding: 60px 276px; */
   height: 50%;
   align-items: center;
   justify-content: center;

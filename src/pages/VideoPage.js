@@ -102,6 +102,7 @@ const VideoPage = () => {
     }, 1000);
     return () => clearInterval(time_ref.current);
   });
+  //들어갈때
 
   // sidebar
   const sideBarHandler = () => {
