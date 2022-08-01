@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import axios from "axios";
-import kakao from "../shared/login-assets/kakao.png";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { useDispatch } from "react-redux";
@@ -128,26 +127,6 @@ const Login = ({ onClose, SignOpen }) => {
               </Letter>
               후 이용해주세요.
             </LinkContainer>
-            <a
-              style={{
-                width: "360px",
-                height: "50px",
-                marginBottom: "10px",
-                marginTop: "24px",
-              }}
-              href={process.env.REACT_APP_KAKAOURL}
-            >
-              <img
-                alt=""
-                style={{
-                  width: "360px",
-                  height: "50px",
-                  marginBottom: "10px",
-                  marginTop: "24px",
-                }}
-                src={kakao}
-              />
-            </a>
             <br />
           </LoginBtn>
         </ModalBlock>
@@ -275,7 +254,7 @@ const LinkContainer = styled.div`
 `;
 
 const Button = styled.button`
-  margin-top: 42px;
+  margin-top: 60px;
   margin-bottom: 8px;
   color: #fff;
   background-color: ${(props) => (props.disabled ? "gray" : "#1D9FFD")};
