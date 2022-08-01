@@ -41,8 +41,8 @@
 |포지션|Front-end|Front-end|Front-end|
 |이름|조원희|하율찬|조성인|.
 
-|제목|내용|설명|설명|
+
+|![a2a82850f6db5ee6033c48f55d5e15a7a88f7b2cbb72be0bdfff91ad65b168ab](https://user-images.githubusercontent.com/107375500/182104284-14c0d66e-1e84-4cc4-9f56-dfc769c8730c.png)|내용|설명|설명|
 |:---|---:|:---:|:---:|
-|왼쪽정렬|오른쪽정렬|중앙정렬|
-|왼쪽정렬|오른쪽정렬|중앙정렬|
-|왼쪽정렬|오른쪽정렬|중앙정렬|
+|포지션|Front-en|Front-end|Front-end|
+|이름|조원희|하율찬|조성인|
