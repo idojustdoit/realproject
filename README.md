@@ -38,9 +38,10 @@
 
 
 
+
 ## E-GLOO 팀원소개 👨‍👨‍👦
 
-|이미지|![4ffcfac596ce78b6359f6703e5ffe57e](https://user-images.githubusercontent.com/107375500/182104419-9c0bc974-77b0-48d8-beeb-98574f881577.jpg)|![014f6bf2dccf97d1cfc97dff79b028e182f3bd8c9735553d03f6f982e10ebe70](https://user-images.githubusercontent.com/107375500/182104497-2989dd73-d46a-4e31-ab60-1e1ed72f9244.png)|![a2a82850f6db5ee6033c48f55d5e15a7113e2bd2b7407c8202a97d2241a96625](https://user-images.githubusercontent.com/107375500/182104592-a256a2fc-c249-4b90-bee3-ad5c8ad21920.png)|![a2a82850f6db5ee6033c48f55d5e15a7113e2bd2b7407c8202a97d2241a96625](https://user-images.githubusercontent.com/107375500/182132932-59de69d6-a4be-4bcb-afae-0d457ffc840c.png)|
+|이미지|![4ffcfac596ce78b6359f6703e5ffe57e](https://user-images.githubusercontent.com/107375500/182104419-9c0bc974-77b0-48d8-beeb-98574f881577.jpg)|![014f6bf2dccf97d1cfc97dff79b028e182f3bd8c9735553d03f6f982e10ebe70](https://user-images.githubusercontent.com/107375500/182104497-2989dd73-d46a-4e31-ab60-1e1ed72f9244.png)|![a2a82850f6db5ee6033c48f55d5e15a7a88f7b2cbb72be0bdfff91ad65b168ab](https://user-images.githubusercontent.com/107375500/182133022-3629d622-334f-4ec5-a2bc-52dc932cb6ad.png)|![a2a82850f6db5ee6033c48f55d5e15a7113e2bd2b7407c8202a97d2241a96625](https://user-images.githubusercontent.com/107375500/182132932-59de69d6-a4be-4bcb-afae-0d457ffc840c.png)|
 |:---:|:---:|:---:|:---:|:---:|
 |포지션|Front-end|Front-end|Front-end|Designer|
 |이름|조원희|하율찬|조성인|기영석|
