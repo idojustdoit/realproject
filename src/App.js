@@ -12,6 +12,7 @@ import Modify from "./pages/Modify";
 import VideoPage from "./pages/VideoPage";
 import Kakaologin from "./pages/Kakaologin";
 import SearchPage from "./pages/SearchPage";
+import IntroPage from "./pages/IntroPage";
 
 function App() {
   return (
@@ -21,9 +22,10 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<MainPage />}></Route>
+            <Route path="/IntroPage" element={<IntroPage />}></Route>
             <Route path="/mypage" element={<MyPage />}></Route>
             <Route path="/search" element={<SearchPage />}></Route>
-            <Route path="Modify" element={<Modify />}></Route>
+            <Route path="/Modify" element={<Modify />}></Route>
             <Route path="/kakaotalk" element={<Kakaologin />}></Route>
             <Route path="/public-room/:roomId" element={<VideoPage />}></Route>
           </Routes>

@@ -70,7 +70,7 @@ function Header() {
           </LogoCont>
           <Ul>
             <Li>
-              <Link to="/">이글루 소개</Link>
+              <Link to="/IntroPage">이글루 소개</Link>
             </Li>
             <Li>
               <Link to="/">이용 가이드</Link>

@@ -59,7 +59,7 @@ const VideoPage = () => {
   const API_URL = process.env.REACT_APP_API_URL;
   const userId = localStorage.getItem("userId");
   const token = localStorage.getItem("accessToken");
-
+  //들어갈때
   const poststartData = () => {
     axios({
       method: "POST",
@@ -102,7 +102,6 @@ const VideoPage = () => {
     }, 1000);
     return () => clearInterval(time_ref.current);
   });
-  //들어갈때
 
   // sidebar
   const sideBarHandler = () => {
