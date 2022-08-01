@@ -58,6 +58,7 @@ const ContentTitle = styled.h1`
   font-size: 1.4rem;
   line-height: 2rem;
   margin: 0 20px;
+  box-shadow: var(--card-box-shadow);
 `;
 const Content = styled.section`
   font-size: 1.5rem;
