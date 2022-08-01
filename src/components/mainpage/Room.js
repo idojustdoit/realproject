@@ -19,7 +19,7 @@ const Room = ({
   date,
   tagName,
   groupNum,
-  likeUser,
+  isLiked,
   lock,
 }) => {
   const API_URL = process.env.REACT_APP_API_URL;
@@ -27,7 +27,7 @@ const Room = ({
 
   const token = localStorage.getItem("accessToken");
   const userId = localStorage.getItem("userId");
-  const [likeState, setLikeState] = useState(likeUser.includes(Number(userId)));
+  const [likeState, setLikeState] = useState(isLiked.includes(Number(userId)));
   const catename = tagName;
   const catearr = catename;
 
