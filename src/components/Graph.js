@@ -45,17 +45,27 @@ function Graph() {
   //단위 변경해서 넣어주고 변수 명 체크하기
 
   return (
-    <div style={{ marginTop: "40px" }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        height: "100%",
+        alignItems: "center",
+      }}
+    >
       <div
         style={{
-          backgroundColor: "lightgray",
+          fontWeight: "700",
           width: "200px",
           marginLeft: "20px",
           bottom: "40",
+          fontSize: "20px",
+          margin: "20px 0",
         }}
       >
-        {" "}
-        1주일 공부량:{weektime}시간
+        🏃‍♀️<span style={{ color: "#1D9FFD" }}>일주일</span> 공부량 그래프
+        {/* {weektime} */}
       </div>
       <BarChart
         width={600}

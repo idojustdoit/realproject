@@ -125,6 +125,7 @@ const Category = () => {
 미디어 쿼리 설정해야 함 (2022 07 19)
 */
 const Container = styled.section`
+  width: 100%;
   min-width: 1920px;
   min-height: 390px;
   padding: 40px 250px 60px;

@@ -88,6 +88,7 @@ const SearchBox = styled.form`
   border-radius: 4px;
   width: 25%;
   display: flex;
+  justify-content: center;
   overflow: hidden;
 `;
 const SearchTitle = styled.h1`
