@@ -26,15 +26,10 @@ export const BasicBtn = ({ roomId, userVideo }) => {
       baseURL: API_URL,
     })
       .then((response) => {
-        console.log(response);
         navigate("/");
         window.location.reload();
-        alert("성공");
       })
-      .catch((error) => {
-        console.log(error);
-        alert("실패");
-      });
+      .catch((error) => {});
   };
 
   const outAlert = () => {

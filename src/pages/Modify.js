@@ -48,7 +48,7 @@ function Modify() {
   const signupdata = (e) => {
     e.preventDefault();
     let file = profile_ref.current.files[0];
-    console.log(file);
+
     formData.append("profile_url", file);
     formData.append("password", password);
     formData.append("passwordCheck", passwordCheck);
@@ -66,7 +66,6 @@ function Modify() {
       baseURL: API_URL,
     })
       .then((response) => {
-        console.log(response);
         localStorage.setItem("nickname", response.data.updateUser.nickname);
         navigate("/mypage");
         MySwal.fire({
@@ -77,7 +76,6 @@ function Modify() {
         });
       })
       .catch((error) => {
-        console.log(error);
         MySwal.fire({
           title: "error",
           text: "정보수정을 실패하였습니다",

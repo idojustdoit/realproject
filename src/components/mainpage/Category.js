@@ -73,7 +73,6 @@ const CATEGORY_LIST = [
 const Category = () => {
   const dispatch = useDispatch();
   const [isActive, setIsActive] = useState(false);
-  console.log(isActive);
 
   function categoryClickHandler(e, clickedCateName) {
     setIsActive((prevState) => e.target.value);
