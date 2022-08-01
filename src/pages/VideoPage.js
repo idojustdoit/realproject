@@ -4,10 +4,6 @@ import styled from "styled-components";
 import VideoHeader from "../components/videoPage/mainScreen/VideoHeader";
 import SideView from "../components/videoPage/sideBar/SideView";
 
-import Timer from "../components/Timer";
-import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
-
 import Peer from "simple-peer";
 import axios from "axios";
 
@@ -29,7 +25,6 @@ const VideoPage = () => {
   const navigate = useNavigate();
   const { roomId } = useParams();
 
-  const MySwal = withReactContent(Swal);
   const [peers, setPeers] = useState([]);
   const socketRef = useRef();
   const userVideo = useRef();
@@ -72,16 +67,11 @@ const VideoPage = () => {
       },
     })
       .then((response) => {
-        console.log(response);
-        alert("타이머 성공");
         setHours(response.data.hour);
         setMinutes(response.data.minute);
         setSeconds(response.data.second);
       })
-      .catch((error) => {
-        console.log(error);
-        alert("타이머 실패");
-      });
+      .catch((error) => {});
   };
   useEffect(() => {
     poststartData();
@@ -137,7 +127,6 @@ const VideoPage = () => {
   };
 
   // const exitRoomHandler = async () => {
-  //   console.log(userVideo.current.srcObject);
   //   MySwal.fire({
   //     title: "EXIT",
   //     text: "정말 나가시겠습니까?",
@@ -215,7 +204,7 @@ const VideoPage = () => {
 
     socketRef.current.on("user left", (payload) => {
       alert(payload.userInfo.nickname + "님이 나갔대요(수근수근)");
-      console.log("user left");
+
       const peerObj = peersRef.current.find(
         (p) => p.peerID === payload.socketId
       );

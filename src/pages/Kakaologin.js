@@ -21,23 +21,21 @@ function Kakaologin() {
         }
       )
       .then((res) => {
-        console.log(res);
         const access_token = res.data.access_token;
         const refresh_token = res.data.refresh_token;
         axios
-          .post("http://3.37.87.171/api/kakao/login", {
+          .post(`${API_URL}/api/kakao/login`, {
             access_token,
             refresh_token,
           })
           .then((res) => {
-            console.log(res);
             const user_id = res.data.id;
             const user_email = res.data.kakao_account.email;
             const user_nickname = res.data.kakao_account.profile.nickname;
             const user_url = res.data.kakao_account.profile.profile_image_url;
             axios
               .post(
-                "http://3.37.87.171/api/kakao/newuser",
+                `${API_URL}/api/kakao/newuser`,
                 {
                   user_id: user_id,
                   user_email: user_email,
@@ -49,7 +47,6 @@ function Kakaologin() {
                 }
               )
               .then((res) => {
-                console.log(res);
                 localStorage.setItem("accessToken", res.data.accessToken);
                 localStorage.setItem("refreshToken", res.data.refreshToken);
                 localStorage.setItem("userId", res.data.snsId);
@@ -57,9 +54,7 @@ function Kakaologin() {
 
                 navigate("/");
               })
-              .catch((error) => {
-                console.log(error);
-              });
+              .catch((error) => {});
           });
       });
   }, []);

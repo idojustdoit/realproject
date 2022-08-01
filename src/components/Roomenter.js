@@ -121,15 +121,16 @@ const Login = ({ onClose, roomId }) => {
                 <Todo>
                   {nickname.map(function (index) {
                     return (
-                      <div className="list">
+                      <div className="list" style={{ display: "flex" }}>
                         {" "}
                         <img
                           alt=""
-                          src={index.imgUrl}
+                          src={index.imageUrl}
                           style={{
-                            width: "50px",
-                            height: "50px",
+                            width: "22px",
+                            height: "22px",
                             borderRadius: "10px",
+                            marginRight: "10px",
                           }}
                         />
                         <div>{index.nickname}</div>

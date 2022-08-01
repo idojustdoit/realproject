@@ -25,7 +25,7 @@ function Header() {
   const dispatch = useDispatch();
   //isLogin 기본 state값 false
   const token = localStorage.getItem("accessToken");
-  const isLogin = useSelector((state) => state.user.isLogin);
+
   const logoutHandler = (e) => {
     dispatch(logOut());
     localStorage.removeItem("accessToken");
@@ -36,7 +36,6 @@ function Header() {
     window.location.reload();
   };
 
-  console.log(isLogin);
   const [LogInOpen, setIsLogInOpen] = React.useState(false);
   const [SignUpOpen, setSignUpOpen] = React.useState(false);
   const [CreateOpen, setCreateOpen] = React.useState(false);

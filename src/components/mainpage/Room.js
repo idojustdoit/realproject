@@ -26,6 +26,8 @@ const Room = ({
   const token = localStorage.getItem("accessToken");
   const userId = localStorage.getItem("userId");
   const [likeState, setLikeState] = useState(likeUser.includes(Number(userId)));
+  const catename = tagName;
+  const catearr = catename;
 
   //좋아요 버튼
   const likeAxios = () => {
@@ -39,12 +41,8 @@ const Room = ({
         Authorization: `Bearer ${token}`,
       },
     })
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      .then((response) => {})
+      .catch((error) => {});
   };
 
   //입장하기버튼: 클릭한 방(roomId)에 해당하는 화상채팅방으로 입장하는 모달
@@ -66,10 +64,7 @@ const Room = ({
     setLikeState((prevlikeState) => !prevlikeState);
     likeAxios();
   }
-  const catename = tagName.join();
-  const catearr = catename.split(",");
 
-  console.log(catearr);
   return (
     <RoomCont key={key}>
       <RoomImg imgUrl={imgUrl} alt=""></RoomImg>

@@ -44,7 +44,7 @@ const Login = ({ onClose, SignOpen }) => {
     })
       .then(function (response) {
         dispatch(logIn());
-        console.log(response);
+
         localStorage.setItem("accessToken", response.data.accessToken);
         localStorage.setItem("nickname", response.data.nickname);
         localStorage.setItem("refreshToken", response.data.refreshToken);
@@ -59,7 +59,6 @@ const Login = ({ onClose, SignOpen }) => {
         });
       })
       .catch(function (error) {
-        console.log(error);
         MySwal.fire({
           title: "Error!",
           text: "로그인이 실패하였습니다.",

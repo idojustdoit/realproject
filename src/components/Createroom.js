@@ -134,7 +134,6 @@ const Createroom = ({ onClose }) => {
       },
     })
       .then((response) => {
-        console.log(response);
         MySwal.fire({
           title: "success",
           text: "방이 생성되었습니다!",
@@ -142,10 +141,9 @@ const Createroom = ({ onClose }) => {
           confirmButtonText: "확인",
         });
         onClose();
-        //방상세페이지로 이동.
+        window.location.reload();
       })
       .catch((error) => {
-        console.log(error);
         MySwal.fire({
           title: "Error!",
           text: "방생성에 실패하였습니다.",
@@ -154,9 +152,6 @@ const Createroom = ({ onClose }) => {
         });
       });
   };
-  const a = categoryName.join();
-  const b = a.split(",");
-  console.log(b);
 
   return (
     <Container>
