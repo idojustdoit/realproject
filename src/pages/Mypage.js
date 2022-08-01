@@ -17,7 +17,6 @@ import Footer from "../components/Footer";
 import Spinner from "../components/Spinner";
 
 const Mypage = () => {
-  const USER_ID = localStorage.getItem("userId");
   const API_URL = process.env.REACT_APP_API_URL;
   const TOKEN = localStorage.getItem("accessToken");
   const navigate = useNavigate();
@@ -37,9 +36,10 @@ const Mypage = () => {
   const dispatch = useDispatch();
 
   const getMypageInfos = async () => {
+    const userId = localStorage.getItem("userId");
     setIsLoading(true);
     await axios
-      .get(`${API_URL}/api/mypage/${USER_ID}`, {
+      .get(`${API_URL}/api/mypage/${userId}`, {
         headers: {
           "content-type": "application/json",
           Authorization: `Bearer ${TOKEN}`,
