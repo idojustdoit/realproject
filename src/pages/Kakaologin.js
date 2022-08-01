@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Kakaologin() {
-  const API_URL = process.env.REACT_APP_API_URL;
+  const API_URL = "https://egloo.shop";
   const navigate = useNavigate();
   useEffect(() => {
     const href = window.location.href;
@@ -21,18 +21,23 @@ function Kakaologin() {
         }
       )
       .then((res) => {
+        console.log(res);
         const access_token = res.data.access_token;
         const refresh_token = res.data.refresh_token;
         axios
           .post(`${API_URL}/api/kakao/login`, {
             access_token,
             refresh_token,
+            withcredentials: true,
           })
           .then((res) => {
+            console.log(res);
             const user_id = res.data.id;
             const user_email = res.data.kakao_account.email;
-            const user_nickname = res.data.kakao_account.profile.nickname;
+            const user_nickname = res.data.properties.nickname;
             const user_url = res.data.kakao_account.profile.profile_image_url;
+            localStorage.setItem("userId", res.data.id);
+            localStorage.setItem("nickname", res.data.properties.nickname);
             axios
               .post(
                 `${API_URL}/api/kakao/newuser`,
@@ -47,6 +52,7 @@ function Kakaologin() {
                 }
               )
               .then((res) => {
+                console.log(res);
                 localStorage.setItem("accessToken", res.data.accessToken);
                 localStorage.setItem("refreshToken", res.data.refreshToken);
                 localStorage.setItem("userId", res.data.snsId);
