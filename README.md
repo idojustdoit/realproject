@@ -20,8 +20,8 @@
 
 
 ## E-GLOO 프론트엔드 기술스택 🧑‍💻
-<img src="https://img.shields.io/badge/react-blue?style=for-the-badge&logo=react&logoColor=blue">
-<img src="https://img.shields.io/badge/redux-tookit-lightblue?style=for-the-badge&logoredux&logoColor=lightblue">
+<img src="https://img.shields.io/badge/react-black?style=for-the-badge&logo=react&logoColor=blue">
+<img src="https://img.shields.io/badge/redux-tookit-light black?style=for-the-badge&logoredux&logoColor=blue">
 <img src="https://img.shields.io/badge/amazonaws-green?style=for-the-badge&logo=amazonaws&logoColor=grey">
 <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=grey">
 <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=grey">
