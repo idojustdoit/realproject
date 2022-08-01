@@ -36,12 +36,7 @@
 ## E-GLOO 트러블슈팅 ❌
 
 ## E-GLOO 팀원소개 👨‍👨‍👦
-|제목|내용|설명|
+
 |------|---|---|---|
-||![4ffcfac596ce78b6359f6703e5ffe57e](https://user-images.githubusercontent.com/107375500/182102654-29413297-256b-4221-bd09-5cb5ae32a8af.jpg|![014f6bf2dccf97d1cfc97dff79b028e182f3bd8c9735553d03f6f982e10ebe70](https://user-images.githubusercontent.com/107375500/182102730-e913e5e7-058e-4667-8593-9aecd6021099.png)|![a2a82850f6db5ee6033c48f55d5e15a7a88f7b2cbb72be0bdfff91ad65b168ab](https://user-images.githubusercontent.com/107375500/182102826-3520f706-c82a-4f16-8df8-c58f715adab8.png)|
 |포지션|Front-end|Front-end|Front-end|
 |이름|조원희|하율찬|조성인|
-
-
-
-
