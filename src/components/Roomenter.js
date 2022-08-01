@@ -136,7 +136,7 @@ const Login = ({ onClose, roomId }) => {
                             marginRight: "10px",
                           }}
                         />
-                        <span style={{ fontSize: "20px" }}>
+                        <span style={{ fontSize: "16px", fontWeight: "400" }}>
                           {index.nickname}
                         </span>
                       </div>
