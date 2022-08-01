@@ -22,7 +22,7 @@ function Graph() {
     const userId = localStorage.getItem("userId");
     axios({
       method: "GET",
-      url: `/api/mypage/time`,
+      url: `/api/mypage/${userId}/time`,
       baseURL: API_URL,
 
       headers: {

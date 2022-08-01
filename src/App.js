@@ -10,7 +10,6 @@ import MainPage from "./pages/MainPage";
 import MyPage from "./pages/Mypage";
 import Modify from "./pages/Modify";
 import VideoPage from "./pages/VideoPage";
-import Kakaologin from "./pages/Kakaologin";
 import SearchPage from "./pages/SearchPage";
 import IntroPage from "./pages/IntroPage";
 import NotFoundPage from "./pages/NotFoundPage";
@@ -27,7 +26,6 @@ function App() {
             <Route path="/mypage" element={<MyPage />}></Route>
             <Route path="/search" element={<SearchPage />}></Route>
             <Route path="/Modify" element={<Modify />}></Route>
-            <Route path="/kakaotalk" element={<Kakaologin />}></Route>
             <Route path="/public-room/:roomId" element={<VideoPage />}></Route>
             <Route path="*" element={<NotFoundPage />} />
           </Routes>

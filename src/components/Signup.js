@@ -142,7 +142,7 @@ const SignUp = ({ onClose, LoginOpen }) => {
         console.log(error);
         MySwal.fire({
           title: "Error!",
-          text: "인증번호를 다시 확인해주세요.",
+          text: "이메일을 다시입력해주세요!",
           icon: "error",
           confirmButtonText: "확인",
         });

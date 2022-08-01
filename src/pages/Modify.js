@@ -57,7 +57,7 @@ function Modify() {
     const userId = localStorage.getItem("userId");
     axios({
       method: "PUT",
-      url: `/api/mypage/update`,
+      url: `/api/mypage/${userId}/update`,
       data: formData,
       headers: {
         "content-type": "multipart/form-data",

@@ -37,9 +37,10 @@ const Mypage = () => {
   const dispatch = useDispatch();
 
   const getMypageInfos = async () => {
+    const userId = localStorage.getItem("userId");
     setIsLoading(true);
     await axios
-      .get(`${API_URL}/api/mypage/`, {
+      .get(`${API_URL}/api/mypage/${userId}`, {
         headers: {
           "content-type": "application/json",
           Authorization: `Bearer ${TOKEN}`,
