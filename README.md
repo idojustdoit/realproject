@@ -1,70 +1,32 @@
-# Getting Started with Create React App
+# E-GLOO ⛄
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## E-GLOO 아키텍처 🌈
+![스크린샷 2022-08-01 14 24 02](https://user-images.githubusercontent.com/96240712/182083770-a15da7a1-6479-4107-adf0-c48557eacc0f.png)
 
-In the project directory, you can run:
+## E-GLOO 핵심기능 🛠
 
-### `yarn start`
+#### 최대 4명의 유저간의 실시간 화상채팅 및 실시간 채팅 기능 👨‍👨‍👦‍👦
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+#### 일주일 단위의 공부시간 그래프 표기 📈
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+#### 스터디룸 공개방 비밀방 기능 🚪
 
-### `yarn test`
+#### 마이페이지 호스트 룸 참여 룸 찜한 룸 확인 가능 🍀
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+#### 화상 채팅방 내에서 TO-DO LIST 작성 📚
 
-### `yarn build`
+#### 채팅방 타이머로 오늘 공부한 시간 체크 ✔
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## E-GLOO 프론트엔드 기술스택 🧑‍💻
+<img src="https://img.shields.io/badge/react-000000?style=for-the-badge&logo=Docker&logoColor=blue">
+<img src="https://img.shields.io/badge/redux-tookit-000000?style=for-the-badge&logo=Docker&logoColor=lightblue">
+<img src="https://img.shields.io/badge/amazonaws-232F3E?style=for-the-badge&logo=amazonaws&logoColor=grey">
+<img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=grey">
+<img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=grey">
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `yarn eject`
+## E-GLOO 트러블슈팅 ❌
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## E-GLOO 팀원소개 👨‍👨‍👦
