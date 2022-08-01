@@ -54,7 +54,7 @@ export default SearchBanner;
 const SearchCont = styled.div`
   width: 100%;
   min-width: 1440px;
-  height: 400px;
+  height: 450px;
   display: flex;
   flex-direction: column;
   justify-content: center;
