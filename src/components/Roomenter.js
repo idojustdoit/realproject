@@ -118,31 +118,45 @@ const Login = ({ onClose, roomId }) => {
                   <div className="person">현재 참여 인원이 없습니다.</div>
                 </Todo>
               ) : (
-                <Todo>
+                <div
+                  style={{
+                    flexDirection: "column",
+                    border: "1px solid #dddddd",
+                    borderRadius: "4px",
+                    width: "309px",
+                  }}
+                >
                   {nickname.map(function (index) {
                     return (
-                      <div
-                        className="list"
-                        style={{ display: "flex", alignItems: "center" }}
-                      >
-                        {" "}
-                        <img
-                          alt=""
-                          src={index.imageUrl}
+                      <div>
+                        <div
+                          className="list"
                           style={{
-                            width: "22px",
-                            height: "22px",
-                            borderRadius: "10px",
-                            marginRight: "10px",
+                            display: "flex",
+                            alignItems: "center",
+                            padding: "5px",
+                            border: "1px solid #dddddd",
                           }}
-                        />
-                        <span style={{ fontSize: "16px", fontWeight: "400" }}>
-                          {index.nickname}
-                        </span>
+                        >
+                          {" "}
+                          <img
+                            alt=""
+                            src={index.imageUrl}
+                            style={{
+                              width: "22px",
+                              height: "22px",
+                              borderRadius: "10px",
+                              marginRight: "10px",
+                            }}
+                          />
+                          <span style={{ fontSize: "16px", fontWeight: "400" }}>
+                            {index.nickname}
+                          </span>
+                        </div>
                       </div>
                     );
                   })}
-                </Todo>
+                </div>
               )}
             </div>
           </Label>
@@ -180,98 +194,6 @@ const Login = ({ onClose, roomId }) => {
               <Btn2 onClick={RoomenterHandler}>공개방 입장하기</Btn2>
             </EnterBtn>
           )}
-
-          {/* <Title> title</Title>
-          <Line />
-          <Label>
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <Chat1>스터디내용</Chat1>
-              <Todo>같이 으쌰으쌰 해요!!!!</Todo>
-            </div>
-          </Label>
-          <Label>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              <Chat2>참여인원</Chat2>
-
-              <div>
-                <People>
-                  <img
-                    alt=""
-                    style={{
-                      width: "25px",
-                      height: "25px",
-                      borderRadius: "50px",
-                      position: "relative",
-                      marginRight: "10px",
-                    }}
-                    src="https://opgg-com-image.akamaized.net/attach/images/20220220075306.1538486.jpg"
-                  />
-                  하율찬
-                </People>
-                <People>
-                  {" "}
-                  <img
-                    alt=""
-                    style={{
-                      width: "25px",
-                      height: "25px",
-                      borderRadius: "50px",
-                      position: "relative",
-                      marginRight: "10px",
-                    }}
-                    src="https://opgg-com-image.akamaized.net/attach/images/20220220075306.1538486.jpg"
-                  />
-                  기영석
-                </People>
-                <People>
-                  {" "}
-                  <img
-                    alt=""
-                    style={{
-                      width: "25px",
-                      height: "25px",
-                      borderRadius: "50px",
-                      position: "relative",
-                      marginRight: "10px",
-                    }}
-                    src="https://opgg-com-image.akamaized.net/attach/images/20220220075306.1538486.jpg"
-                  />
-                  조성인
-                </People>
-                <People>
-                  {" "}
-                  <img
-                    alt=""
-                    style={{
-                      width: "25px",
-                      height: "25px",
-                      borderRadius: "50px",
-                      position: "relative",
-                      marginRight: "10px",
-                    }}
-                    src="https://opgg-com-image.akamaized.net/attach/images/20220220075306.1538486.jpg"
-                  />
-                  조원희
-                </People>
-              </div>
-            </div>
-          </Label>
-          <EnterBtn>
-            <Btn1
-              onClick={() => {
-                onClose();
-              }}
-            >
-              취소
-            </Btn1>
-
-            <Btn2 onClick={RoomenterHandler}>입장하기</Btn2> */}
-          {/* </EnterBtn> */}
         </ModalBlock>
       </Background>
     </Container>
@@ -381,7 +303,11 @@ const Chat3 = styled.span`
   font-size: 18px;
   padding: 5px;
 `;
-
+const Line2 = styled.hr`
+  width: 309px;
+  height: 1px;
+  border: 1px solid #dddddd;
+`;
 const Todo = styled.div`
   background-color: white;
   color: black;

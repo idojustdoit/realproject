@@ -221,6 +221,7 @@ const Createroom = ({ onClose }) => {
               <span>
                 <div>
                   <input
+                    required
                     type="file"
                     id="input_file"
                     ref={profile_ref}

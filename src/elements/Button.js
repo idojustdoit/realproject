@@ -26,10 +26,13 @@ export const BasicBtn = ({ roomId, userVideo }) => {
       baseURL: API_URL,
     })
       .then((response) => {
+        console.log(response);
         navigate("/");
         window.location.reload();
       })
-      .catch((error) => {});
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const outAlert = () => {

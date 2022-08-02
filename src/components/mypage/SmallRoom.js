@@ -1,13 +1,34 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { FaUser } from "react-icons/fa";
+import axios from "axios";
 
 import Portal from "../Portal";
 import Roomenter from "../Roomenter";
 import { FaLock } from "react-icons/fa";
 
 function SmallRoom({ roomId, imgUrl, title, date, groupNum, lock }) {
-  function studyOutHandler() {}
+  const API_URL = process.env.REACT_APP_API_URL;
+  function studyOutHandler() {
+    const userId = localStorage.getItem("userId");
+    const token = localStorage.getItem("accessToken");
+    axios({
+      method: "post",
+      url: `api/room/outroom/${roomId}/${userId}`,
+
+      baseURL: API_URL,
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 
   function joinRoomHandler() {}
   const [EnterOpen, setEnterOpen] = useState(false);

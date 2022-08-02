@@ -135,6 +135,7 @@ const RoomList = () => {
         `${API_URL}/api/main/tag/${body.category}?page=${body.page}&perPage=${body.perPage}`
       )
       .then((res) => {
+        console.log(res);
         if (res.data.result) {
           if (body.loadMore) {
             //더보기 버튼 클릭시
