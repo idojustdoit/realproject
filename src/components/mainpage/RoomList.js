@@ -180,7 +180,7 @@ const RoomList = () => {
             modules={[Navigation, Scrollbar]}
             spaceBetween={10}
             slidesPerView={8}
-            touchRatio={0}
+            allowTouchMove={false}
             navigation
             scrollbar={{ draggable: false }}
             onClick={(swiper) => {
