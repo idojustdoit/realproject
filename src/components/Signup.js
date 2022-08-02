@@ -13,7 +13,7 @@ const SignUp = ({ onClose, LoginOpen }) => {
   const MySwal = withReactContent(Swal);
   const outZone_ref = React.useRef(null);
   const profile_ref = React.useRef(null); //유저 이미지 URL
-  const [profile, setprofile] = React.useState("");
+  const [profile, setprofile] = React.useState(userprofile);
   const [email, setemail] = React.useState(""); //email 인풋
   const [password, setPwd] = React.useState(""); //비밀번호 인풋
   const [passwordCheck, setpasswordCheck] = React.useState(""); //비밀번호 확인 인풋
@@ -71,6 +71,7 @@ const SignUp = ({ onClose, LoginOpen }) => {
   // 사용해서 url 추출
   const FILE_SIZE_MAX_LIMIT = 5 * 1024 * 1024;
   const UpImageUrl = (e) => {
+    setprofile(e.target.value);
     const files = e.target.files[0];
     if (files.size > FILE_SIZE_MAX_LIMIT) {
       e.target.value = "";
@@ -78,7 +79,6 @@ const SignUp = ({ onClose, LoginOpen }) => {
       return;
     }
     encodeFileToBase64(files);
-    setprofile(e.target.value);
   };
 
   const encodeFileToBase64 = (fileBlob) => {
@@ -149,11 +149,6 @@ const SignUp = ({ onClose, LoginOpen }) => {
       });
     setVerEmail(true);
   };
-  useEffect(() => {
-    setprofile(
-      "https://velog.velcdn.com/images/idojustdo_it/post/ff5bd820-b3d0-423c-b29d-e3192a74803a/image.png"
-    );
-  }, []);
 
   // 회원가입 통신
   const signupdata = (e) => {
@@ -203,6 +198,7 @@ const SignUp = ({ onClose, LoginOpen }) => {
   const handlerPwcheck = (e) => {
     setpasswordCheck(e.target.value);
   };
+  console.log(profile);
 
   return (
     <Container>
@@ -243,6 +239,7 @@ const SignUp = ({ onClose, LoginOpen }) => {
                 src="https://www.shareicon.net/data/2017/05/09/885771_camera_512x512.png"
               />
               <input
+                required
                 style={{ display: "none" }}
                 type="file"
                 id="files"
@@ -250,6 +247,20 @@ const SignUp = ({ onClose, LoginOpen }) => {
                 onChange={UpImageUrl}
               />
               <br />
+
+              {profile == userprofile ? (
+                <span
+                  style={{
+                    marginTop: "10px",
+                    fontSize: "15px",
+                    fontWeight: "400",
+                  }}
+                >
+                  프로필사진을 꼭 지정해주세요.
+                </span>
+              ) : (
+                ""
+              )}
             </span>
           </Label>
           <Label>
