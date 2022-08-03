@@ -1,8 +1,6 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import { storage } from "../shared/firebase";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import userprofile from "../shared/mypage-assets/user-basic-img.png";
