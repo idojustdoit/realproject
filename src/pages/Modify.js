@@ -66,8 +66,8 @@ function Modify() {
       baseURL: API_URL,
     })
       .then((response) => {
-        localStorage.setItem("nickname", response.data.updateUser.nickname);
-        localStorage.setItem("accessToken", response.data.accessToken);
+        // localStorage.setItem("nickname", response.data.updateUser?.nickname);
+        // localStorage.setItem("accessToken", response.data?.accessToken);
         navigate("/mypage");
         MySwal.fire({
           title: "success",

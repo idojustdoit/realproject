@@ -348,8 +348,6 @@ const VideoPage = () => {
       window.removeEventListener("beforeunload", postTimerData);
     };
   }, []);
-  console.log(profileImg)
-  console.log(peers)
 
   return (
     <>
@@ -498,7 +496,16 @@ const VideoInfo = (props) => {
     >
       <div>
         <div className="user_img">
-          <img style={{ objectFit: "cover", width:"33px", height:"33px", borderRadius:"50%" }} src={props.profileImg} alt="" />
+          <img
+            style={{
+              objectFit: "cover",
+              width: "33px",
+              height: "33px",
+              borderRadius: "50%",
+            }}
+            src={props.profileImg}
+            alt=""
+          />
         </div>
         <span className="user_name">{props.nickname}</span>
       </div>
