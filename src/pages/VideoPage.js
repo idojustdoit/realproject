@@ -1,15 +1,13 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import VideoHeader from "../components/videoPage/mainScreen/VideoHeader";
 import SideView from "../components/videoPage/sideBar/SideView";
 
-import Timer from "../components/Timer";
-import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
-
 import Peer from "simple-peer";
 import axios from "axios";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 import "../App.css";
 
@@ -23,13 +21,13 @@ import { TbVideo, TbVideoOff } from "react-icons/tb";
 //socket
 import io from "socket.io-client";
 
-const socket = io.connect("http://localhost:3001");
+const socket = io.connect("https://egloo.shop");
 
 const VideoPage = () => {
+  const MySwal = withReactContent(Swal);
   const navigate = useNavigate();
   const { roomId } = useParams();
-
-  const MySwal = withReactContent(Swal);
+  const { state } = useLocation();
   const [peers, setPeers] = useState([]);
   const socketRef = useRef();
   const userVideo = useRef();
@@ -50,7 +48,156 @@ const VideoPage = () => {
   const [openBar, setOpenBar] = useState(true);
 
   const nickname = localStorage.getItem("nickname");
-  const profileImg = localStorage.getItem("imgurl");
+  const profileImg = localStorage.getItem("profile");
+
+  // 타이머
+  const [seconds, setSeconds] = useState(0);
+  const [minutes, setMinutes] = useState(0);
+  const [hours, setHours] = useState(0);
+  const [title, setTitle] = useState("");
+  const time_ref = useRef(null);
+  const API_URL = process.env.REACT_APP_API_URL;
+  const userId = localStorage.getItem("userId");
+  const token = localStorage.getItem("accessToken");
+  //들어갈때
+
+  const poststartData = () => {
+    axios({
+      method: "POST",
+      url: `/api/room/public-room/${roomId}/${userId}`,
+
+      baseURL: API_URL,
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        console.log(response);
+        setTitle(response.data.title);
+        setHours(response.data.hour);
+        setMinutes(response.data.minute);
+        setSeconds(response.data.second);
+      })
+      .catch((error) => {});
+  };
+
+  const postsecretData = () => {
+    axios({
+      method: "POST",
+      url: `/api/room/private-room/${roomId}/${userId}`,
+      data: {
+        password: state.password,
+      },
+      baseURL: API_URL,
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        console.log(response);
+        setHours(response.data.hour);
+        setMinutes(response.data.minute);
+        setSeconds(response.data.second);
+      })
+      .catch((error) => {});
+  };
+  useEffect(() => {
+    if (state.lock) {
+      postsecretData();
+    } else {
+      poststartData();
+    }
+  }, []);
+
+  const postTimerData = () => {
+    const token = localStorage.getItem("accessToken");
+    const userId = localStorage.getItem("userId");
+    axios({
+      method: "POST",
+      url: `/api/room/exit/${roomId}/${userId}`,
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+
+      baseURL: API_URL,
+    })
+      .then((response) => {
+        console.log(response);
+        navigate("/");
+        window.location.reload();
+      })
+      .catch((error) => {
+        navigate("/");
+        window.location.reload();
+      });
+  };
+  const reloadTimerData = () => {
+    const token = localStorage.getItem("accessToken");
+    const userId = localStorage.getItem("userId");
+    axios({
+      method: "POST",
+      url: `/api/room/exit/${roomId}/${userId}`,
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+
+      baseURL: API_URL,
+    })
+      .then((response) => {})
+      .catch((error) => {});
+  };
+
+  const exitRoomHandler = () => {
+    MySwal.fire({
+      title: "EXIT",
+      text: "정말 나가시겠습니까?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "승인",
+      cancelButtonText: "취소",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        postTimerData();
+      }
+    });
+  };
+
+  useEffect(() => {
+    time_ref.current = setInterval(() => {
+      setSeconds(seconds + 1);
+      if (seconds === 59) {
+        setMinutes(minutes + 1);
+        setSeconds(0);
+        if (seconds === 59 && minutes === 59) {
+          setHours(hours + 1);
+          setMinutes(0);
+          setSeconds(0);
+        }
+      }
+    }, 1000);
+    return () => clearInterval(time_ref.current);
+  });
+  // 새로고침 이벤트 감지
+  const preventClose = (e) => {
+    e.preventDefault();
+    e.returnValue = "";
+  };
+  useEffect(() => {
+    (() => {
+      window.addEventListener("beforeunload", preventClose);
+      window.addEventListener("beforeunload", reloadTimerData);
+    })();
+    return () => {
+      window.removeEventListener("beforeunload", preventClose);
+      window.addEventListener("beforeunload", reloadTimerData);
+    };
+  }, []);
 
   // sidebar
   const sideBarHandler = () => {
@@ -85,35 +232,10 @@ const VideoPage = () => {
     }
   };
 
-  // const exitRoomHandler = async () => {
-  //   console.log(userVideo.current.srcObject);
-  //   MySwal.fire({
-  //     title: "EXIT",
-  //     text: "정말 나가시겠습니까?",
-  //     icon: "warning",
-  //     showCancelButton: true,
-  //     confirmButtonColor: "#3085d6",
-  //     cancelButtonColor: "#d33",
-  //     confirmButtonText: "승인",
-  //     cancelButtonText: "취소",
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       userVideo.current.srcObject.getVideoTracks().forEach((track) => {
-  //         track.stop();
-  //       });
-  //       userVideo.current.srcObject.getAudioTracks().forEach((track) => {
-  //         track.stop();
-  //       });
-  //       navigate("/");
-  //       window.location.reload();
-  //     }
-  //   });
-  // };
-
   useEffect(() => {
     socketRef.current = socket;
     navigator.mediaDevices
-      .getUserMedia({ video: true, audio: false })
+      .getUserMedia({ video: true, audio: true })
       .then((stream) => {
         userVideo.current.srcObject = stream;
         const data = {
@@ -161,7 +283,7 @@ const VideoPage = () => {
 
     socketRef.current.on("user left", (payload) => {
       alert(payload.userInfo.nickname + "님이 나갔대요(수근수근)");
-      console.log("user left");
+
       const peerObj = peersRef.current.find(
         (p) => p.peerID === payload.socketId
       );
@@ -216,6 +338,19 @@ const VideoPage = () => {
     return peer;
   }
 
+  // 새로고침 뒤로가기 이벤트 감지
+
+  useEffect(() => {
+    (() => {
+      window.addEventListener("beforeunload", postTimerData);
+    })();
+    return () => {
+      window.removeEventListener("beforeunload", postTimerData);
+    };
+  }, []);
+  console.log(profileImg)
+  console.log(peers)
+
   return (
     <>
       <ScreenWrapper>
@@ -231,9 +366,14 @@ const VideoPage = () => {
           }}
         >
           <VideoHeader
+            title={title}
+            exitRoomHandler={exitRoomHandler}
             openBar={openBar}
             roomId={roomId}
             userVideo={userVideo}
+            hours={hours}
+            minutes={minutes}
+            seconds={seconds}
           />
           {/* <Timer roomId={roomId} /> */}
 
@@ -358,7 +498,7 @@ const VideoInfo = (props) => {
     >
       <div>
         <div className="user_img">
-          <img style={{ objectFit: "cover" }} src={props.profileImg} alt="" />
+          <img style={{ objectFit: "cover", width:"33px", height:"33px", borderRadius:"50%" }} src={props.profileImg} alt="" />
         </div>
         <span className="user_name">{props.nickname}</span>
       </div>

@@ -27,7 +27,6 @@ const Video = () => {
 
   const roomId = "스터디";
 
-  console.log(roomId);
   const [openBar, setOpenBar] = useState(true);
 
   const sideBarHandler = () => {
@@ -94,18 +93,14 @@ const Video = () => {
           (device) => device.kind === "videoinput"
         );
         const audios = devices.filter((device) => device.kind === "audioinput");
-        // console.log(devices);
 
         //enumerateDevices로 kind = videoinput 정보 불러와서  sellect -> option에 state 값으로 value, label 삽입.
         setCameraDevice(cameras);
         setAudioDevice(audios);
-      } catch (e) {
-        console.log(e);
-      }
+      } catch (e) {}
     };
 
     const getMedia = async () => {
-      // console.log(`오디오 선택: ${audioId}`);
       const initialConstrains = {
         audio: false,
         // video: { facingMode: "user" }, //selfie mode
@@ -123,7 +118,6 @@ const Video = () => {
         );
 
         myFace.srcObject = myStream;
-        console.log(myStream.getAudioTracks());
 
         await getCameras();
 
@@ -134,12 +128,11 @@ const Video = () => {
         socket.on("welcome", async () => {
           const offer = await myPeerConnection.createOffer();
           myPeerConnection.setLocalDescription(offer);
-          console.log("sent the offer");
+
           socket.emit("offer", offer, roomId);
         });
 
         socket.on("offer", async (offer) => {
-          console.log(offer);
           await myPeerConnection.setRemoteDescription(offer);
           const answer = await myPeerConnection.createAnswer();
           myPeerConnection.setLocalDescription(answer);
@@ -147,11 +140,9 @@ const Video = () => {
         });
 
         socket.on("answer", async (answer) => {
-          console.log(answer);
           await myPeerConnection.setRemoteDescription(answer);
         });
         socket.on("ice", async (ice) => {
-          console.log("receive candidate");
           await myPeerConnection.addIceCandidate(ice);
         });
 
@@ -172,7 +163,6 @@ const Video = () => {
         });
         myPeerConnection.addEventListener("icecandidate", (data) => {
           socket.emit("ice", data.candidate, roomId);
-          console.log("sent candidate");
         });
         myPeerConnection.addEventListener("addstream", (data) => {
           peerFace.srcObject = data.stream;
@@ -180,9 +170,7 @@ const Video = () => {
         myStream
           .getTracks()
           .forEach((track) => myPeerConnection.addTrack(track, myStream));
-      } catch (e) {
-        console.log(e);
-      }
+      } catch (e) {}
     };
     getMedia();
 

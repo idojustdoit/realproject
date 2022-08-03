@@ -59,18 +59,14 @@ const UserScreens = ({ socket, nick, room }) => {
           (device) => device.kind === "videoinput"
         );
         const audios = devices.filter((device) => device.kind === "audioinput");
-        // console.log(devices);
 
         //enumerateDevices로 kind = videoinput 정보 불러와서  sellect -> option에 state 값으로 value, label 삽입.
         setCameraDevice(cameras);
         setAudioDevice(audios);
-      } catch (e) {
-        console.log(e);
-      }
+      } catch (e) {}
     };
 
     const getMedia = async () => {
-      // console.log(`오디오 선택: ${audioId}`);
       const initialConstrains = {
         audio: false,
         // video: { facingMode: "user" }, //selfie mode
@@ -88,7 +84,6 @@ const UserScreens = ({ socket, nick, room }) => {
         );
 
         video_ref.current.srcObject = myStream;
-        console.log(myStream.getAudioTracks());
 
         await getCameras();
 
@@ -98,9 +93,7 @@ const UserScreens = ({ socket, nick, room }) => {
         myStream
           .getTracks()
           .forEach((track) => myPeerConnection.addTrack(track, myStream));
-      } catch (e) {
-        console.log(e);
-      }
+      } catch (e) {}
     };
 
     getMedia();
@@ -111,12 +104,11 @@ const UserScreens = ({ socket, nick, room }) => {
     socket.on("welcome", async () => {
       const offer = await myPeerConnection.createOffer();
       myPeerConnection.setLocalDescription(offer);
-      console.log("sent the offer");
+
       socket.emit("offer", offer, room);
     });
 
     socket.on("offer", async (offer) => {
-      console.log(offer);
       await myPeerConnection.setRemoteDescription(offer);
     });
   }, [socket, room, audioId, cameraId]);

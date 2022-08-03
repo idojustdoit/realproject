@@ -7,7 +7,7 @@ import styled from "styled-components";
 import HorizonLine from "../../../../elements/HorizonLine";
 
 const RealTimeChatList = ({ socket, nick, roomId }) => {
-  const profileImg = localStorage.getItem("imgurl");
+  const profileImg = localStorage.getItem("profile");
 
   const chatList = useSelector((state) => state.chatList);
   const dispatch = useDispatch();
@@ -87,7 +87,12 @@ const RealTimeChatList = ({ socket, nick, roomId }) => {
                       <div className="msg_items">
                         <div className="user_img">
                           <img
-                            style={{ objectFit: "cover" }}
+                            style={{
+                              objectFit: "cover",
+                              width: "33px",
+                              height: "33px",
+                              borderRadius: "50%",
+                            }}
                             src={list.profileImg}
                             alt=""
                           />
@@ -117,7 +122,12 @@ const RealTimeChatList = ({ socket, nick, roomId }) => {
                       <div className="msg_items">
                         <div className="user_img">
                           <img
-                            style={{ objectFit: "cover" }}
+                            style={{
+                              objectFit: "cover",
+                              width: "33px",
+                              height: "33px",
+                              borderRadius: "50%",
+                            }}
                             src={list.profileImg}
                             alt=""
                           />

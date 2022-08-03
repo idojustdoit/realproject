@@ -10,8 +10,10 @@ import MainPage from "./pages/MainPage";
 import MyPage from "./pages/Mypage";
 import Modify from "./pages/Modify";
 import VideoPage from "./pages/VideoPage";
-import Kakaologin from "./pages/Kakaologin";
 import SearchPage from "./pages/SearchPage";
+import IntroPage from "./pages/IntroPage";
+import NotFoundPage from "./pages/NotFoundPage";
+import NoServicePage from "./pages/NoServicePage";
 
 function App() {
   return (
@@ -21,12 +23,14 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<MainPage />}></Route>
+            <Route path="/Intro" element={<IntroPage />}></Route>
             <Route path="/mypage" element={<MyPage />}></Route>
             <Route path="/search" element={<SearchPage />}></Route>
-            <Route path="Modify" element={<Modify />}></Route>
-            <Route path="/kakaotalk" element={<Kakaologin />}></Route>
+            <Route path="/Modify" element={<Modify />}></Route>
             <Route path="/public-room/:roomId" element={<VideoPage />}></Route>
-            <Route path="*" element={<MainPage />} />
+            <Route path="/noservice" element={<NoServicePage />} />
+            <Route path="/private-room/:roomId" element={<VideoPage />}></Route>
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Router>
       </StyledApp>

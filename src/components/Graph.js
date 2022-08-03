@@ -30,15 +30,11 @@ function Graph() {
       },
     })
       .then(function (response) {
-        console.log(response.data);
         setData(response.data.studytime);
-        setWeektime(response.data.studytime.time);
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch((error) => {});
   };
-  console.log(weektime);
+
   useEffect(() => {
     Getdata();
   }, []);

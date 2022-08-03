@@ -48,7 +48,7 @@ function Modify() {
   const signupdata = (e) => {
     e.preventDefault();
     let file = profile_ref.current.files[0];
-    console.log(file);
+
     formData.append("profile_url", file);
     formData.append("password", password);
     formData.append("passwordCheck", passwordCheck);
@@ -66,8 +66,8 @@ function Modify() {
       baseURL: API_URL,
     })
       .then((response) => {
-        console.log(response);
         localStorage.setItem("nickname", response.data.updateUser.nickname);
+        localStorage.setItem("accessToken", response.data.accessToken);
         navigate("/mypage");
         MySwal.fire({
           title: "success",
@@ -77,7 +77,6 @@ function Modify() {
         });
       })
       .catch((error) => {
-        console.log(error);
         MySwal.fire({
           title: "error",
           text: "정보수정을 실패하였습니다",
@@ -132,13 +131,12 @@ function Modify() {
                 }}
                 src="https://www.shareicon.net/data/2017/05/09/885771_camera_512x512.png"
               />
-              <Input
+              <input
                 style={{ display: "none" }}
                 type="file"
                 id="file"
                 ref={profile_ref}
                 onChange={UpImageUrl}
-                defaultValue={imgUrl}
               />
               <br />
             </span>
@@ -208,8 +206,14 @@ function Modify() {
 }
 
 const Background = styled.div`
+  color: var(--blue-black);
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  height: 100%;
+  margin: 0 auto;
+  align-items: center;
+  justify-content: center;
+  padding-top: 80px;
 `;
 const ModalBlock = styled.div`
   display: flex;
@@ -222,10 +226,9 @@ const ModalBlock = styled.div`
   height: 540px;
   padding: 10px;
   box-shadow: 1px 1px 1px 1px gray;
-  margin-top: 20px;
+  margin-top: 70px;
   margin-bottom: 20px;
-  transform: translate(150%, 0%);
-  margin-top: 225px;
+
   margin-bottom: 145px;
 `;
 

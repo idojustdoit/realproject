@@ -25,7 +25,7 @@ function Header() {
   const dispatch = useDispatch();
   //isLogin 기본 state값 false
   const token = localStorage.getItem("accessToken");
-  const isLogin = useSelector((state) => state.user.isLogin);
+
   const logoutHandler = (e) => {
     dispatch(logOut());
     localStorage.removeItem("accessToken");
@@ -36,7 +36,6 @@ function Header() {
     window.location.reload();
   };
 
-  console.log(isLogin);
   const [LogInOpen, setIsLogInOpen] = React.useState(false);
   const [SignUpOpen, setSignUpOpen] = React.useState(false);
   const [CreateOpen, setCreateOpen] = React.useState(false);
@@ -70,10 +69,10 @@ function Header() {
           </LogoCont>
           <Ul>
             <Li>
-              <Link to="/">이글루 소개</Link>
+              <Link to="/intro">이글루 소개</Link>
             </Li>
             <Li>
-              <Link to="/">커뮤니티</Link>
+              <Link to="/noservice">커뮤니티</Link>
             </Li>
           </Ul>
         </LeftCont>
@@ -90,11 +89,11 @@ function Header() {
                 <MyPageIcon style={{ cursor: "pointer" }} />
               </Link>
             </li>
-            <li>
+            {/* <li>
               <Link to="/알람모달?">
                 <AlarmIcon style={{ cursor: "pointer" }} />
               </Link>
-            </li>
+            </li> */}
             <li>
               <LogoutIcon style={{ cursor: "pointer" }} onClick={logoutHandler}>
                 로그아웃
@@ -132,7 +131,7 @@ const HeaderCont = styled.header`
   position: absolute;
   top: 0;
   /* width: 1920px; */
-  min-width: 1440px;
+  min-width: 1200px;
   min-height: 80px;
   display: flex;
   align-items: center;

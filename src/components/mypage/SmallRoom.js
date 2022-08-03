@@ -1,13 +1,47 @@
-import React, { useState } from "react";
+import React, { useState, memo } from "react";
 import styled from "styled-components";
 import { FaUser } from "react-icons/fa";
-
+import axios from "axios";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import Portal from "../Portal";
 import Roomenter from "../Roomenter";
 import { FaLock } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { deleteARoom } from "../../redux/modules/myRoomSlice";
 
 function SmallRoom({ roomId, imgUrl, title, date, groupNum, lock }) {
-  function studyOutHandler() {}
+  const dispatch = useDispatch();
+  const API_URL = process.env.REACT_APP_API_URL;
+  const MySwal = withReactContent(Swal); //(에러 및 성공 모달창)
+
+  function studyOutHandler(roomId) {
+    const userId = localStorage.getItem("userId");
+    const token = localStorage.getItem("accessToken");
+
+    axios({
+      method: "post",
+      url: `api/room/outroom/${roomId}/${userId}`,
+
+      baseURL: API_URL,
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        dispatch(deleteARoom(roomId));
+        MySwal.fire({
+          title: "success",
+          text: "방이 성공적으로 삭제되었습니다.",
+          icon: "success",
+          confirmButtonText: "확인",
+        });
+      })
+      .catch((error) => {});
+  }
+
+  const num = groupNum.length - 1;
 
   function joinRoomHandler() {}
   const [EnterOpen, setEnterOpen] = useState(false);
@@ -28,7 +62,7 @@ function SmallRoom({ roomId, imgUrl, title, date, groupNum, lock }) {
             <UserCountBox className="userCount-box">
               <FaUser />
               &nbsp;
-              <span>{groupNum}/4</span>
+              <span>{num}/4</span>
             </UserCountBox>
           </IconBox>
         </TitleBox>
@@ -48,7 +82,7 @@ function SmallRoom({ roomId, imgUrl, title, date, groupNum, lock }) {
   );
 }
 
-export default SmallRoom;
+export default memo(SmallRoom);
 
 const RoomCont = styled.div`
   background-color: #fff;
@@ -79,10 +113,10 @@ const BlackCont = styled.div`
 `;
 const RoomButtonCont = styled.div`
   height: 92px;
-  padding: 18px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
 `;
 
 const IconBox = styled.div`

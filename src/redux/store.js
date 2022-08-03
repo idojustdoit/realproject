@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./modules/userSlice";
-import roomReducer from "./modules/roomSlice";
+import myRoomReducer from "./modules/myRoomSlice";
 import searchReducer from "./modules/searchSlice";
 import todoListReducer from "./modules/todoListSlice";
 import chatListReducer from "./modules/chatListSlice";
@@ -10,7 +10,7 @@ import chatListReducer from "./modules/chatListSlice";
 const store = configureStore({
   reducer: {
     user: userReducer,
-    room: roomReducer,
+    myRoom: myRoomReducer,
     todoList: todoListReducer,
     chatList:chatListReducer,
     search: searchReducer,

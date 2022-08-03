@@ -1,8 +1,6 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import { storage } from "../shared/firebase";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import userprofile from "../shared/mypage-assets/user-basic-img.png";
@@ -13,7 +11,7 @@ const SignUp = ({ onClose, LoginOpen }) => {
   const MySwal = withReactContent(Swal);
   const outZone_ref = React.useRef(null);
   const profile_ref = React.useRef(null); //유저 이미지 URL
-  const [profile, setprofile] = React.useState("");
+  const [profile, setprofile] = React.useState(userprofile);
   const [email, setemail] = React.useState(""); //email 인풋
   const [password, setPwd] = React.useState(""); //비밀번호 인풋
   const [passwordCheck, setpasswordCheck] = React.useState(""); //비밀번호 확인 인풋
@@ -33,7 +31,6 @@ const SignUp = ({ onClose, LoginOpen }) => {
   };
 
   const confirmNumber = () => {
-    console.log(emailcode);
     if (usernum === emailcode) {
       MySwal.fire({
         title: "success",
@@ -52,10 +49,9 @@ const SignUp = ({ onClose, LoginOpen }) => {
     }
   };
 
-  // 조건 최소 2글자
   const onChangeUserId = (e) => {
     const userIdRegex =
-      /^[0-9a-zA-Z]([-_/.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_/.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
+      /^[0-9a-z]([-_/.]?[0-9a-z])*@[0-9a-z]([-_/.]?[0-9a-z])*\.[a-z]{2,3}$/;
     if (!e.target.value || userIdRegex.test(e.target.value))
       setUserIdError(false);
     else setUserIdError(true);
@@ -71,6 +67,7 @@ const SignUp = ({ onClose, LoginOpen }) => {
   // 사용해서 url 추출
   const FILE_SIZE_MAX_LIMIT = 5 * 1024 * 1024;
   const UpImageUrl = (e) => {
+    setprofile(e.target.value);
     const files = e.target.files[0];
     if (files.size > FILE_SIZE_MAX_LIMIT) {
       e.target.value = "";
@@ -78,7 +75,6 @@ const SignUp = ({ onClose, LoginOpen }) => {
       return;
     }
     encodeFileToBase64(files);
-    setprofile(e.target.value);
   };
 
   const encodeFileToBase64 = (fileBlob) => {
@@ -100,10 +96,9 @@ const SignUp = ({ onClose, LoginOpen }) => {
       data: {
         nickname: nickname,
       },
-      baseURL: "https://egloo.shop",
+      baseURL: API_URL,
     })
       .then((response) => {
-        console.log(response);
         MySwal.fire({
           title: "success",
           text: "사용 가능한 닉네임입니다!",
@@ -113,7 +108,6 @@ const SignUp = ({ onClose, LoginOpen }) => {
         setChecknick(true);
       })
       .catch((error) => {
-        console.log(error);
         MySwal.fire({
           title: "Error!",
           text: "다른 닉네임을 입력해주세요.",
@@ -135,25 +129,18 @@ const SignUp = ({ onClose, LoginOpen }) => {
       baseURL: API_URL,
     })
       .then((response) => {
-        console.log(response);
         setEmailcode(response.data.authNum);
       })
       .catch((error) => {
-        console.log(error);
         MySwal.fire({
           title: "Error!",
-          text: "인증번호를 다시 확인해주세요.",
+          text: "이메일을 다시입력해주세요!",
           icon: "error",
           confirmButtonText: "확인",
         });
       });
     setVerEmail(true);
   };
-  useEffect(() => {
-    setprofile(
-      "https://velog.velcdn.com/images/idojustdo_it/post/ff5bd820-b3d0-423c-b29d-e3192a74803a/image.png"
-    );
-  }, []);
 
   // 회원가입 통신
   const signupdata = (e) => {
@@ -175,7 +162,6 @@ const SignUp = ({ onClose, LoginOpen }) => {
       },
     })
       .then((response) => {
-        console.log(response);
         MySwal.fire({
           title: "success!",
           text: "회원가입에 성공하였습니다!",
@@ -186,7 +172,6 @@ const SignUp = ({ onClose, LoginOpen }) => {
         LoginOpen();
       })
       .catch((error) => {
-        console.log(error);
         MySwal.fire({
           title: "Error!",
           text: "이메일을 확인해주세요.",
@@ -243,13 +228,30 @@ const SignUp = ({ onClose, LoginOpen }) => {
                 src="https://www.shareicon.net/data/2017/05/09/885771_camera_512x512.png"
               />
               <input
+                required
                 style={{ display: "none" }}
                 type="file"
                 id="files"
                 ref={profile_ref}
                 onChange={UpImageUrl}
               />
+
               <br />
+
+              {profile == userprofile ? (
+                <div
+                  style={{
+                    marginTop: "7px",
+                    color: "red",
+                    fontSize: "15px",
+                    fontWeight: "400",
+                  }}
+                >
+                  ※프로필사진을 꼭 지정해주세요.
+                </div>
+              ) : (
+                ""
+              )}
             </span>
           </Label>
           <Label>

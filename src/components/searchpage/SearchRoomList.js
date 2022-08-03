@@ -55,20 +55,19 @@ function SearchRoomList() {
 export default SearchRoomList;
 const SearchCont = styled.div`
   display: flex;
-  width: 1440px;
+  width: 1200px;
   flex-direction: column;
   min-height: 500px;
 `;
 const RoomListCont = styled.div`
-  padding: 60px;
-  /* width: 100%; */
+  padding: 60px 20px;
+  width: 1200px;
   display: grid;
   align-items: center;
   justify-content: center;
-  grid-template-columns: repeat(auto-fill, minmax(424px, 1fr));
-  grid-column-gap: 24px;
-  grid-row-gap: 30px;
-  margin-bottom: 100px;
+  grid-template-columns: repeat(auto-fill, minmax(30%, 1fr));
+  grid-column-gap: 25px;
+  grid-row-gap: 25px;
 `;
 
 const SearchTitle = styled.h1`

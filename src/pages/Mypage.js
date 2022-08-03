@@ -2,10 +2,8 @@ import "../styles/reset.css";
 import React, { useEffect, useState, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
-import axios from "axios";
-import { Navigate, useNavigate } from "react-router-dom";
-
-// import { getMypageInfos } from "../redux/modules/roomSlice";
+import { useNavigate } from "react-router-dom";
+import { getMypageInfos } from "../redux/modules/myRoomSlice";
 
 import { ReactComponent as EditUserInfoIcon } from "../shared/mypage-assets/icon-update-userInfo.svg";
 import userAvatar from "../shared/mypage-assets/user-basic-img.png";
@@ -17,52 +15,25 @@ import Footer from "../components/Footer";
 import Spinner from "../components/Spinner";
 
 const Mypage = () => {
-  const USER_ID = localStorage.getItem("userId");
   const API_URL = process.env.REACT_APP_API_URL;
   const TOKEN = localStorage.getItem("accessToken");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const modify = () => {
     navigate("/modify");
   };
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [attendRooms, setAttendRooms] = useState([]);
-  const [hostRooms, setHostRooms] = useState([]);
-  const [likeRooms, setLikeRooms] = useState([]);
-  const [email, setEmail] = useState("");
-  const [nickname, setNickName] = useState("");
-  const [userImg, setuserImg] = useState("");
-
-  const dispatch = useDispatch();
-
-  const getMypageInfos = async () => {
-    setIsLoading(true);
-    await axios
-      .get(`${API_URL}/api/mypage/${USER_ID}`, {
-        headers: {
-          "content-type": "application/json",
-          Authorization: `Bearer ${TOKEN}`,
-        },
-      })
-      .then((res) => {
-        setIsLoading(false);
-        console.log(res.data);
-        if (res.data.result) {
-          setIsLoading(false);
-          setAttendRooms(res.data.attendInfo);
-          setHostRooms(res.data.hostInfo);
-          setLikeRooms(res.data.likeInfo);
-          setEmail(res.data.myPage?.email);
-          setNickName(res.data.myPage?.nickname);
-          setuserImg(res.data.myPage?.profile_url);
-        }
-      })
-      .catch((e) => console.log(e));
-  };
+  const myPageInfo = useSelector((state) => state.myRoom.myPageInfo);
+  const isLoading = useSelector((state) => state.myRoom.isLoading);
+  const hostRoomsLength = useSelector((state) => state.myRoom.hostRoomsLength);
+  const attendRoomsLength = useSelector(
+    (state) => state.myRoom.attendRoomsLength
+  );
+  const likeRoomsLength = useSelector((state) => state.myRoom.likeRoomsLength);
 
   useEffect(() => {
-    getMypageInfos();
+    dispatch(getMypageInfos());
   }, []);
 
   return (
@@ -78,28 +49,31 @@ const Mypage = () => {
               ) : (
                 <>
                   <UserCardTop>
-                    <img alt="user" src={userImg ? userImg : userAvatar} />
+                    <img
+                      alt="user"
+                      src={myPageInfo.userImg ? myPageInfo.userImg : userAvatar}
+                    />
                     <FlexCont>
                       <UserInfo>
                         <div>
-                          {nickname}님
+                          {myPageInfo.nickname}님
                           <EditButton onClick={modify}>
                             <EditUserInfoIcon />
                           </EditButton>
                         </div>
-                        <span>{email}</span>
+                        <span>{myPageInfo.email}</span>
                       </UserInfo>
                     </FlexCont>
                   </UserCardTop>
                   <UserCardBottom>
                     <li>
-                      참여중<span>{attendRooms.length}</span>
+                      참여중<span>{attendRoomsLength}</span>
                     </li>
                     <li>
-                      호스팅중<span>{hostRooms.length}</span>
+                      호스팅중<span>{hostRoomsLength}</span>
                     </li>
                     <li>
-                      찜<span>{likeRooms.length}</span>
+                      찜<span>{likeRoomsLength}</span>
                     </li>
                   </UserCardBottom>
                 </>
@@ -111,12 +85,7 @@ const Mypage = () => {
           </Cont>
         </UpperCont>
         <RoomsCont className="menu-nav__cont">
-          <Tab
-            attendRooms={attendRooms}
-            hostRooms={hostRooms}
-            likeRooms={likeRooms}
-            isLoading={isLoading}
-          />
+          <Tab />
         </RoomsCont>
       </ContentBox>
       <Footer />
@@ -141,7 +110,7 @@ const ContentBox = styled.div`
 `;
 
 const UpperTitle = styled.h2`
-  min-width: 1440px;
+  min-width: 1200px;
   margin: 60px 0 40px 0;
   font-weight: 700;
   font-size: 30px;
@@ -158,7 +127,7 @@ const Cont = styled.div`
   display: flex;
   gap: 24px;
   margin-bottom: 100px;
-  width: 1440px;
+  width: 1200px;
   justify-content: space-between;
 `;
 
@@ -209,7 +178,6 @@ const UserInfo = styled.div`
 
 const FlexCont = styled.div`
   display: flex;
-  /* gap: 140px; */
 `;
 const EditButton = styled.button`
   height: 20px;

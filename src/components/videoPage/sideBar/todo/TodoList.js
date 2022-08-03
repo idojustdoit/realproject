@@ -18,11 +18,12 @@ const TodoList = ({roomId}) => {
 
   const check_ref = useRef(null);
 
-  const todoListItem = useSelector((state) => state.todoList);
-  const test = useSelector((state)=>state)
-  console.log(test)
-  console.log(todoListItem)
 
+  const todoListItem = useSelector((state) => state.todoList);
+
+  useEffect(() => {
+    dispatch(getList());
+  }, []);
 
   const [updateTodo, setUpdateTodo] = useState(false);
   const [inputShow, setInputShow] = useState(false);

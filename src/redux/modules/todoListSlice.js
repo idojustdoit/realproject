@@ -67,8 +67,6 @@ const todoListSlice = createSlice({
     
   },
 });
-
 export const { addTodoList, updateTodoChecked, deleteTodoList } =
   todoListSlice.actions;
-
 export default todoListSlice.reducer;

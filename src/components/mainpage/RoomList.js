@@ -1,10 +1,5 @@
 import React, { memo, useCallback, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  getMainList,
-  getRoomListByCategory,
-  setRoomList,
-} from "../../redux/modules/roomSlice";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
@@ -93,7 +88,6 @@ const RoomList = () => {
   const navigate = useNavigate();
 
   //받아온 메인 룸 리스트
-  console.log("😎룸리스트 렌더링..!");
   // const roomList = useSelector((state) => state.room.roomList);
   const [isLoading, setIsLoading] = useState(false);
   const [roomList, setRoomList] = useState([]);
@@ -102,7 +96,7 @@ const RoomList = () => {
   //초기에는 모든 이미지가 컬러인 상태로 보여야해서 추가한 state
   const [isClicked, setIsClicked] = useState(false);
 
-  const API_URL = "https://egloo.shop";
+  const API_URL = process.env.REACT_APP_API_URL;
 
   // const [ro`oms, setRooms] = useState([])
   const LIMIT = 6; //axios요청시 6개씩
@@ -113,7 +107,6 @@ const RoomList = () => {
 
   useEffect(() => {
     let initialPage = 1;
-
     let body = {
       page: initialPage,
       perPage: LIMIT,
@@ -124,9 +117,10 @@ const RoomList = () => {
     setIsLoading(false);
     setPage(initialPage);
 
-    return () => {
-      setRoomList([]);
-    };
+    // return () => {
+    //   setRoomList([]);
+    //   setRoomsLength(0);
+    // };
   }, [category]);
 
   //메인에서 로드되는 카테고리별 리스트 axios
@@ -137,7 +131,6 @@ const RoomList = () => {
       )
       .then((res) => {
         if (res.data.result) {
-          console.log(res.data.roomList);
           if (body.loadMore) {
             //더보기 버튼 클릭시
             setRoomList([...roomList, ...res.data?.roomList]);
@@ -182,15 +175,13 @@ const RoomList = () => {
             modules={[Navigation, Scrollbar]}
             spaceBetween={10}
             slidesPerView={8}
-            touchRatio={0}
+            allowTouchMove={false}
             navigation
             scrollbar={{ draggable: false }}
             onClick={(swiper) => {
-              console.log(swiper);
               setIsActive((prev) => swiper.clickedIndex);
               setIsClicked(true);
             }}
-            //반응형 적용x
           >
             {CATEGORY_LIST.map((cate, idx) => (
               <SwiperSlide
@@ -212,6 +203,7 @@ const RoomList = () => {
                 }
                 onClick={(e) => {
                   categoryClickHandler(e, cate.name);
+                  // console.log(e.currentTarget.getAttribute("value"));
                 }}
                 value={idx}
               >
@@ -233,27 +225,25 @@ const RoomList = () => {
       >
         {!isLoading ? (
           roomList.length > 0 ? (
-            <>
-              <RoomListCont>
-                {roomList.map((room) => {
-                  return (
-                    <Room
-                      key={room._id}
-                      roomId={room.roomId}
-                      imgUrl={room.imgUrl ? room.imgUrl : roomImg}
-                      title={room.title}
-                      content={room.content}
-                      date={room?.date}
-                      tagName={room?.tagName}
-                      groupNum={room?.groupNum}
-                      //만약에 서버의 isLiked 값이 없으면 false(기본)값을 내려준다.
-                      isLiked={room.likeUser}
-                      lock={room.lock ? room.lock : false}
-                    ></Room>
-                  );
-                })}
-              </RoomListCont>
-            </>
+            <RoomListCont>
+              {roomList.map((room, idx) => {
+                return (
+                  <Room
+                    key={idx}
+                    roomId={room.roomId}
+                    imgUrl={room.imgUrl ? room.imgUrl : roomImg}
+                    title={room.title}
+                    content={room.content}
+                    date={room?.date}
+                    tagName={room?.tagName}
+                    groupNum={room?.groupNum}
+                    //만약에 서버의 isLiked 값이 없으면 false(기본)값을 내려준다.
+                    isLiked={room.likeUser}
+                    lock={room.lock ? room.lock : false}
+                  ></Room>
+                );
+              })}
+            </RoomListCont>
           ) : (
             <Div>게시물이 없습니다.😓</Div>
           )
@@ -282,8 +272,7 @@ export default RoomList;
 
 const Container = styled.section`
   width: 100%;
-  min-height: 390px;
-  /* padding: 60px 250px 60px; */
+  min-height: 350px;
   background-color: #eff3f6;
   display: flex;
   align-items: center;
@@ -291,12 +280,12 @@ const Container = styled.section`
   //margin-bottom은 mainpage의 section에서 적용했던 것
 `;
 const CateBox = styled.div`
-  max-width: 1440px;
+  max-width: 1200px;
   background-color: #eff3f6;
 `;
 
 const Img = styled.img`
-  height: 140px;
+  height: 120px;
   /* width: 12vw; */
   border-radius: 50%;
   margin: 20px 0 12px 0;
@@ -306,30 +295,27 @@ const Img = styled.img`
 `;
 
 const Title = styled.div`
-  /* margin: 0 10px 10px; */
   font-size: 20px;
   font-weight: bold;
   text-align: center;
 `;
 
 const TitleH2 = styled.h2`
-  /* margin-bottom: 25px; */
   padding-left: 5px;
-  /*원래 폰트사이즈 30px*/
   font-size: 1.7rem;
   font-weight: 700;
   line-height: 42px;
 `;
 //여기서부터가 룸 리스트 CSS
 const RoomListCont = styled.div`
-  padding: 60px;
-  width: 1440px;
+  padding: 60px 20px;
+  width: 1200px;
   display: grid;
   align-items: center;
   justify-content: center;
-  grid-template-columns: repeat(auto-fill, minmax(424px, 1fr));
-  grid-column-gap: 24px;
-  grid-row-gap: 30px;
+  grid-template-columns: repeat(auto-fill, minmax(30%, 1fr));
+  grid-column-gap: 25px;
+  grid-row-gap: 25px;
 `;
 const ButtonBox = styled.div`
   display: flex;
@@ -338,9 +324,6 @@ const ButtonBox = styled.div`
   /* margin-bottom: 60px; */
 `;
 const LoadMoreBtn = styled.button`
-  /* display: flex;
-  flex-basis: 90%;
-  align-items: center; */
   /* color: rgba(0, 0, 0, 0.35); */
   font-size: 1.2rem;
   font-weight: 600;
@@ -356,17 +339,6 @@ const LoadMoreBtn = styled.button`
     background-color: #2e70e0;
     border: 2px solid #2e70e0;
   }
-
-  /* &::before,
-  &::after {
-    content: "";
-    flex-grow: 1;
-    background: rgba(0, 0, 0, 0.35);
-    height: 1px;
-    font-size: 0px;
-    line-height: 0px;
-    margin: 0px 16px;
-  } */
 `;
 const Div = styled.div`
   font-size: 20px;
