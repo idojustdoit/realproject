@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { DragDropContext, Draggable } from "react-beautiful-dnd";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
@@ -6,6 +6,7 @@ import {
   addTodoList,
   deleteTodoList,
   updateTodoChecked,
+  getList,
 } from "../../../../redux/modules/todoListSlice";
 
 //react icons
@@ -18,7 +19,11 @@ const TodoList = () => {
 
   const check_ref = useRef(null);
 
-  const todoListItem = useSelector((state) => state.todoList);
+  const todoListItem = useSelector((state) => state.todoList.todoList);
+
+  useEffect(() => {
+    dispatch(getList());
+  }, []);
 
   const [updateTodo, setUpdateTodo] = useState(false);
   const [inputShow, setInputShow] = useState(false);
@@ -109,7 +114,7 @@ const TodoList = () => {
                       className="input_result"
                       type="text"
                       defaultValue={i.list}
-                      disabled={!updateTodo &&  "disabled"}
+                      disabled={!updateTodo && "disabled"}
                     />
                   </CheckLabel>
                   <div
@@ -159,7 +164,7 @@ const TodoList = () => {
             );
           })}
         </ul>
-        {emptyListInputShow  && (
+        {emptyListInputShow && (
           <TodoForm onSubmit={addList}>
             <input type="checkbox" disabled />
             <input

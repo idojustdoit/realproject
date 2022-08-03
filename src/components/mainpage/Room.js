@@ -11,7 +11,6 @@ import emptyHeart from "../../shared/mainpage-assets/icon-empty-heart.svg";
 import { FaLock } from "react-icons/fa";
 
 const Room = ({
-  key,
   roomId,
   imgUrl,
   title,
@@ -28,6 +27,8 @@ const Room = ({
   const token = localStorage.getItem("accessToken");
   const userId = localStorage.getItem("userId");
   const [likeState, setLikeState] = useState(isLiked.includes(Number(userId)));
+  const catename = tagName;
+  const catearr = catename;
 
   //좋아요 버튼
   const likeAxios = () => {
@@ -41,12 +42,8 @@ const Room = ({
         Authorization: `Bearer ${token}`,
       },
     })
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      .then((response) => {})
+      .catch((error) => {});
   };
 
   //입장하기버튼: 클릭한 방(roomId)에 해당하는 화상채팅방으로 입장하는 모달
@@ -55,25 +52,18 @@ const Room = ({
     setEnterOpen(!EnterOpen);
   };
 
-  console.log("😎Room 컴포넌트 렌더링!");
-
   //로그인 안했을시에 보여지는 경고창
   const AlertHandler = () => {
     alert("로그인 이후 사용해주세요!");
   };
 
   function clickLike(event) {
-    //부모 엘리먼트에게 이벤트 전달을 중단 할때 event.stopProgation() 사용
-    // event.stopPropagation();
     setLikeState((prevlikeState) => !prevlikeState);
     likeAxios();
   }
-  const catename = tagName.join();
-  const catearr = catename.split(",");
 
-  console.log(catearr);
   return (
-    <RoomCont key={key}>
+    <RoomCont key={roomId}>
       <RoomImg imgUrl={imgUrl} alt=""></RoomImg>
       <RoomCotentBox>
         <TopContent>
@@ -83,7 +73,7 @@ const Room = ({
               <UserCountBox className="userCount-box">
                 <FaUser />
                 &nbsp;
-                <span>{groupNum}/4</span>
+                <span>{groupNum.length}/4</span>
               </UserCountBox>
             </TitleAndGroupNum>
             <IconBox>
@@ -139,8 +129,8 @@ export default memo(Room);
 
 const RoomCont = styled.div`
   background-color: #fff;
-  max-width: 424px;
-  height: 500px;
+  max-width: 400px;
+  height: 450px;
   display: flex;
   flex-direction: column;
   -webkit-margin-collapse: collapse;
@@ -152,7 +142,7 @@ const RoomCont = styled.div`
 const RoomImg = styled.div`
   width: 100%;
   height: 50%;
-  background: url(${(props) => props.imgUrl}) no-repeat;
+  background: url(${(props) => props.imgUrl}) center no-repeat;
   background-size: cover;
   background-color: var(--egloo-gray);
 `;
@@ -228,7 +218,7 @@ const TagBox = styled.div`
   align-items: center;
   gap: 5px;
   font-size: 16px;
-  margin-bottom: 20px;
+  padding: 10px 0 20px 0;
 `;
 const Tag = styled.span`
   font-size: 16px;
@@ -238,7 +228,7 @@ const Tag = styled.span`
   border-radius: 20px;
   border: 1px solid var(--blue-black);
   opacity: 0.5;
-  padding: 10px 16px;
+  padding: 6px 10px;
   font-weight: 400;
 `;
 

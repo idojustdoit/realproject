@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import axios from "axios";
-import kakao from "../shared/login-assets/kakao.png";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { useDispatch } from "react-redux";
@@ -44,7 +43,6 @@ const Login = ({ onClose, SignOpen }) => {
     })
       .then(function (response) {
         dispatch(logIn());
-        console.log(response);
         localStorage.setItem("accessToken", response.data.accessToken);
         localStorage.setItem("nickname", response.data.nickname);
         localStorage.setItem("refreshToken", response.data.refreshToken);
@@ -57,9 +55,9 @@ const Login = ({ onClose, SignOpen }) => {
           icon: "success",
           confirmButtonText: "확인",
         });
+        window.location.reload();
       })
       .catch(function (error) {
-        console.log(error);
         MySwal.fire({
           title: "Error!",
           text: "로그인이 실패하였습니다.",
@@ -114,11 +112,7 @@ const Login = ({ onClose, SignOpen }) => {
             </div>
           </Label>
           <LoginBtn>
-            <Button
-              id="login_btn"
-              onClick={loginAxios}
-              disabled={email === "" || password === "" ? true : false}
-            >
+            <Button id="login_btn" onClick={loginAxios}>
               로그인
             </Button>
 
@@ -129,26 +123,6 @@ const Login = ({ onClose, SignOpen }) => {
               </Letter>
               후 이용해주세요.
             </LinkContainer>
-            <a
-              style={{
-                width: "360px",
-                height: "50px",
-                marginBottom: "10px",
-                marginTop: "24px",
-              }}
-              href={process.env.REACT_APP_KAKAOURL}
-            >
-              <img
-                alt=""
-                style={{
-                  width: "360px",
-                  height: "50px",
-                  marginBottom: "10px",
-                  marginTop: "24px",
-                }}
-                src={kakao}
-              />
-            </a>
             <br />
           </LoginBtn>
         </ModalBlock>
@@ -187,13 +161,12 @@ const ModalBlock = styled.div`
   background-color: white;
   color: black;
   width: 458px;
-  height: 480px;
+  height: 450px;
   box-shadow: 1px 1px 1px 1px gray;
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  min-height: 35rem;
   animation: modal-show 1s;
   @keyframes modal-show {
     from {
@@ -276,10 +249,10 @@ const LinkContainer = styled.div`
 `;
 
 const Button = styled.button`
-  margin-top: 42px;
+  margin-top: 60px;
   margin-bottom: 8px;
   color: #fff;
-  background-color: ${(props) => (props.disabled ? "gray" : "#1D9FFD")};
+  background-color: #1d9ffd;
   border: none;
   font-size: 18px;
   font-weight: 900;
@@ -292,13 +265,11 @@ const Button = styled.button`
   cursor: pointer;
   border-radius: 4px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-  ${(props) =>
-    props.disabled
-      ? ""
-      : `&:hover {
-  background-color: rgba(74, 21, 75, 0.9);
-  border: none;
-}`};
+
+  &:hover {
+    background-color: rgba(74, 21, 75, 0.9);
+    border: none;
+  }
   &:focus {
     --saf-0: rgba(var(--sk_highlight, 18, 100, 163), 1);
     box-shadow: 0 0 0 1px var(--saf-0), 0 0 0 5px rgba(29, 155, 209, 0.3);

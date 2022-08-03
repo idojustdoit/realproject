@@ -31,7 +31,7 @@ const MypageCont = styled.div`
 
 const ContentCont = styled.section`
   width: 100%;
-  min-width: 1440px;
+  min-width: 1200px;
   display: flex;
   justify-content: center;
 `;

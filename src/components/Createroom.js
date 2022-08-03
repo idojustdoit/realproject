@@ -12,8 +12,6 @@ import Moment from "react-moment";
 import "moment/locale/ko";
 
 import { ko } from "date-fns/esm/locale";
-import { storage } from "../shared/firebase";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 // 카테고리 명 표시
 const names = [
@@ -30,7 +28,8 @@ const names = [
 
 const Createroom = ({ onClose }) => {
   const API_URL = process.env.REACT_APP_API_URL;
-
+  const img =
+    "https://media.istockphoto.com/vectors/photo-album-icon-vector-id1023892724?k=20&m=1023892724&s=170667a&w=0&h=zXZB3iWNnwhrDA055eJgxh4Sq814_ZNRSVAJT7lBgLY=";
   //사용하는 변수명 정리
   const MySwal = withReactContent(Swal); //(에러 및 성공 모달창)
   const outZone_ref = React.useRef(); //모달창 닫을때
@@ -42,9 +41,7 @@ const Createroom = ({ onClose }) => {
   const [loading, setLoading] = React.useState(true); //라디오 박스 체크 관련
   const [dateRange, setDateRange] = React.useState("", ""); //날짜
   const [startDate, endDate] = dateRange;
-  const [imgUrl, setImgUrl] = React.useState(
-    "https://media.istockphoto.com/vectors/photo-album-icon-vector-id1023892724?k=20&m=1023892724&s=170667a&w=0&h=zXZB3iWNnwhrDA055eJgxh4Sq814_ZNRSVAJT7lBgLY="
-  );
+  const [imgUrl, setImgUrl] = React.useState(img);
   const formData = new FormData();
 
   const handlerName = (e) => {
@@ -118,6 +115,7 @@ const Createroom = ({ onClose }) => {
     formData.append("lock", lock);
     formData.append("content", content);
     formData.append("date", moment(dateRange[1]).format("YYYY년MM월DD일"));
+    formData.append("tagName", ["전체", ...categoryName]);
     formData.append("isLike", false);
     const token = localStorage.getItem("accessToken");
     const userId = localStorage.getItem("userId");
@@ -133,7 +131,6 @@ const Createroom = ({ onClose }) => {
       },
     })
       .then((response) => {
-        console.log(response);
         MySwal.fire({
           title: "success",
           text: "방이 생성되었습니다!",
@@ -141,10 +138,9 @@ const Createroom = ({ onClose }) => {
           confirmButtonText: "확인",
         });
         onClose();
-        //방상세페이지로 이동.
+        window.location.reload();
       })
       .catch((error) => {
-        console.log(error);
         MySwal.fire({
           title: "Error!",
           text: "방생성에 실패하였습니다.",
@@ -153,9 +149,6 @@ const Createroom = ({ onClose }) => {
         });
       });
   };
-  const a = categoryName.join();
-  const b = a.split(",");
-  console.log(b);
 
   return (
     <Container>
@@ -225,6 +218,7 @@ const Createroom = ({ onClose }) => {
               <span>
                 <div>
                   <input
+                    required
                     type="file"
                     id="input_file"
                     ref={profile_ref}
@@ -245,6 +239,20 @@ const Createroom = ({ onClose }) => {
                     src={imgUrl}
                   />
                   <br />
+                  {imgUrl == img ? (
+                    <div
+                      style={{
+                        marginTop: "7px",
+                        color: "red",
+                        fontSize: "15px",
+                        fontWeight: "400",
+                      }}
+                    >
+                      ※프로필사진을 꼭 지정해주세요.
+                    </div>
+                  ) : (
+                    ""
+                  )}
                 </div>
               </span>
             </div>
