@@ -48,6 +48,7 @@ const VideoPage = () => {
   const [openBar, setOpenBar] = useState(true);
 
   const nickname = localStorage.getItem("nickname");
+  const profileImg = localStorage.getItem("profile");
 
   // 타이머
   const [seconds, setSeconds] = useState(0);
@@ -234,15 +235,13 @@ const VideoPage = () => {
   useEffect(() => {
     socketRef.current = socket;
     navigator.mediaDevices
-      .getUserMedia({ video: true, audio: false })
+      .getUserMedia({ video: true, audio: true })
       .then((stream) => {
         userVideo.current.srcObject = stream;
         const data = {
           roomId,
           nickname,
-          hours,
-          minutes,
-          seconds,
+          profileImg,
         };
         socketRef.current.emit("join room", data);
         socketRef.current.on("all users", (users) => {
@@ -255,10 +254,8 @@ const VideoPage = () => {
             const peerObj = {
               peerID: user.socketId,
               peerNickname: user.nickname,
+              peerProfileImg: user.profileImg,
               peer,
-              peerHours: user.hours,
-              peerMinutes: user.seconds,
-              peerSeconds: user.seconds,
             };
             peersRef.current.push(peerObj);
             setPeers((users) => [...users, peerObj]);
@@ -270,6 +267,7 @@ const VideoPage = () => {
           const newPeer = {
             peerID: payload.callerID,
             peerNickname: payload.callerNickname,
+            peerProfileImg: payload.callerProfileImg,
             peer,
           };
           peersRef.current.push(newPeer);
@@ -350,6 +348,8 @@ const VideoPage = () => {
       window.removeEventListener("beforeunload", postTimerData);
     };
   }, []);
+  console.log(profileImg)
+  console.log(peers)
 
   return (
     <>
@@ -390,6 +390,7 @@ const VideoPage = () => {
                   nickname={nickname}
                   audioState={audioState}
                   videoState={videoState}
+                  profileImg={profileImg}
                 />
               </div>
 
@@ -406,6 +407,7 @@ const VideoPage = () => {
                       nickname={peer.peerNickname}
                       audioState={audioState}
                       videoState={videoState}
+                      profileImg={peer.peerProfileImg}
                     />
                   </div>
                 );
@@ -495,10 +497,11 @@ const VideoInfo = (props) => {
       }}
     >
       <div>
-        <div className="user_img"></div>
+        <div className="user_img">
+          <img style={{ objectFit: "cover", width:"33px", height:"33px", borderRadius:"50%" }} src={props.profileImg} alt="" />
+        </div>
         <span className="user_name">{props.nickname}</span>
       </div>
-
       <DeviceSelctor className="video_control_btn">
         <div className="audio">
           {props.audioState ? <BsFillMicMuteFill /> : <AiFillAudio />}
@@ -572,7 +575,6 @@ const UnderPlusBar = styled.div`
   .user_img {
     width: 33px;
     height: 33px;
-    background-color: lightgray;
     border-radius: 50%;
   }
 `;

@@ -50,12 +50,17 @@ const Login = ({ onClose, SignOpen }) => {
         localStorage.setItem("profile", response.data.imgurl);
         onClose();
         MySwal.fire({
-          title: "Success!",
-          text: "로그인 성공",
-          icon: "success",
+          title: "SUCCESS",
+          text: "로그인 성공!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
           confirmButtonText: "확인",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.reload();
+          }
         });
-        window.location.reload();
       })
       .catch(function (error) {
         MySwal.fire({

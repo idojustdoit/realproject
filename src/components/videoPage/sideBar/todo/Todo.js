@@ -7,7 +7,7 @@ import ResizePanel from "react-resize-panel";
 
 import "../../../../App.css";
 
-const Todo = () => {
+const Todo = ({roomId}) => {
   const [todoToggle, setTodoToggle] = useState(true);
  
   const toggleHandler = () => {
@@ -38,7 +38,7 @@ const Todo = () => {
       <Wrapper>
         {todoToggle && (
           <ResizePanel direction="s">
-            <TodoList />
+            <TodoList roomId={roomId}/>
           </ResizePanel>
         )}
       </Wrapper>

@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from "react";
-
+import { useSelector, useDispatch } from "react-redux";
+import { addChatList } from "../../../../redux/modules/chatListSlice";
 
 import { TiDelete } from "react-icons/ti";
 import styled from "styled-components";
 import HorizonLine from "../../../../elements/HorizonLine";
 
 const RealTimeChatList = ({ socket, nick, roomId }) => {
+  const profileImg = localStorage.getItem("profile");
+
+  const chatList = useSelector((state) => state.chatList);
+  const dispatch = useDispatch();
   const [currentMessage, setCurrentMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
 
@@ -37,95 +42,105 @@ const RealTimeChatList = ({ socket, nick, roomId }) => {
       const messageData = {
         roomId: roomId,
         author: nick,
+        profileImg: profileImg,
         message: currentMessage,
         time: fullTime,
         date: fullDate,
       };
 
       socket.emit("send_message", messageData);
-      setMessageList((list) => [messageData, ...list]);
+      dispatch(addChatList(messageData));
       setCurrentMessage("");
     }
   };
 
   useEffect(() => {
-    socket.on("receive_message", (data) => {
-      console.log(`receive_message(on): ${data.message}`);
-      setMessageList((list) => [data, ...list]);
-    });
-    socket.on("welcome", (data) => {
-      console.log(`welcome(on): ${data.author}`);
-      setMessageList((list) => [data, ...list]);
-    });
-    socket.on("bye", (data) => {
-      console.log(`bye(on): ${data}`);
-      setMessageList((list) => [{ message: "님이 퇴장하셨습니다." }, ...list]);
+    socket.on("receive_message", (payload) => {
+      console.log(payload);
+      console.log(`receive_message(on): ${payload.message}`);
+      dispatch(addChatList(payload));
     });
   }, []);
 
   return (
     <>
-      <ChatList className="panel sidebar" empty={messageList.length === 0}>
-        {messageList.length === 0 ? (
+      <ChatList className="panel sidebar" empty={chatList.length === 0}>
+        {chatList.length === 0 ? (
           <div style={{ textAlign: "center", color: "#808080" }}>
             아직 나눈 대화가 없습니다.
           </div>
         ) : null}
 
-        {messageList.map((messageContent, idx) => {
+        {chatList.map((list, idx) => {
           return (
             <div key={idx} className="message">
-              {messageContent.author === nick ? (
-                <Message state={nick === messageContent.author && nick}>
+              {list.author === nick ? (
+                <Message state={nick === list.author && nick}>
                   {/* 같은 유저가 보낼때 메세지, 시간만 전송(my chat) */}
                   {idx >= 0 &&
-                  messageList[idx]?.author !== messageList[idx + 1]?.author ? (
+                  chatList[idx]?.author !== chatList[idx + 1]?.author ? (
                     <>
                       {idx >= 0 &&
-                        messageList[idx]?.date !==
-                          messageList[idx + 1]?.date && (
-                          <HorizonLine text={messageContent.date} />
+                        chatList[idx]?.date !== chatList[idx + 1]?.date && (
+                          <HorizonLine text={list.date} />
                         )}
-
                       <div className="msg_items">
-                        <div className="user_img"></div>
-                        <div className="nickname">{messageContent.author}</div>
+                        <div className="user_img">
+                          <img
+                            style={{
+                              objectFit: "cover",
+                              width: "33px",
+                              height: "33px",
+                              borderRadius: "50%",
+                            }}
+                            src={list.profileImg}
+                            alt=""
+                          />
+                        </div>
+                        <div className="nickname">{list.author}</div>
                       </div>
                     </>
                   ) : null}
                   {/* 같은 유저가 보낼때 메세지, 시간만 전송(my chat) */}
 
                   <div className="msg_line">
-                    <span className="time">{messageContent.time}</span>
-                    <div className="message">{messageContent.message}</div>
+                    <span className="time">{list.time}</span>
+                    <div className="message">{list.message}</div>
                   </div>
                 </Message>
-              ) : !messageContent.message ? (
-                // 유저가 방에 들어올 때 알림
-                <p className="enter_and_exit">
-                  {messageContent.author}님이 입장하셨습니다.👀
-                </p>
-              ) : messageContent.message === "님이 퇴장하셨습니다." ? (
-                // 유저가 퇴장할 때 알림
-                <p className="enter_and_exit">
-                  {getUserName || "익명 사용자"}
-                  {messageContent.message}😢
-                </p>
               ) : (
                 <Message>
                   {/* 같은 유저가 보낼때 메세지, 시간만 전송(friend chat) */}
+
                   {idx >= 0 &&
-                  messageList[idx]?.author !== messageList[idx + 1]?.author ? (
-                    <div className="msg_items">
-                      <div className="user_img"></div>
-                      <div className="nickname">{messageContent.author}</div>
-                    </div>
+                  chatList[idx]?.author !== chatList[idx + 1]?.author ? (
+                    <>
+                      {idx >= 0 &&
+                        chatList[idx]?.date !== chatList[idx + 1]?.date && (
+                          <HorizonLine text={list.date} />
+                        )}
+                      <div className="msg_items">
+                        <div className="user_img">
+                          <img
+                            style={{
+                              objectFit: "cover",
+                              width: "33px",
+                              height: "33px",
+                              borderRadius: "50%",
+                            }}
+                            src={list.profileImg}
+                            alt=""
+                          />
+                        </div>
+                        <div className="nickname">{list.author}</div>
+                      </div>
+                    </>
                   ) : null}
                   {/* 같은 유저가 보낼때 메세지, 시간만 전송(friend chat) */}
 
                   <div className="msg_line">
-                    <div className="message">{messageContent.message}</div>
-                    <span className="time">{messageContent.time}</span>
+                    <div className="message">{list.message}</div>
+                    <span className="time">{list.time}</span>
                   </div>
                 </Message>
               )}
@@ -206,7 +221,7 @@ const MessageForm = styled.form`
   button {
     width: 70px;
     height: 100%;
-    background-color: #1D9FFD;
+    background-color: #1d9ffd;
     color: white;
     font-weight: bold;
     border-radius: 5px;
@@ -229,7 +244,6 @@ const Message = styled.div`
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    background-color: lightgray;
   }
   .nickname {
     font-size: 1.3rem;
