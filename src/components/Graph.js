@@ -30,8 +30,8 @@ function Graph() {
       },
     })
       .then(function (response) {
+        console.log(response);
         setData(response.data.studytime);
-        setWeektime(response.data.studytime.time);
       })
       .catch((error) => {});
   };
