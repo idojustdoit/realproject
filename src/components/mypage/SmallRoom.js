@@ -43,6 +43,8 @@ function SmallRoom({ roomId, imgUrl, title, date, groupNum, lock }) {
       });
   }
 
+  const num = groupNum.length - 1;
+
   function joinRoomHandler() {}
   const [EnterOpen, setEnterOpen] = useState(false);
   const EnterModal = () => {
@@ -62,7 +64,7 @@ function SmallRoom({ roomId, imgUrl, title, date, groupNum, lock }) {
             <UserCountBox className="userCount-box">
               <FaUser />
               &nbsp;
-              <span>{groupNum.length - 1}/4</span>
+              <span>{num}/4</span>
             </UserCountBox>
           </IconBox>
         </TitleBox>

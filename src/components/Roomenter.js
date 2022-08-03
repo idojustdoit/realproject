@@ -17,7 +17,7 @@ const Login = ({ onClose, roomId }) => {
   const [profile, setProfile] = React.useState([]);
   const [nickname, setNickname] = React.useState([]);
   const [password, setPassword] = React.useState(0);
-  const [personinfo, setPersoninfo] = React.useState([]);
+  const [roompassward, setRoompassward] = React.useState(0);
   const [lock, setLock] = React.useState("");
 
   //유저가 선택한 방에대한 정보
@@ -32,13 +32,11 @@ const Login = ({ onClose, roomId }) => {
       },
     })
       .then((response) => {
-        console.log(response);
         setTitle(response.data.checkRoom.title);
         setContent(response.data.checkRoom.content);
-
         setNickname(response.data.output);
         setLock(response.data.checkRoom.lock);
-        // setPersoninfo(response.data.personinfo);
+        setRoompassward(response.data.checkRoom.password);
       })
       .catch((error) => {
         console.log(error);
@@ -49,42 +47,27 @@ const Login = ({ onClose, roomId }) => {
   }, []);
 
   // 비밀방 입장 할때
+  const list = { lock, password };
+
+  console.log(list);
   const secretRoom = () => {
-    const token = localStorage.getItem("accessToken");
-    const userId = localStorage.getItem("userId");
-    axios({
-      method: "POST",
-      url: `api/room/private-room/${roomId}/${userId}`,
-      baseURL: API_URL,
-      data: {
-        password: password,
-      },
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => {
-        console.log(response);
-        navigate(`/public-room/${roomId}`);
-      })
-      .catch((error) => {
-        console.log(error);
-        MySwal.fire({
+    password == roompassward
+      ? navigate(`/private-room/${roomId}`, { state: list })
+      : MySwal.fire({
           title: "Error!",
-          text: "방 입장에 실패하였습니다.",
+          text: "비밀번호를 다시 확인해주세요.",
           icon: "error",
           confirmButtonText: "확인",
         });
-      });
   };
 
   const pwhandler = (e) => {
     setPassword(e.target.value);
   };
   const RoomenterHandler = () => {
-    navigate(`/public-room/${roomId}`);
+    navigate(`/public-room/${roomId}`, { state: list });
   };
-  console.log(nickname);
+
   return (
     <Container>
       <Background

@@ -50,10 +50,9 @@ const SignUp = ({ onClose, LoginOpen }) => {
     }
   };
 
-  // 조건 최소 2글자
   const onChangeUserId = (e) => {
     const userIdRegex =
-      /^[0-9a-zA-Z]([-_/.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_/.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
+      /^[0-9a-z]([-_/.]?[0-9a-z])*@[0-9a-z]([-_/.]?[0-9a-z])*\.[a-z]{2,3}$/;
     if (!e.target.value || userIdRegex.test(e.target.value))
       setUserIdError(false);
     else setUserIdError(true);
@@ -244,18 +243,20 @@ const SignUp = ({ onClose, LoginOpen }) => {
                 ref={profile_ref}
                 onChange={UpImageUrl}
               />
+
               <br />
 
               {profile == userprofile ? (
-                <span
+                <div
                   style={{
-                    marginTop: "10px",
+                    marginTop: "7px",
+                    color: "red",
                     fontSize: "15px",
                     fontWeight: "400",
                   }}
                 >
-                  프로필사진을 꼭 지정해주세요.
-                </span>
+                  ※프로필사진을 꼭 지정해주세요.
+                </div>
               ) : (
                 ""
               )}

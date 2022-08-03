@@ -29,6 +29,7 @@ function App() {
             <Route path="/Modify" element={<Modify />}></Route>
             <Route path="/public-room/:roomId" element={<VideoPage />}></Route>
             <Route path="/noservice" element={<NoServicePage />} />
+            <Route path="/private-room/:roomId" element={<VideoPage />}></Route>
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Router>

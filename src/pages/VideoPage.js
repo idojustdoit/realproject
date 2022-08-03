@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import VideoHeader from "../components/videoPage/mainScreen/VideoHeader";
 import SideView from "../components/videoPage/sideBar/SideView";
 
 import Peer from "simple-peer";
 import axios from "axios";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 import "../App.css";
 
@@ -22,9 +24,10 @@ import io from "socket.io-client";
 const socket = io.connect("https://egloo.shop");
 
 const VideoPage = () => {
+  const MySwal = withReactContent(Swal);
   const navigate = useNavigate();
   const { roomId } = useParams();
-
+  const { state } = useLocation();
   const [peers, setPeers] = useState([]);
   const socketRef = useRef();
   const userVideo = useRef();
@@ -55,6 +58,7 @@ const VideoPage = () => {
   const userId = localStorage.getItem("userId");
   const token = localStorage.getItem("accessToken");
   //들어갈때
+
   const poststartData = () => {
     axios({
       method: "POST",
@@ -67,15 +71,102 @@ const VideoPage = () => {
       },
     })
       .then((response) => {
+        console.log(response);
         setHours(response.data.hour);
         setMinutes(response.data.minute);
         setSeconds(response.data.second);
       })
       .catch((error) => {});
   };
+
+  const postsecretData = () => {
+    axios({
+      method: "POST",
+      url: `/api/room/private-room/${roomId}/${userId}`,
+      data: {
+        password: state.password,
+      },
+      baseURL: API_URL,
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        console.log(response);
+        setHours(response.data.hour);
+        setMinutes(response.data.minute);
+        setSeconds(response.data.second);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   useEffect(() => {
-    poststartData();
+    if (state.lock) {
+      postsecretData();
+    } else {
+      poststartData();
+    }
   }, []);
+
+  const postTimerData = () => {
+    const token = localStorage.getItem("accessToken");
+    const userId = localStorage.getItem("userId");
+    axios({
+      method: "POST",
+      url: `/api/room/exit/${roomId}/${userId}`,
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+
+      baseURL: API_URL,
+    })
+      .then((response) => {
+        console.log(response);
+        navigate("/");
+        window.location.reload();
+      })
+      .catch((error) => {
+        console.log(error);
+        navigate("/");
+        window.location.reload();
+      });
+  };
+  const reloadTimerData = () => {
+    const token = localStorage.getItem("accessToken");
+    const userId = localStorage.getItem("userId");
+    axios({
+      method: "POST",
+      url: `/api/room/exit/${roomId}/${userId}`,
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+
+      baseURL: API_URL,
+    })
+      .then((response) => {})
+      .catch((error) => {});
+  };
+
+  const exitRoomHandler = () => {
+    MySwal.fire({
+      title: "EXIT",
+      text: "정말 나가시겠습니까?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "승인",
+      cancelButtonText: "취소",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        postTimerData();
+      }
+    });
+  };
 
   useEffect(() => {
     time_ref.current = setInterval(() => {
@@ -92,6 +183,21 @@ const VideoPage = () => {
     }, 1000);
     return () => clearInterval(time_ref.current);
   });
+  // 새로고침 이벤트 감지
+  const preventClose = (e) => {
+    e.preventDefault();
+    e.returnValue = "";
+  };
+  useEffect(() => {
+    (() => {
+      window.addEventListener("beforeunload", preventClose);
+      window.addEventListener("beforeunload", reloadTimerData);
+    })();
+    return () => {
+      window.removeEventListener("beforeunload", preventClose);
+      window.addEventListener("beforeunload", reloadTimerData);
+    };
+  }, []);
 
   // sidebar
   const sideBarHandler = () => {
@@ -125,30 +231,6 @@ const VideoPage = () => {
       setAudioState(false);
     }
   };
-
-  // const exitRoomHandler = async () => {
-  //   MySwal.fire({
-  //     title: "EXIT",
-  //     text: "정말 나가시겠습니까?",
-  //     icon: "warning",
-  //     showCancelButton: true,
-  //     confirmButtonColor: "#3085d6",
-  //     cancelButtonColor: "#d33",
-  //     confirmButtonText: "승인",
-  //     cancelButtonText: "취소",
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       userVideo.current.srcObject.getVideoTracks().forEach((track) => {
-  //         track.stop();
-  //       });
-  //       userVideo.current.srcObject.getAudioTracks().forEach((track) => {
-  //         track.stop();
-  //       });
-  //       navigate("/");
-  //       window.location.reload();
-  //     }
-  //   });
-  // };
 
   useEffect(() => {
     socketRef.current = socket;
@@ -259,6 +341,17 @@ const VideoPage = () => {
     return peer;
   }
 
+  // 새로고침 뒤로가기 이벤트 감지
+
+  useEffect(() => {
+    (() => {
+      window.addEventListener("beforeunload", postTimerData);
+    })();
+    return () => {
+      window.removeEventListener("beforeunload", postTimerData);
+    };
+  }, []);
+
   return (
     <>
       <ScreenWrapper>
@@ -274,6 +367,7 @@ const VideoPage = () => {
           }}
         >
           <VideoHeader
+            exitRoomHandler={exitRoomHandler}
             openBar={openBar}
             roomId={roomId}
             userVideo={userVideo}

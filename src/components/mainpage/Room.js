@@ -73,7 +73,7 @@ const Room = ({
               <UserCountBox className="userCount-box">
                 <FaUser />
                 &nbsp;
-                <span>{groupNum.length - 1}/4</span>
+                <span>{groupNum.length}/4</span>
               </UserCountBox>
             </TitleAndGroupNum>
             <IconBox>
