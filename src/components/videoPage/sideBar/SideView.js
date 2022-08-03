@@ -21,7 +21,7 @@ const SideView = ({ openBar, socket, nick, roomId }) => {
         <SideBar>
           <Wrapper>
             {/* components */}
-            <Todo />
+            <Todo roomId={roomId}/>
             <RealTimeChat socket={socket} nick={nick} roomId={roomId} />
             {/* components */}
           </Wrapper>
@@ -32,8 +32,6 @@ const SideView = ({ openBar, socket, nick, roomId }) => {
 };
 
 const SideBar = styled.div`
-  visibility: ${(props) => (props.BarState ? "hidden" : "visible")};
-  display: ${(props) => (props.BarState ? "none" : "flex")};
   width: 30vw;
   max-height: 100vh;
 `;

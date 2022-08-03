@@ -1,67 +1,74 @@
-import { createSlice} from "@reduxjs/toolkit";
+import { async } from "@firebase/util";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
 
-const initialTodoListState = [
-  {
-    id: 1,
-    list: "공부시간 4시간 채우기",
-    checked: false,
-  },
-  {
-    id: 2,
-    list: "'웹디자인기능가 필기 절대족보' 53P ~ 80P",
-    checked: false,
-  },
-  {
-    id: 3,
-    list: "13:00 ~ 14:00 방해금지 시간",
-    checked: true,
-  },
-  {
-    id: 4,
-    list: "--------------------------율찬--------------------------",
-    checked: false,
-  },
-  {
-    id: 5,
-    list: "유튜브 강의 Chapter2",
-    checked: false,
-  },
-  {
-    id: 6,
-    list: "유튜브 강의 Chapter3",
-    checked: false,
-  },
-];
+const API_URL = process.env.REACT_APP_API_URL;
+const TOKEN = localStorage.getItem("accessToken");
+
+export const getList = createAsyncThunk("GET_TODO", async (roomId) => {
+  return await axios
+    .get(`${API_URL}/api/todo/${roomId}`, {
+      headers: { Authorization: `Bearer ${TOKEN}` },
+    })
+    .then((response) => response.data.todos);
+});
+
+export const addList = createAsyncThunk("POST_TODO", async (payload) => {
+  const roomId = payload.roomId;
+  const data = {
+    text: payload.text,
+    checkBox: payload.checkBox,
+  };
+  return await axios.post(`${API_URL}/api/todo/input/${roomId}`, data, {
+    headers: { Authorization: `Bearer ${TOKEN}` },
+  }).then(response=>response.data.todos);
+});
+
+export const updateCheckBox = createAsyncThunk(
+  "PUT_CHECKBOX",
+  async (payload) => {
+    const todoId = payload.todoId;
+    const data = {
+      text: payload.text,
+      checkBox: payload.checkBox,
+    };
+    return await axios
+      .put(`${API_URL}/api/todo/${todoId}`, data, {
+        headers: { Authorization: `Bearer ${TOKEN}` },
+      })
+      .then((response) => response.data.todos);
+  }
+);
+export const deleteList = createAsyncThunk("DELETE_TODO", async (payload) => {
+  const todoId = payload.todoId
+  await axios
+    .delete(`${API_URL}/api/todo/remove/${todoId}`, {
+      headers: { Authorization: `Bearer ${TOKEN}` },
+    })
+    return todoId;
+});
 
 const todoListSlice = createSlice({
   name: "todoList",
-  initialState: initialTodoListState,
-  reducers: {
-    addTodoList(state, { payload }) {
-      return [
-        ...state,
-        {
-          id: payload.id,
-          list: payload.list,
-          checked: payload.checked,
-        },
-      ];
-    },
-    deleteTodoList(state, { payload }) {
-      const deletedState = state.filter((list) => list.id !== payload.id);
-      return deletedState;
-    },
-    updateTodoChecked(state, { payload }) {
-      const toggleState = state.map((list) =>
-        list.id === payload.id ? { ...list, checked: !payload.checked } : list
-      );
-      return toggleState;
-    },
+  initialState: [],
+  reducers: {},
+  extraReducers: {
+    [getList.fulfilled]: (state, { payload }) => [...payload],
+    [addList.fulfilled]: (state, { payload }) => [...state, payload],
+    [updateCheckBox.fulfilled]: (state, { payload }) => 
+      state.map((list) =>
+        list.todoId === payload.todoId
+          ? { ...list, checkBox: payload.checkBox }
+          : list
+      ),
+    
+    [deleteList.fulfilled]: (state, { payload }) => 
+      state.filter((list) => list.todoId !== payload),
+    
   },
 });
 
 export const { addTodoList, updateTodoChecked, deleteTodoList } =
   todoListSlice.actions;
-
 
 export default todoListSlice.reducer;

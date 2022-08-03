@@ -23,7 +23,7 @@ import { TbVideo, TbVideoOff } from "react-icons/tb";
 //socket
 import io from "socket.io-client";
 
-const socket = io.connect("https://egloo.shop");
+const socket = io.connect("http://localhost:3001");
 
 const VideoPage = () => {
   const navigate = useNavigate();
@@ -50,59 +50,7 @@ const VideoPage = () => {
   const [openBar, setOpenBar] = useState(true);
 
   const nickname = localStorage.getItem("nickname");
-
-  // 타이머
-  const [seconds, setSeconds] = useState(0);
-  const [minutes, setMinutes] = useState(0);
-  const [hours, setHours] = useState(0);
-  const time_ref = useRef(null);
-  const API_URL = process.env.REACT_APP_API_URL;
-  const userId = localStorage.getItem("userId");
-  const token = localStorage.getItem("accessToken");
-  //들어갈때
-  const poststartData = () => {
-    axios({
-      method: "POST",
-      url: `/api/room/public-room/${roomId}/${userId}`,
-
-      baseURL: API_URL,
-      headers: {
-        "content-type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => {
-        console.log(response);
-        alert("타이머 성공");
-        setHours(response.data.hour);
-        setMinutes(response.data.minute);
-        setSeconds(response.data.second);
-      })
-      .catch((error) => {
-        console.log(error);
-        alert("타이머 실패");
-      });
-  };
-  useEffect(() => {
-    poststartData();
-  }, []);
-
-  useEffect(() => {
-    time_ref.current = setInterval(() => {
-      setSeconds(seconds + 1);
-      if (seconds === 59) {
-        setMinutes(minutes + 1);
-        setSeconds(0);
-        if (seconds === 59 && minutes === 59) {
-          setHours(hours + 1);
-          setMinutes(0);
-          setSeconds(0);
-        }
-      }
-    }, 1000);
-    return () => clearInterval(time_ref.current);
-  });
-  //들어갈때
+  const profileImg = localStorage.getItem("imgurl");
 
   // sidebar
   const sideBarHandler = () => {
@@ -171,9 +119,7 @@ const VideoPage = () => {
         const data = {
           roomId,
           nickname,
-          hours,
-          minutes,
-          seconds,
+          profileImg,
         };
         socketRef.current.emit("join room", data);
         socketRef.current.on("all users", (users) => {
@@ -186,10 +132,8 @@ const VideoPage = () => {
             const peerObj = {
               peerID: user.socketId,
               peerNickname: user.nickname,
+              peerProfileImg: user.profileImg,
               peer,
-              peerHours: user.hours,
-              peerMinutes: user.seconds,
-              peerSeconds: user.seconds,
             };
             peersRef.current.push(peerObj);
             setPeers((users) => [...users, peerObj]);
@@ -201,6 +145,7 @@ const VideoPage = () => {
           const newPeer = {
             peerID: payload.callerID,
             peerNickname: payload.callerNickname,
+            peerProfileImg: payload.callerProfileImg,
             peer,
           };
           peersRef.current.push(newPeer);
@@ -305,9 +250,7 @@ const VideoPage = () => {
                   nickname={nickname}
                   audioState={audioState}
                   videoState={videoState}
-                  hours={hours}
-                  minutes={minutes}
-                  seconds={seconds}
+                  profileImg={profileImg}
                 />
               </div>
 
@@ -324,6 +267,7 @@ const VideoPage = () => {
                       nickname={peer.peerNickname}
                       audioState={audioState}
                       videoState={videoState}
+                      profileImg={peer.peerProfileImg}
                     />
                   </div>
                 );
@@ -413,15 +357,11 @@ const VideoInfo = (props) => {
       }}
     >
       <div>
-        <div className="user_img"></div>
+        <div className="user_img">
+          <img style={{ objectFit: "cover" }} src={props.profileImg} alt="" />
+        </div>
         <span className="user_name">{props.nickname}</span>
       </div>
-      <span>
-        {" "}
-        {props.hours < 10 ? "0" + props.hours : props.hours}:
-        {props.minutes < 10 ? "0" + props.minutes : props.minutes}:
-        {props.seconds < 10 ? "0" + props.seconds : props.seconds}
-      </span>
       <DeviceSelctor className="video_control_btn">
         <div className="audio">
           {props.audioState ? <BsFillMicMuteFill /> : <AiFillAudio />}
@@ -495,7 +435,6 @@ const UnderPlusBar = styled.div`
   .user_img {
     width: 33px;
     height: 33px;
-    background-color: lightgray;
     border-radius: 50%;
   }
 `;

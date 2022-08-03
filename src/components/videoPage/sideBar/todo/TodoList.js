@@ -1,24 +1,28 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { DragDropContext, Draggable } from "react-beautiful-dnd";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import {
-  addTodoList,
-  deleteTodoList,
-  updateTodoChecked,
+  getList,
+  addList,
+  updateCheckBox,
+  deleteList
 } from "../../../../redux/modules/todoListSlice";
 
 //react icons
 import { ImCross } from "react-icons/im";
-import { RiPencilFill } from "react-icons/ri";
 import { GoPlus } from "react-icons/go";
 
-const TodoList = () => {
+const TodoList = ({roomId}) => {
   const dispatch = useDispatch();
 
   const check_ref = useRef(null);
 
   const todoListItem = useSelector((state) => state.todoList);
+  const test = useSelector((state)=>state)
+  console.log(test)
+  console.log(todoListItem)
+
 
   const [updateTodo, setUpdateTodo] = useState(false);
   const [inputShow, setInputShow] = useState(false);
@@ -26,15 +30,10 @@ const TodoList = () => {
   const [todo, setTodo] = useState([]);
   const [boxCheck, setBoxCheck] = useState(false);
 
-  const id = Math.random();
 
-  const updateTodoList = () => {
-    if (!updateTodo) {
-      setUpdateTodo(true);
-    } else {
-      setUpdateTodo(false);
-    }
-  };
+  useEffect(()=>{
+    dispatch(getList(roomId))
+  },[dispatch, roomId])
 
   const todoInputHandler = () => {
     if (!emptyListInputShow) {
@@ -48,9 +47,9 @@ const TodoList = () => {
     setTodo(e.target.value);
   };
 
-  const addList = (e) => {
+  const addTodoList = (e) => {
     e.preventDefault();
-    dispatch(addTodoList({ id: id, list: todo, checked: boxCheck }));
+    dispatch(addList({roomId, text: todo, checkBox: boxCheck }));
     setTodo("");
     setUpdateTodo(false);
   };
@@ -87,28 +86,27 @@ const TodoList = () => {
 
           {todoListItem.map((i, index) => {
             return (
-              <div key={i.id}>
+              <div key={i.todoId}>
                 <ChatItem>
-                  <CheckLabel boxCheck={i.checked}>
+                  <CheckLabel boxCheck={i.checkBox}>
                     <input
                       className="check"
                       ref={check_ref}
                       onClick={(e) => {
                         setBoxCheck(e.currentTarget.checked);
-                        console.log(e.currentTarget.checked);
                         dispatch(
-                          updateTodoChecked({ id: i.id, checked: i.checked })
+                          updateCheckBox({ todoId: i.todoId, text:i.text, checkBox:e.currentTarget.checked})
                         );
                       }}
                       type="checkbox"
                       //re-rander시 체크박스 유지
-                      defaultChecked={i.checked && "defaultChecked"}
+                      defaultChecked={i.checkBox && "defaultChecked"}
                     />
 
                     <input
                       className="input_result"
                       type="text"
-                      defaultValue={i.list}
+                      defaultValue={i.text}
                       disabled={!updateTodo &&  "disabled"}
                     />
                   </CheckLabel>
@@ -126,20 +124,13 @@ const TodoList = () => {
                       }}
                       style={{ cursor: "pointer" }}
                     />
-                    <RiPencilFill
-                      onClick={updateTodoList}
-                      style={{
-                        fontSize: "0.9rem",
-                        cursor: "pointer",
-                      }}
-                    />
                     <ImCross
                       style={{
                         fontSize: "0.7rem",
                         cursor: "pointer",
                       }}
                       onClick={() => {
-                        dispatch(deleteTodoList({ id: i.id }));
+                        dispatch(deleteList({ todoId: i.todoId }));
                       }}
                     />
                   </div>
@@ -160,7 +151,7 @@ const TodoList = () => {
           })}
         </ul>
         {emptyListInputShow  && (
-          <TodoForm onSubmit={addList}>
+          <TodoForm onSubmit={addTodoList}>
             <input type="checkbox" disabled />
             <input
               onChange={todoHandler}

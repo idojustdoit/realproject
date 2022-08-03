@@ -100,7 +100,7 @@ const SignUp = ({ onClose, LoginOpen }) => {
       data: {
         nickname: nickname,
       },
-      baseURL: "http://3.37.87.171",
+      baseURL: "https://egloo.shop",
     })
       .then((response) => {
         console.log(response);

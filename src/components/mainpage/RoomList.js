@@ -102,7 +102,7 @@ const RoomList = () => {
   //초기에는 모든 이미지가 컬러인 상태로 보여야해서 추가한 state
   const [isClicked, setIsClicked] = useState(false);
 
-  const API_URL = "http://3.37.87.171";
+  const API_URL = "https://egloo.shop";
 
   // const [ro`oms, setRooms] = useState([])
   const LIMIT = 6; //axios요청시 6개씩

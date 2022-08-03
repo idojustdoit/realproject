@@ -25,7 +25,7 @@ function Kakaologin() {
         const access_token = res.data.access_token;
         const refresh_token = res.data.refresh_token;
         axios
-          .post("http://3.37.87.171/api/kakao/login", {
+          .post("https://egloo.shop/api/kakao/login", {
             access_token,
             refresh_token,
           })
@@ -37,7 +37,7 @@ function Kakaologin() {
             const user_url = res.data.kakao_account.profile.profile_image_url;
             axios
               .post(
-                "http://3.37.87.171/api/kakao/newuser",
+                "https://egloo.shop/api/kakao/newuser",
                 {
                   user_id: user_id,
                   user_email: user_email,
