@@ -1,17 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, memo } from "react";
 import styled from "styled-components";
 import { FaUser } from "react-icons/fa";
 import axios from "axios";
-
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import Portal from "../Portal";
 import Roomenter from "../Roomenter";
 import { FaLock } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { deleteARoom } from "../../redux/modules/myRoomSlice";
 
 function SmallRoom({ roomId, imgUrl, title, date, groupNum, lock }) {
+  const dispatch = useDispatch();
   const API_URL = process.env.REACT_APP_API_URL;
-  function studyOutHandler() {
+  const MySwal = withReactContent(Swal); //(에러 및 성공 모달창)
+
+  function studyOutHandler(roomId) {
     const userId = localStorage.getItem("userId");
     const token = localStorage.getItem("accessToken");
+
     axios({
       method: "post",
       url: `api/room/outroom/${roomId}/${userId}`,
@@ -23,7 +30,13 @@ function SmallRoom({ roomId, imgUrl, title, date, groupNum, lock }) {
       },
     })
       .then((response) => {
-        console.log(response);
+        dispatch(deleteARoom(roomId));
+        MySwal.fire({
+          title: "success",
+          text: "방이 성공적으로 삭제되었습니다.",
+          icon: "success",
+          confirmButtonText: "확인",
+        });
       })
       .catch((error) => {
         console.log(error);
@@ -49,7 +62,7 @@ function SmallRoom({ roomId, imgUrl, title, date, groupNum, lock }) {
             <UserCountBox className="userCount-box">
               <FaUser />
               &nbsp;
-              <span>{groupNum}/4</span>
+              <span>{groupNum.length - 1}/4</span>
             </UserCountBox>
           </IconBox>
         </TitleBox>
@@ -69,7 +82,7 @@ function SmallRoom({ roomId, imgUrl, title, date, groupNum, lock }) {
   );
 }
 
-export default SmallRoom;
+export default memo(SmallRoom);
 
 const RoomCont = styled.div`
   background-color: #fff;
