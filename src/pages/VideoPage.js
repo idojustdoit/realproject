@@ -53,6 +53,7 @@ const VideoPage = () => {
   const [seconds, setSeconds] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const [hours, setHours] = useState(0);
+  const [title, setTitle] = useState("");
   const time_ref = useRef(null);
   const API_URL = process.env.REACT_APP_API_URL;
   const userId = localStorage.getItem("userId");
@@ -72,6 +73,7 @@ const VideoPage = () => {
     })
       .then((response) => {
         console.log(response);
+        setTitle(response.data.title);
         setHours(response.data.hour);
         setMinutes(response.data.minute);
         setSeconds(response.data.second);
@@ -98,9 +100,7 @@ const VideoPage = () => {
         setMinutes(response.data.minute);
         setSeconds(response.data.second);
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch((error) => {});
   };
   useEffect(() => {
     if (state.lock) {
@@ -129,7 +129,6 @@ const VideoPage = () => {
         window.location.reload();
       })
       .catch((error) => {
-        console.log(error);
         navigate("/");
         window.location.reload();
       });
@@ -367,6 +366,7 @@ const VideoPage = () => {
           }}
         >
           <VideoHeader
+            title={title}
             exitRoomHandler={exitRoomHandler}
             openBar={openBar}
             roomId={roomId}

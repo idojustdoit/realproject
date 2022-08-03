@@ -230,7 +230,7 @@ const RoomList = () => {
                 return (
                   <Room
                     key={idx}
-                    roomId={room._id}
+                    roomId={room.roomId}
                     imgUrl={room.imgUrl ? room.imgUrl : roomImg}
                     title={room.title}
                     content={room.content}

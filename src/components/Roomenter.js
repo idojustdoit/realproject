@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
-const Login = ({ onClose, roomId }) => {
+const Roomenter = ({ onClose, roomId }) => {
   const API_URL = process.env.REACT_APP_API_URL;
   const MySwal = withReactContent(Swal);
   const navigate = useNavigate();
@@ -366,4 +366,4 @@ const Btn2 = styled.button`
   }
 `;
 
-export default Login;
+export default Roomenter;
