@@ -38,9 +38,7 @@ function SmallRoom({ roomId, imgUrl, title, date, groupNum, lock }) {
           confirmButtonText: "확인",
         });
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch((error) => {});
   }
 
   const num = groupNum.length - 1;

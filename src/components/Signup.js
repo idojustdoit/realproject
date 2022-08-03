@@ -31,7 +31,6 @@ const SignUp = ({ onClose, LoginOpen }) => {
   };
 
   const confirmNumber = () => {
-    console.log(emailcode);
     if (usernum === emailcode) {
       MySwal.fire({
         title: "success",
@@ -100,7 +99,6 @@ const SignUp = ({ onClose, LoginOpen }) => {
       baseURL: API_URL,
     })
       .then((response) => {
-        console.log(response);
         MySwal.fire({
           title: "success",
           text: "사용 가능한 닉네임입니다!",
@@ -110,7 +108,6 @@ const SignUp = ({ onClose, LoginOpen }) => {
         setChecknick(true);
       })
       .catch((error) => {
-        console.log(error);
         MySwal.fire({
           title: "Error!",
           text: "다른 닉네임을 입력해주세요.",
@@ -132,11 +129,9 @@ const SignUp = ({ onClose, LoginOpen }) => {
       baseURL: API_URL,
     })
       .then((response) => {
-        console.log(response);
         setEmailcode(response.data.authNum);
       })
       .catch((error) => {
-        console.log(error);
         MySwal.fire({
           title: "Error!",
           text: "이메일을 다시입력해주세요!",
@@ -167,7 +162,6 @@ const SignUp = ({ onClose, LoginOpen }) => {
       },
     })
       .then((response) => {
-        console.log(response);
         MySwal.fire({
           title: "success!",
           text: "회원가입에 성공하였습니다!",
@@ -178,7 +172,6 @@ const SignUp = ({ onClose, LoginOpen }) => {
         LoginOpen();
       })
       .catch((error) => {
-        console.log(error);
         MySwal.fire({
           title: "Error!",
           text: "이메일을 확인해주세요.",
@@ -195,7 +188,6 @@ const SignUp = ({ onClose, LoginOpen }) => {
   const handlerPwcheck = (e) => {
     setpasswordCheck(e.target.value);
   };
-  console.log(profile);
 
   return (
     <Container>

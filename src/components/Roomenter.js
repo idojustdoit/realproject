@@ -38,9 +38,7 @@ const Login = ({ onClose, roomId }) => {
         setLock(response.data.checkRoom.lock);
         setRoompassward(response.data.checkRoom.password);
       })
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch((error) => {});
   };
   useEffect(() => {
     roomData();
@@ -49,7 +47,6 @@ const Login = ({ onClose, roomId }) => {
   // 비밀방 입장 할때
   const list = { lock, password };
 
-  console.log(list);
   const secretRoom = () => {
     password == roompassward
       ? navigate(`/private-room/${roomId}`, { state: list })

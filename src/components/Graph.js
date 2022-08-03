@@ -30,7 +30,6 @@ function Graph() {
       },
     })
       .then(function (response) {
-        console.log(response);
         setData(response.data.studytime);
       })
       .catch((error) => {});
