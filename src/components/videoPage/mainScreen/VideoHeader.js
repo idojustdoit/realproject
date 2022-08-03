@@ -8,7 +8,7 @@ import { ReactComponent as LogoIcon } from "../../../shared/header-assets/icon-l
 
 import { CSSTransition } from "react-transition-group";
 
-const VideoHeader = ({ exitRoomHandler, openBar }) => {
+const VideoHeader = ({ hours, minutes, seconds, exitRoomHandler, openBar }) => {
   const duration = 700;
 
   return (
@@ -24,6 +24,13 @@ const VideoHeader = ({ exitRoomHandler, openBar }) => {
           style={{ cursor: "pointer", marginLeft: "40px" }}
         />
         <Logo>같이 소방9급 준비해요!</Logo>
+        <Timer>
+          <span>
+            {hours < 10 ? "0" + hours : hours}:
+            {minutes < 10 ? "0" + minutes : minutes}:
+            {seconds < 10 ? "0" + seconds : seconds}
+          </span>
+        </Timer>
         <BasicBtn exitRoomHandler={exitRoomHandler} />
       </Head>
     </CSSTransition>
@@ -46,4 +53,8 @@ const Logo = styled.span`
   font-weight: bold;
 `;
 
+const Timer = styled.div`
+  font-weight: bold;
+  color: black;
+`;
 export default VideoHeader;

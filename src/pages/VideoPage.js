@@ -371,6 +371,9 @@ const VideoPage = () => {
             openBar={openBar}
             roomId={roomId}
             userVideo={userVideo}
+            hours={hours}
+            minutes={minutes}
+            seconds={seconds}
           />
           {/* <Timer roomId={roomId} /> */}
 
@@ -387,9 +390,6 @@ const VideoPage = () => {
                   nickname={nickname}
                   audioState={audioState}
                   videoState={videoState}
-                  hours={hours}
-                  minutes={minutes}
-                  seconds={seconds}
                 />
               </div>
 
@@ -498,12 +498,7 @@ const VideoInfo = (props) => {
         <div className="user_img"></div>
         <span className="user_name">{props.nickname}</span>
       </div>
-      <span>
-        {" "}
-        {props.hours < 10 ? "0" + props.hours : props.hours}:
-        {props.minutes < 10 ? "0" + props.minutes : props.minutes}:
-        {props.seconds < 10 ? "0" + props.seconds : props.seconds}
-      </span>
+
       <DeviceSelctor className="video_control_btn">
         <div className="audio">
           {props.audioState ? <BsFillMicMuteFill /> : <AiFillAudio />}
