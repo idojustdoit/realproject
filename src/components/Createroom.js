@@ -12,8 +12,6 @@ import Moment from "react-moment";
 import "moment/locale/ko";
 
 import { ko } from "date-fns/esm/locale";
-import { storage } from "../shared/firebase";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 // 카테고리 명 표시
 const names = [

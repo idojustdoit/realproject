@@ -1,12 +1,18 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import "./Tab.modules.css";
 import AttendRooms from "./AttendRooms";
 import HostRooms from "./HostRooms";
 import LikeRooms from "./LikeRooms";
 import Spinner from "../Spinner";
 
-function Tab({ attendRooms, hostRooms, likeRooms, isLoading }) {
+function Tab() {
   const [toggleState, setToggleState] = useState(1);
+
+  const attendRooms = useSelector((state) => state.myRoom.attendRooms);
+  const hostRooms = useSelector((state) => state.myRoom.hostRooms);
+  const likeRooms = useSelector((state) => state.myRoom.likeRooms);
+  const isLoading = useSelector((state) => state.myRoom.isLoading);
 
   const toggleTab = (index) => {
     setToggleState(index);

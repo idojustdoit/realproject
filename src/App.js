@@ -13,6 +13,7 @@ import VideoPage from "./pages/VideoPage";
 import SearchPage from "./pages/SearchPage";
 import IntroPage from "./pages/IntroPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import NoServicePage from "./pages/NoServicePage";
 
 function App() {
   return (
@@ -22,11 +23,12 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<MainPage />}></Route>
-            <Route path="/IntroPage" element={<IntroPage />}></Route>
+            <Route path="/Intro" element={<IntroPage />}></Route>
             <Route path="/mypage" element={<MyPage />}></Route>
             <Route path="/search" element={<SearchPage />}></Route>
             <Route path="/Modify" element={<Modify />}></Route>
             <Route path="/public-room/:roomId" element={<VideoPage />}></Route>
+            <Route path="/noservice" element={<NoServicePage />} />
             <Route path="/private-room/:roomId" element={<VideoPage />}></Route>
             <Route path="*" element={<NotFoundPage />} />
           </Routes>

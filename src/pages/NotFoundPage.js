@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import lostgif from "../shared/404-assets/walking-q.gif";
 
 function NotFoundPage() {

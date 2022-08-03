@@ -11,7 +11,6 @@ import emptyHeart from "../../shared/mainpage-assets/icon-empty-heart.svg";
 import { FaLock } from "react-icons/fa";
 
 const Room = ({
-  key,
   roomId,
   imgUrl,
   title,
@@ -64,7 +63,7 @@ const Room = ({
   }
 
   return (
-    <RoomCont key={key}>
+    <RoomCont key={roomId}>
       <RoomImg imgUrl={imgUrl} alt=""></RoomImg>
       <RoomCotentBox>
         <TopContent>

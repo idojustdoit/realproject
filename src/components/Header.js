@@ -69,10 +69,10 @@ function Header() {
           </LogoCont>
           <Ul>
             <Li>
-              <Link to="/IntroPage">이글루 소개</Link>
+              <Link to="/intro">이글루 소개</Link>
             </Li>
             <Li>
-              <Link to="/">커뮤니티</Link>
+              <Link to="/noservice">커뮤니티</Link>
             </Li>
           </Ul>
         </LeftCont>
@@ -89,11 +89,11 @@ function Header() {
                 <MyPageIcon style={{ cursor: "pointer" }} />
               </Link>
             </li>
-            <li>
+            {/* <li>
               <Link to="/알람모달?">
                 <AlarmIcon style={{ cursor: "pointer" }} />
               </Link>
-            </li>
+            </li> */}
             <li>
               <LogoutIcon style={{ cursor: "pointer" }} onClick={logoutHandler}>
                 로그아웃

@@ -1,10 +1,5 @@
 import React, { memo, useCallback, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  getMainList,
-  getRoomListByCategory,
-  setRoomList,
-} from "../../redux/modules/roomSlice";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
@@ -112,7 +107,6 @@ const RoomList = () => {
 
   useEffect(() => {
     let initialPage = 1;
-
     let body = {
       page: initialPage,
       perPage: LIMIT,
@@ -123,9 +117,10 @@ const RoomList = () => {
     setIsLoading(false);
     setPage(initialPage);
 
-    return () => {
-      setRoomList([]);
-    };
+    // return () => {
+    //   setRoomList([]);
+    //   setRoomsLength(0);
+    // };
   }, [category]);
 
   //메인에서 로드되는 카테고리별 리스트 axios
@@ -135,7 +130,6 @@ const RoomList = () => {
         `${API_URL}/api/main/tag/${body.category}?page=${body.page}&perPage=${body.perPage}`
       )
       .then((res) => {
-        console.log(res);
         if (res.data.result) {
           if (body.loadMore) {
             //더보기 버튼 클릭시
@@ -181,14 +175,13 @@ const RoomList = () => {
             modules={[Navigation, Scrollbar]}
             spaceBetween={10}
             slidesPerView={8}
-            touchRatio={0}
+            allowTouchMove={false}
             navigation
             scrollbar={{ draggable: false }}
             onClick={(swiper) => {
               setIsActive((prev) => swiper.clickedIndex);
               setIsClicked(true);
             }}
-            //반응형 적용x
           >
             {CATEGORY_LIST.map((cate, idx) => (
               <SwiperSlide
@@ -210,6 +203,7 @@ const RoomList = () => {
                 }
                 onClick={(e) => {
                   categoryClickHandler(e, cate.name);
+                  // console.log(e.currentTarget.getAttribute("value"));
                 }}
                 value={idx}
               >
@@ -231,27 +225,25 @@ const RoomList = () => {
       >
         {!isLoading ? (
           roomList.length > 0 ? (
-            <>
-              <RoomListCont>
-                {roomList.map((room) => {
-                  return (
-                    <Room
-                      key={room._id}
-                      roomId={room.roomId}
-                      imgUrl={room.imgUrl ? room.imgUrl : roomImg}
-                      title={room.title}
-                      content={room.content}
-                      date={room?.date}
-                      tagName={room?.tagName}
-                      groupNum={room?.groupNum}
-                      //만약에 서버의 isLiked 값이 없으면 false(기본)값을 내려준다.
-                      isLiked={room.likeUser}
-                      lock={room.lock ? room.lock : false}
-                    ></Room>
-                  );
-                })}
-              </RoomListCont>
-            </>
+            <RoomListCont>
+              {roomList.map((room, idx) => {
+                return (
+                  <Room
+                    key={idx}
+                    roomId={room._id}
+                    imgUrl={room.imgUrl ? room.imgUrl : roomImg}
+                    title={room.title}
+                    content={room.content}
+                    date={room?.date}
+                    tagName={room?.tagName}
+                    groupNum={room?.groupNum}
+                    //만약에 서버의 isLiked 값이 없으면 false(기본)값을 내려준다.
+                    isLiked={room.likeUser}
+                    lock={room.lock ? room.lock : false}
+                  ></Room>
+                );
+              })}
+            </RoomListCont>
           ) : (
             <Div>게시물이 없습니다.😓</Div>
           )
