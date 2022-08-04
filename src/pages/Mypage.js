@@ -51,7 +51,11 @@ const Mypage = () => {
                   <UserCardTop>
                     <img
                       alt="user"
-                      src={myPageInfo.userImg ? myPageInfo.userImg : userAvatar}
+                      src={
+                        myPageInfo.profile_url
+                          ? myPageInfo.profile_url
+                          : userAvatar
+                      }
                     />
                     <FlexCont>
                       <UserInfo>

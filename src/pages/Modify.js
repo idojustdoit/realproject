@@ -17,8 +17,6 @@ function Modify() {
   const [password, setpassword] = React.useState(""); // 비밀번호 인풋
   const [passwordCheck, setpasswordCheck] = React.useState(""); //비밀번호 확인 인풋
   const [nickname, setNickname] = React.useState(""); //닉네임 인풋
-  const originick = localStorage.getItem("nickname");
-  const imgUrl = localStorage.getItem("profile");
 
   // 프로필이미지 관련 코드
   const FILE_SIZE_MAX_LIMIT = 5 * 1024 * 1024;
@@ -66,8 +64,6 @@ function Modify() {
       baseURL: API_URL,
     })
       .then((response) => {
-        // localStorage.setItem("nickname", response.data.updateUser?.nickname);
-        // localStorage.setItem("accessToken", response.data?.accessToken);
         navigate("/mypage");
         MySwal.fire({
           title: "success",
@@ -146,11 +142,7 @@ function Modify() {
             <div>
               <Chat1>닉네임</Chat1>
 
-              <Input
-                type="text"
-                defaultValue={originick}
-                onChange={handlernickname}
-              />
+              <Input type="text" onChange={handlernickname} />
             </div>
           </Label>
           <Label>
