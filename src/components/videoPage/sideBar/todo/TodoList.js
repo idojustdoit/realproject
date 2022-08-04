@@ -21,10 +21,6 @@ const TodoList = ({roomId}) => {
 
   const todoListItem = useSelector((state) => state.todoList);
 
-  useEffect(() => {
-    dispatch(getList());
-  }, []);
-
   const [updateTodo, setUpdateTodo] = useState(false);
   const [inputShow, setInputShow] = useState(false);
   const [emptyListInputShow, setEmptyListInputShow] = useState(false);
@@ -35,7 +31,7 @@ const TodoList = ({roomId}) => {
   useEffect(()=>{
     dispatch(getList(roomId))
   },[dispatch, roomId])
-
+  
   const todoInputHandler = () => {
     if (!emptyListInputShow) {
       setEmptyListInputShow(true);

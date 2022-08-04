@@ -126,13 +126,8 @@ const VideoPage = () => {
     })
       .then((response) => {
         console.log(response);
-        navigate("/");
-        window.location.reload();
       })
-      .catch((error) => {
-        navigate("/");
-        window.location.reload();
-      });
+      .catch((error) => {});
   };
   const reloadTimerData = () => {
     const token = localStorage.getItem("accessToken");
@@ -159,11 +154,13 @@ const VideoPage = () => {
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "승인",
+      confirmButtonText: "확인",
       cancelButtonText: "취소",
     }).then((result) => {
       if (result.isConfirmed) {
         postTimerData();
+        navigate("/");
+        window.location.reload();
       }
     });
   };
@@ -302,6 +299,11 @@ const VideoPage = () => {
         oldPeers.filter((p) => p.peerID !== payload.socketId)
       );
     });
+
+    if(peersRef.length > 3 ){
+      alert("정원이 초과된 방입니다.")
+      navigate("/");
+    }
   }, [roomId, nickname]);
 
   function createPeer(userToSignal, callerID, stream) {
@@ -348,8 +350,9 @@ const VideoPage = () => {
       window.removeEventListener("beforeunload", postTimerData);
     };
   }, []);
-  console.log(profileImg)
-  console.log(peers)
+  console.log(profileImg);
+  console.log(peers);
+
 
   return (
     <>
@@ -498,7 +501,16 @@ const VideoInfo = (props) => {
     >
       <div>
         <div className="user_img">
-          <img style={{ objectFit: "cover", width:"33px", height:"33px", borderRadius:"50%" }} src={props.profileImg} alt="" />
+          <img
+            style={{
+              objectFit: "cover",
+              width: "33px",
+              height: "33px",
+              borderRadius: "50%",
+            }}
+            src={props.profileImg}
+            alt=""
+          />
         </div>
         <span className="user_name">{props.nickname}</span>
       </div>
