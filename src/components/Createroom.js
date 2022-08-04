@@ -169,7 +169,8 @@ const Createroom = ({ onClose }) => {
               <Input
                 required
                 type="text"
-                placeholder="스터디 명을 입력해주세요."
+                maxLength={15}
+                placeholder="스터디 명은 최대 15글자입니다."
                 onChange={handlerName}
               />
             </div>
