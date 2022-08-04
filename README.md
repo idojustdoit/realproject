@@ -1,70 +1,49 @@
-# Getting Started with Create React App
+# E-GLOO ⛄
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## E-GLOO 아키텍처 🌈
+![스크린샷 2022-08-01 14 24 02](https://user-images.githubusercontent.com/96240712/182083770-a15da7a1-6479-4107-adf0-c48557eacc0f.png)
 
-In the project directory, you can run:
+## E-GLOO 핵심기능 🛠
 
-### `yarn start`
+#### 최대 4명의 유저간의 실시간 화상채팅 및 실시간 채팅 기능 👨‍👨‍👦‍👦
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+#### 일주일 단위의 공부시간 그래프 표기 📈
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+#### 스터디룸 공개방 비밀방 기능 🚪
 
-### `yarn test`
+#### 마이페이지 호스트 룸 참여 룸 찜한 룸 확인 가능 🍀
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+#### 화상 채팅방 내에서 TO-DO LIST 작성 📚
 
-### `yarn build`
+#### 채팅방 타이머로 오늘 공부한 시간 체크 ✔
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## E-GLOO 프론트엔드 기술스택 🧑‍💻
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+<div align=center>
+<img src="https://img.shields.io/badge/react-black?style=for-the-badge&logo=react&logoColor=blue">
+<img src="https://img.shields.io/badge/redux-tookit-light black?style=for-the-badge&logoredux&logoColor=blue">
+<img src="https://img.shields.io/badge/webRTC-white?style=for-the-badge&logo=webRTC&logoColor=blue">
+<img src="https://img.shields.io/badge/socketio-black?style=for-the-badge&logo=socket.io&logoColor=white">
+  <br>
+<img src="https://img.shields.io/badge/amazonaws-green?style=for-the-badge&logo=amazonaws&logoColor=grey">
+<img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=grey">
+<img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=grey">
 
-### `yarn eject`
+</div>
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## E-GLOO 트러블슈팅 ❌
+1. 데이터 형태 통신 문제 <a href="https://github.com/idojustdoit/realproject/wiki/1.-%EB%8D%B0%EC%9D%B4%ED%84%B0-%ED%98%95%ED%83%9C-%ED%86%B5%EC%8B%A0-%EB%AC%B8%EC%A0%9C">wiki</a>
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+2. webrtc 문제 <a href="https://github.com/idojustdoit/realproject/wiki/2.-webrtc-%EB%AC%B8%EC%A0%9C">wiki</a>
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## E-GLOO 팀원소개 👨‍👨‍👦
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+|이미지|![4ffcfac596ce78b6359f6703e5ffe57e](https://user-images.githubusercontent.com/107375500/182104419-9c0bc974-77b0-48d8-beeb-98574f881577.jpg)|![014f6bf2dccf97d1cfc97dff79b028e182f3bd8c9735553d03f6f982e10ebe70](https://user-images.githubusercontent.com/107375500/182104497-2989dd73-d46a-4e31-ab60-1e1ed72f9244.png)|![a2a82850f6db5ee6033c48f55d5e15a7a88f7b2cbb72be0bdfff91ad65b168ab](https://user-images.githubusercontent.com/107375500/182133022-3629d622-334f-4ec5-a2bc-52dc932cb6ad.png)|![a2a82850f6db5ee6033c48f55d5e15a7113e2bd2b7407c8202a97d2241a96625](https://user-images.githubusercontent.com/107375500/182132932-59de69d6-a4be-4bcb-afae-0d457ffc840c.png)|
+|:---:|:---:|:---:|:---:|:---:|
+|포지션|Front-end|Front-end|Front-end|Designer|
+|이름|조원희|하율찬|조성인|기영석|
