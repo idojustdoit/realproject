@@ -73,7 +73,6 @@ const VideoPage = () => {
       },
     })
       .then((response) => {
-        console.log(response);
         setTitle(response.data.title);
         setHours(response.data.hour);
         setMinutes(response.data.minute);
@@ -299,11 +298,6 @@ const VideoPage = () => {
         oldPeers.filter((p) => p.peerID !== payload.socketId)
       );
     });
-
-    if(peersRef.length > 3 ){
-      alert("정원이 초과된 방입니다.")
-      navigate("/");
-    }
   }, [roomId, nickname]);
 
   function createPeer(userToSignal, callerID, stream) {
@@ -350,9 +344,6 @@ const VideoPage = () => {
       window.removeEventListener("beforeunload", postTimerData);
     };
   }, []);
-  console.log(profileImg);
-  console.log(peers);
-
 
   return (
     <>
