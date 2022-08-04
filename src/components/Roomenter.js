@@ -263,7 +263,7 @@ const Input = styled.input`
   transition: border 80ms ease-out, box-shadow 80ms ease-out;
   box-sizing: border-box;
   width: 309px;
-  height: 36px;
+
   color: rgba(var(--sk_primary_foreground, 29, 28, 29), 1);
   background-color: rgba(var(--sk_primary_background, 255, 255, 255), 1);
   padding: 12px;
@@ -295,7 +295,7 @@ const Todo = styled.div`
   border-radius: 4px;
   width: 309px;
   padding: 5px;
-  height: 36px;
+
   font-size: 18px;
 `;
 

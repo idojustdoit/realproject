@@ -302,7 +302,7 @@ const SignUp = ({ onClose, LoginOpen }) => {
                 style={{ fontSize: "15px" }}
                 type="password"
                 onChange={handlerPw}
-                placeholder="숫자, 영문, 특수문자 조합 최소 8자"
+                placeholder="숫자, 영문조합 8자 입력해주세요"
               />
             </div>
           </Label>

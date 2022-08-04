@@ -166,7 +166,7 @@ const TitleBox = styled.div`
   align-items: center;
 `;
 const RoomTitle = styled.h3`
-  font-size: 20px;
+  font-size: 1.2rem;
   margin-right: 10px;
   font-weight: 700;
   line-height: 24px;
