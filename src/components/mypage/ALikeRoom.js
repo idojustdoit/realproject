@@ -31,7 +31,7 @@ function ALikeRoom({ roomId, imgUrl, title, date, groupNum, lock, isLiked }) {
             <UserCountBox className="userCount-box">
               <FaUser />
               &nbsp;
-              <span>{groupNum.length - 1}/4</span>
+              <span>{groupNum.length}/4</span>
             </UserCountBox>
           </IconBox>
         </TitleBox>
@@ -105,7 +105,7 @@ const TitleBox = styled.div`
   align-items: flex-start;
 `;
 const RoomTitle = styled.h3`
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   color: white;
   /* line-height: 20px; */
 `;

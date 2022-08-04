@@ -92,7 +92,7 @@ const RoomList = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [roomList, setRoomList] = useState([]);
   // const [rooms, setRooms] = useState([]);
-  const [isActive, setIsActive] = useState(null);
+  const [isActive, setIsActive] = useState("");
   //초기에는 모든 이미지가 컬러인 상태로 보여야해서 추가한 state
   const [isClicked, setIsClicked] = useState(false);
 
@@ -178,10 +178,10 @@ const RoomList = () => {
             allowTouchMove={false}
             navigation
             scrollbar={{ draggable: false }}
-            onClick={(swiper) => {
-              setIsActive((prev) => swiper.clickedIndex);
-              setIsClicked(true);
-            }}
+            // onClick={(swiper, event) => {
+            //   setIsActive((prev) => swiper.clickedIndex);
+            //   setIsClicked(true);
+            // }}
           >
             {CATEGORY_LIST.map((cate, idx) => (
               <SwiperSlide
@@ -194,18 +194,17 @@ const RoomList = () => {
                   border: "none",
                   height: "200px",
                 }}
-                className={
-                  isClicked
-                    ? idx === isActive
-                      ? " -active"
-                      : " -not-active"
-                    : ""
-                }
-                onClick={(e) => {
-                  categoryClickHandler(e, cate.name);
-                  // console.log(e.currentTarget.getAttribute("value"));
+                // className={
+                //   isClicked
+                //     ? cate.num === isActive
+                //       ? " -active"
+                //       : " -not-active"
+                //     : ""
+                // }
+                onClick={(event) => {
+                  categoryClickHandler(event, cate.name);
+                  // let targetIdx = event.currentTarget.getAttribute("value");
                 }}
-                value={idx}
               >
                 <Img src={cate.imageUrl} style={{ filter: "none" }} />
                 <Title>{cate.name}</Title>
