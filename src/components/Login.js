@@ -52,7 +52,7 @@ const Login = ({ onClose, SignOpen }) => {
         MySwal.fire({
           title: "SUCCESS",
           text: "로그인 성공!",
-          icon: "warning",
+          icon: "success",
           showCancelButton: true,
           confirmButtonColor: "#3085d6",
           confirmButtonText: "확인",
