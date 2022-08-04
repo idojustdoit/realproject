@@ -34,7 +34,9 @@
 </div>
 
 ## E-GLOO 트러블슈팅 ❌
-1. 데이터 형태 통신 문제 
+1. 데이터 형태 통신 문제 <a href="https://github.com/idojustdoit/realproject/wiki/1.-%EB%8D%B0%EC%9D%B4%ED%84%B0-%ED%98%95%ED%83%9C-%ED%86%B5%EC%8B%A0-%EB%AC%B8%EC%A0%9C">wiki</a>
+
+2. webrtc 문제 <a href="https://github.com/idojustdoit/realproject/wiki/2.-webrtc-%EB%AC%B8%EC%A0%9C">wiki</a>
 
 
 
