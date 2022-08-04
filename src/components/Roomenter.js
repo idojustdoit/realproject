@@ -65,6 +65,19 @@ const Roomenter = ({ onClose, roomId }) => {
     navigate(`/public-room/${roomId}`, { state: list });
   };
 
+  const fullmember = (e) => {
+    MySwal.fire({
+      title: "Error!",
+      text: "입장인원이 다찼습니다!",
+      icon: "error",
+      confirmButtonText: "확인",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.reload();
+      }
+    });
+  };
+
   return (
     <Container>
       <Background
@@ -140,39 +153,78 @@ const Roomenter = ({ onClose, roomId }) => {
               )}
             </div>
           </Label>
-
-          {lock ? (
+          {nickname.length >= 4 ? (
             <>
-              <Label>
-                <div>
-                  <Chat3>비밀번호</Chat3>
-                  <Input type="password" onChange={pwhandler} />
-                </div>
-              </Label>
-              <EnterBtn>
-                <Btn1
-                  onClick={() => {
-                    onClose();
-                  }}
-                >
-                  취소
-                </Btn1>
+              {lock ? (
+                <>
+                  <Label>
+                    <div>
+                      <Chat3>비밀번호</Chat3>
+                      <Input type="password" onChange={pwhandler} />
+                    </div>
+                  </Label>
+                  <EnterBtn>
+                    <Btn1
+                      onClick={() => {
+                        onClose();
+                      }}
+                    >
+                      취소
+                    </Btn1>
 
-                <Btn2 onClick={secretRoom}>비밀방 입장하기</Btn2>
-              </EnterBtn>
+                    <Btn2 onClick={fullmember}>비밀방 입장하기</Btn2>
+                  </EnterBtn>
+                </>
+              ) : (
+                <EnterBtn>
+                  <Btn1
+                    onClick={() => {
+                      onClose();
+                    }}
+                  >
+                    취소
+                  </Btn1>
+
+                  <Btn2 onClick={fullmember}>공개방 입장하기</Btn2>
+                </EnterBtn>
+              )}
             </>
           ) : (
-            <EnterBtn>
-              <Btn1
-                onClick={() => {
-                  onClose();
-                }}
-              >
-                취소
-              </Btn1>
+            <>
+              {lock ? (
+                <>
+                  <Label>
+                    <div>
+                      <Chat3>비밀번호</Chat3>
+                      <Input type="password" onChange={pwhandler} />
+                    </div>
+                  </Label>
+                  <EnterBtn>
+                    <Btn1
+                      onClick={() => {
+                        onClose();
+                      }}
+                    >
+                      취소
+                    </Btn1>
 
-              <Btn2 onClick={RoomenterHandler}>공개방 입장하기</Btn2>
-            </EnterBtn>
+                    <Btn2 onClick={secretRoom}>비밀방 입장하기</Btn2>
+                  </EnterBtn>
+                </>
+              ) : (
+                <EnterBtn>
+                  <Btn1
+                    onClick={() => {
+                      onClose();
+                    }}
+                  >
+                    취소
+                  </Btn1>
+
+                  <Btn2 onClick={RoomenterHandler}>공개방 입장하기</Btn2>
+                </EnterBtn>
+              )}
+            </>
           )}
         </ModalBlock>
       </Background>

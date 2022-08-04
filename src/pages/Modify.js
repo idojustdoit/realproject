@@ -65,6 +65,9 @@ function Modify() {
     })
       .then((response) => {
         navigate("/mypage");
+        console.log(response);
+        localStorage.setItem("nickname", response.data.updateUser.nickname);
+        localStorage.setItem("profile", response.data.updateUser.profile_url);
         MySwal.fire({
           title: "success",
           text: "정보수정이 완료되었습니다!",
