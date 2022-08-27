@@ -46,6 +46,7 @@
 
 2. webrtc 문제 <a href="https://github.com/idojustdoit/realproject/wiki/2.-webrtc-%EB%AC%B8%EC%A0%9C">wiki</a>
 
+3. state persist 문제 <a href="https://github.com/blueprint-12/realproject/wiki/3.-state-persist-%EB%AC%B8%EC%A0%9C">wiki</a>
 <p>&nbsp;</p>
 
 
