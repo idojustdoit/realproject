@@ -1,8 +1,7 @@
 # E-GLOO ⛄
 
 > 온라인 스터디룸을 제공하는 웹 기반 **화상 스터디 서비스**<br/>
-### E-GLOO 사이트 주소 🏃‍ : https://www.egloo.link
-### E-GLOO 시연 영상 🏃‍♂️: https://www.youtube.com/watch?v=rVmQeC5CMO0&feature=youtu.be
+### E-GLOO 시연 영상 🏃‍♂️: [유튜브](https://www.youtube.com/watch?v=rVmQeC5CMO0&feature=youtu.be)
 * 프로젝트 기간 : 2022/06/24 ~ 2022/08/04 (6주)
 * <a href="https://github.com/JumukWang/LastProject"> **백엔드팀 github 바로가기** </a>
 
