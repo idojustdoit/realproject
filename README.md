@@ -1,12 +1,19 @@
 # E-GLOO ⛄
-
 > 온라인 스터디룸을 제공하는 웹 기반 **화상 스터디 서비스**<br/>
 ### E-GLOO 시연 영상 🏃‍♂️: [유튜브](https://www.youtube.com/watch?v=rVmQeC5CMO0&feature=youtu.be)
 * 프로젝트 기간 : 2022/06/24 ~ 2022/08/04 (6주)
 * <a href="https://github.com/JumukWang/LastProject"> **백엔드팀 github 바로가기** </a>
 
-![이글루 로고](https://user-images.githubusercontent.com/86911858/183428943-45533943-fed1-4933-9f0d-912161ddaf03.png)
 
+![이글루 로고](https://user-images.githubusercontent.com/86911858/183428943-45533943-fed1-4933-9f0d-912161ddaf03.png)
+## 목차
+1. [프로젝트 아키텍처](E-GLOO-아키텍처-🌈)
+2. [핵심 기능 소개](E-GLOO-핵심기능-🛠)
+3. [프론트엔드 기술 스택](E-GLOO-프론트엔드-기술스택-🧑‍) 
+4. [개인별 트러블슈팅](E-GLOO-트러블슈팅-❌)
+5. [프론트 팀원 소개](E-GLOO-팀원소개-👨‍👨‍👦) 
+6. [프론트 파트 분배](Front_End-파트분배-☕👨‍👦)  
+ 
 
 
 ## E-GLOO 아키텍처 🌈
@@ -42,11 +49,11 @@
 <p>&nbsp;</p>
 
 ## E-GLOO 트러블슈팅 ❌
-1. 데이터 형태 통신 문제 <a href="https://github.com/idojustdoit/realproject/wiki/1.-%EB%8D%B0%EC%9D%B4%ED%84%B0-%ED%98%95%ED%83%9C-%ED%86%B5%EC%8B%A0-%EB%AC%B8%EC%A0%9C">wiki</a>
+1. 데이터 형태 통신 문제(하율찬) <a href="https://github.com/idojustdoit/realproject/wiki/1.-%EB%8D%B0%EC%9D%B4%ED%84%B0-%ED%98%95%ED%83%9C-%ED%86%B5%EC%8B%A0-%EB%AC%B8%EC%A0%9C">wiki</a> 
 
-2. webrtc 문제 <a href="https://github.com/idojustdoit/realproject/wiki/2.-webrtc-%EB%AC%B8%EC%A0%9C">wiki</a>
+2. webrtc 문제(조성인) <a href="https://github.com/idojustdoit/realproject/wiki/2.-webrtc-%EB%AC%B8%EC%A0%9C">wiki</a>
 
-3. state persist 문제 <a href="https://github.com/blueprint-12/realproject/wiki/3.-state-persist-%EB%AC%B8%EC%A0%9C">wiki</a>
+3. 페이지 전환 시, state persist 문제(조원희) <a href="https://github.com/blueprint-12/realproject/wiki/3.-state-persist-%EB%AC%B8%EC%A0%9C">wiki</a>
 <p>&nbsp;</p>
 
 
